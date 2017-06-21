@@ -347,9 +347,7 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
             /* Get our file */
             $version = \IPS\Request::i()->id;
             $json = $this->_getQueries( $version );
-            $install = 'install';
-            $ijson = $this->_getQueries( $install );
-
+            $install = $this->_getQueries( 'install');
             if( $vals[ 'storm_query_select' ] != 'code' )
             {
                 $type = $vals[ 'storm_query_select' ];
@@ -460,17 +458,13 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
                     if( $type == 'addColumn' )
                     {
                         $json[] = [ 'method' => $type, 'params' => [ $table, $schema ] ];
-                        $ijson[] = [ 'method' => $type, 'params' => [ $table, $schema ] ];
-
-                        //write to the install, tired of forgetting this!
-                        $this->_writeQueries( $install, $ijson );
-
+                        $install[] = [ 'method' => $type, 'params' => [ $table, $schema ] ];
+                        $this->_writeQueries( 'install', $install );
                         \IPS\Db::i()->addColumn( $table, $schema );
                     }
                     else if( $type == 'changeColumn' )
                     {
                         $json[] = [ 'method' => $type, 'params' => [ $table, $column, $schema ] ];
-                        $ijson[] = [ 'method' => $type, 'params' => [ $table, $column, $schema ] ];
                         \IPS\Db::i()->changeColumn( $table, $column, $schema );
                     }
                 }
@@ -497,6 +491,7 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
 
             /* Write it */
             $this->_writeQueries( $version, $json );
+
             /* Redirect us */
             \IPS\Output::i()
                        ->redirect( \IPS\Http\Url::internal( "app=core&module=applications&controller=developer&appKey={$this->application->directory}&tab=versions&root={$version}" ) );
