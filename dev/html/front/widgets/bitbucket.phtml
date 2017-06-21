@@ -1,0 +1,9 @@
+<ips:template parameters="$messages" />
+<ul class="ipsList_reset">
+    <li class="ipsWidget ipsWidget_vertical">
+        <h3 class="ipsWidget_title ipsType_reset">Push and Commit Log</h3>
+    </li>
+    {{foreach $messages as $message}}
+        {template="rows" group="widgets" app="storm" params="$message"}
+    {{endforeach}}
+</ul>

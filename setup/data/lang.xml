@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+ <app key="storm" version="20100">
+  <word key="__app_storm" js="0">Storm</word>
+  <word key="menu__storm_configuration" js="0">Storm</word>
+  <word key="menu__storm_configuration_settings" js="0">Settings</word>
+  <word key="menu__storm_configuration_apps" js="0">Dev Folder: Applications</word>
+  <word key="menu__storm_configuration_proxyclass" js="0">Proxy Classes Generator</word>
+  <word key="menu__storm_configuration_plugins" js="0">Dev Folder: Plugins</word>
+  <word key="dev_class" js="0">Sources</word>
+  <word key="storm_settings_headerdoc__tabbed" js="0">Headerdoc</word>
+  <word key="storm_settings_headerdoc_enabled" js="0">Enabled</word>
+  <word key="storm_settings_headerdoc_enabled_desc" js="0">If enabled, will add a file header to each php class.</word>
+  <word key="storm_settings_headerdoc_allowed_apps" js="0">Allowed Apps</word>
+  <word key="storm_settings_headerdoc_allowed_apps_desc" js="0">Select Apps to execute Header doc generation on 'build' and on 'download'.</word>
+  <word key="storm_settings_headerdoc__sidebar" js="0">If enabled, will add a temporary header doc to each php class file when app is built. On download, will replace the temp header doc with a permanent one, container @brief (class name), @author (app author), @copyright (current year with author name from app), @package (IPS Social Suite), @subpackage (App's name), @since (which version file was added in), @version (current version of app). Excluded folders: 3rdparty, vendor, dev, hooks, data (these are case sensitive).</word>
+  <word key="storm_proxyclass_progress" js="0">Processing %s of %s</word>
+  <word key="storm_proxyclass_done" js="0">Proxy Classes have been Generated</word>
+  <word key="storm_proxyclass_title" js="0">Proxy Classes</word>
+  <word key="storm_proxyclass_button" js="0">Generate Proxy Classes</word>
+  <word key="storm_apps_apps_select" js="0">Select Application</word>
+  <word key="storm_apps_app" js="0">Application</word>
+  <word key="storm_apps_app_desc" js="0">Select which application to generate the Dev Folder for.</word>
+  <word key="storm_apps_type" js="0">Type</word>
+  <word key="storm_apps_type_desc" js="0">Choose everything to recreate the entire Dev Folder, or select which part of the Dev folder you wish to recreate.</word>
+  <word key="storm_apps_type_lang" js="0">Language</word>
+  <word key="storm_apps_type_js" js="0">Javascript</word>
+  <word key="storm_apps_type_template" js="0">Templates</word>
+  <word key="storm_apps_type_email" js="0">Email Templates</word>
+  <word key="storm_apps_type_all" js="0">Everything</word>
+  <word key="storm_apps_type_select" js="0">Select Type</word>
+  <word key="storm_apps_return_javascript" js="0">Javascript Files Generated</word>
+  <word key="storm_apps_return_templates" js="0">Template Files Generated</word>
+  <word key="storm_apps_return_email" js="0">Email Template Files Generated</word>
+  <word key="storm_apps_return_lang" js="0">Language Strings Generated</word>
+  <word key="storm_apps_queue_title" js="0">Generating Dev Files</word>
+  <word key="storm_apps_total_done" js="0">Processing %s of %s</word>
+  <word key="storm_apps_completed" js="0">Dev Folder Generated Completed!</word>
+  <word key="storm_plugins_done" js="0">The Dev Folder for %s has been generated!</word>
+  <word key="storm_plugin_upload" js="0">Plugin XML</word>
+  <word key="storm_plugin_upload_desc" js="0">Upload the plugin's xml file here. Will install the plugin if its not already installed (disable whoops in constants.php or this will error out due to a bug in IPS).</word>
+  <word key="storm_plugins_title" js="0">Plugins Dev Folder Generator</word>
+  <word key="storm_apps_title" js="0">Applications Dev Folder Generator</word>
+  <word key="storm_settings_title" js="0">Settings</word>
+  <word key="storm_proxyclass_sidebar" js="0">Generates proxy classes for IPS/IPS Apps/3rd party apps, This is useful for IDE's, so useful features such as autocomplete and hinting can be used, since IPS's framework is uniuque.</word>
+  <word key="storm_class_type" js="0">Class Type</word>
+  <word key="storm_class_type_desc" js="0">Class type, Class for a regular class. Node for a \IPS\Node\Model class. Content Item for a \IPS\Content\Item class. Content Item Comment Class for a \IPS\Content\Comment class.</word>
+  <word key="storm_class_namespace" js="0">Namespace</word>
+  <word key="storm_class_namespace_desc" js="0">Namespace for the class, leave blank if not a subclass. Class: \IPS\myapp, SubClass: \IPS\myapp\ParentClass</word>
+  <word key="storm_class_className" js="0">Class Name</word>
+  <word key="storm_class_className_desc" js="0">do not include the underscore( _ ). This will also be the file's name.</word>
+  <word key="storm_class_extends" js="0">Extends</word>
+  <word key="storm_class_extends_desc" js="0">Does this class extend another class? if yes, please use the FQN here.</word>
+  <word key="storm_class_implements" js="0">Implements</word>
+  <word key="storm_class_implements_desc" js="0">will this class implement any interface classes? Use the FQN.</word>
+  <word key="storm_classes_class_no_exist" js="0">This class already exist in this namespace.</word>
+  <word key="storm_classes_extended_class_no_exist" js="0">The extended class does not exist!</word>
+  <word key="storm_classes_implemented_no_interface" js="0">One of your implemented interface classes does not exist!</word>
+  <word key="storm_classes_type_no_selection" js="0">Please select a type!</word>
+  <word key="storm_settings_general__tabbed" js="0">General</word>
+  <word key="storm_settings_enable_debug" js="0">Enable</word>
+  <word key="storm_settings_enable_debug_desc" js="0">Enable console output</word>
+  <word key="ext__Headerdoc" js="0">Customize how the headerdoc works for storm.</word>
+  <word key="storm_profiler_no_items" js="0">This panel has no log items.</word>
+  <word key="storm_profiler_button" js="0">Profiler</word>
+  <word key="storm_profiler_main_tab" js="0">Console (%s)</word>
+  <word key="storm_profiler_db_queries_tab" js="0">DB Queries (%s)</word>
+  <word key="storm_profiler_total_time_console" js="0"><![CDATA[%s<br>Total Time (seconds)]]></word>
+  <word key="storm_profiler_dbqueries_console" js="0"><![CDATA[%s<br>DB Queries]]></word>
+  <word key="storm_console_title_DbQueries" js="0">DB Query</word>
+  <word key="storm_profiler_files_console" js="0"><![CDATA[%s<br>Included Files]]></word>
+  <word key="storm_profiler_memory_console" js="0"><![CDATA[%s<br>Memory Used]]></word>
+  <word key="storm_profiler_db_execution_time" js="0">Execution Time: %s</word>
+  <word key="storm_profiler_memory_name" js="0">Name: %s</word>
+  <word key="storm_console_title_Memory" js="0">Memory</word>
+  <word key="storm_profiler_memory_tab" js="0">Memory (%s)</word>
+  <word key="storm_profiler_file_tab" js="0">Files (%s)</word>
+  <word key="storm_profiler_file_name" js="0">Filename: %s</word>
+  <word key="storm_profiler_file_path" js="0">Path: %s</word>
+  <word key="storm_profiler_file_size" js="0">File Size: %s</word>
+  <word key="storm_profiler_file_total_size" js="0">Total size %s</word>
+  <word key="storm_profiler_file_autoloaded" js="0">Autoloaded: True</word>
+  <word key="storm_profiler_files_autoloaded_console" js="0"><![CDATA[%s<br>Files Autoloaded]]></word>
+  <word key="storm_profiler_files_manual_console" js="0"><![CDATA[%s<br>Manually Included]]></word>
+  <word key="storm_console_title_Files" js="0">Included</word>
+  <word key="storm_console_title_FilesAuto" js="0">Autoloaded</word>
+  <word key="storm_profiler_time_for" js="0">For: %s</word>
+  <word key="storm_profiler_time_execution" js="0">Execution Time: %s</word>
+  <word key="storm_profiler_time_percent" js="0">Percentage of Total Time: %s</word>
+  <word key="storm_console_title_Time" js="0">Speed</word>
+  <word key="storm_profiler_time_tab" js="0">Speed (%s)</word>
+  <word key="storm_profiler_log_exception_class" js="0">Exception's Class</word>
+  <word key="storm_profiler_log_exception_code" js="0">Exception's Code</word>
+  <word key="storm_profiler_category" js="0">Category: %s</word>
+  <word key="storm_console_title_Log" js="0">Log</word>
+  <word key="storm_profiler_log_tab" js="0">Logs (%s)</word>
+  <word key="storm_profiler_log_console" js="0"><![CDATA[{# [1:<br>Log][?:<br>Logs]}]]></word>
+  <word key="storm_profiler_cache_type" js="0">Type: %s</word>
+  <word key="storm_profiler_cache_key" js="0">Key: %s</word>
+  <word key="storm_console_title_Cache" js="0">Cache</word>
+  <word key="storm_profiler_cache_console" js="0"><![CDATA[%s<br> Caches]]></word>
+  <word key="storm_profiler_cache_tab" js="0">Cache (%s)</word>
+  <word key="storm_profiler_none" js="0">This is not the tab you are looking for.</word>
+  <word key="storm_settings_profiler" js="0">Profiler</word>
+  <word key="storm_settings_enable_query" js="0">Enable DB Queries</word>
+  <word key="storm_class_created" js="0">Created %s Class: %s has been created successfully!</word>
+  <word key="storm_devfolder_created" js="0">%s has been successfully created.</word>
+  <word key="storm_settings_tab_debug_templates" js="0">Debug Templates</word>
+  <word key="storm_settings_tab_debug_templates_desc" js="0">This will write the templates to disk for easier debugging.</word>
+  <word key="storm_settings_tab_debug_css" js="0">Debug CSS</word>
+  <word key="storm_settings_tab_debug_css_desc" js="0">Requires debug templates to be enabled, but writes the css to disk and allows for easier debugging.</word>
+  <word key="storm_settings_tab_debug_css_alt" js="0">Alt CSS Loading</word>
+  <word key="storm_settings_tab_debug_css_alt_desc" js="0">if you are getting no css, you could be hitting the query string limit in apache, enable this to try to avoid it.</word>
+  <word key="storm_settings_tab_profiler" js="0">Profiler</word>
+  <word key="storm_settings_tab_debug" js="0"><![CDATA[Dev & Debug]]></word>
+  <word key="storm_dev_folder" js="0">Dev Folder</word>
+  <word key="storm_devfolder_type" js="0">Type</word>
+  <word key="storm_devfolder_type_desc" js="0">Select what dev folder type you want to create. (template, javascript)</word>
+  <word key="storm_devfolder_args" js="0">Arguments</word>
+  <word key="storm_devfolder_args_desc" js="0">the argumenuts for the file.</word>
+  <word key="storm_devfolder_loc" js="0">Location</word>
+  <word key="storm_devfolder_loc_desc" js="0">accessed from (front, admin, global)</word>
+  <word key="storm_devfolder_group" js="0">Group</word>
+  <word key="storm_devfolder_group_desc" js="0">containing group for file</word>
+  <word key="storm_devfolder_filename" js="0">Filename</word>
+  <word key="storm_devfolder_filename_desc" js="0">name of the file.</word>
+  <word key="storm_devfolder_loc_error" js="0">You need to select a location</word>
+  <word key="storm_devfolder_group_error" js="0">enter a group</word>
+  <word key="storm_devfolder_widgetname_error" js="0">Widget Name required</word>
+  <word key="storm_devfolder_filename_error" js="0">enter a filename</word>
+  <word key="storm_devfolder_filename_exist" js="0">File with this name exists at this location.</word>
+  <word key="storm_devfolder_widgetname" js="0">Widget Name</word>
+  <word key="storm_devfolder_widgetname_desc" js="0">Used when loading the widget over the data api</word>
+  <word key="storm_create_class" js="0">Create Class File</word>
+  <word key="storm_create_class_desc" js="0">This allows you to create your node/AR/Item/Comment class with your database</word>
+  <word key="storm_classes_no_blank" js="0">Can't be blank!</word>
+  <word key="storm_class_item_node_class" js="0">Node/Item Class</word>
+  <word key="storm_class_item_node_class_desc" js="0">Enter the node/item class for Item/Comment class you are about to create.</word>
+  <word key="storm_class_node_item_missing" js="0">Node/Item Class doesn't exists.</word>
+  <word key="storm_class_database" js="0">Database</word>
+  <word key="storm_class_prefix" js="0">Prefix</word>
+  <word key="storm_profiler_is_fixed" js="0">Always show Profiler</word>
+  <word key="storm_progress" js="0">%s out of %s</word>
+  <word key="storm_mc_limit" js="0">Amount</word>
+  <word key="storm_mc_limit_desc" js="0">How many dummy records to create</word>
+  <word key="storm_mc_passwords" js="0">Random Password</word>
+  <word key="storm_mc_avatars" js="0">Create Avatars</word>
+  <word key="storm_mc_group" js="0">Group</word>
+  <word key="menu__storm_configuration_generator" js="0">Dummy Data Generator</word>
+  <word key="storm_gen_type" js="0">Type</word>
+  <word key="storm_gen_limit" js="0">Amount</word>
+  <word key="storm_gen_limit_desc" js="0">How many of the type to create. Forums will create between 1 to 12 topics and each topic will create between 1 to 12 posts, Topics will create 1 to 12 posts.</word>
+  <word key="storm_gen_none" js="0">Please select a type!</word>
+  <word key="storm_generation_done" js="0">Generation Done</word>
+  <word key="storm_generation_delete_done" js="0">Dummy Data Deleted</word>
+ </app>
+</language>

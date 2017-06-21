@@ -1,0 +1,18 @@
+<?php
+
+#header#
+
+namespace #namespace#;
+
+if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
+{
+    header( ( isset( $_SERVER[ 'SERVER_PROTOCOL' ] ) ? $_SERVER[ 'SERVER_PROTOCOL' ] :
+            'HTTP/1.0' ) . ' 403 Forbidden' );
+    exit;
+}
+
+class _#classname# #extends# #implements#
+{
+    /* this is here or the autoloader will spaz out */
+    public function __construct(){}
+}

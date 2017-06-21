@@ -1,0 +1,90 @@
+<?php
+
+#header#
+
+namespace #namespace#;
+
+if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
+{
+    header( ( isset( $_SERVER[ 'SERVER_PROTOCOL' ] ) ? $_SERVER[ 'SERVER_PROTOCOL' ] :
+            'HTTP/1.0' ) . ' 403 Forbidden' );
+    exit;
+}
+
+class _#classname# extends \IPS\Content\Comment #implements#
+{
+    /**
+     * @brief    [ActiveRecord] Multiton Store
+     */
+    protected static $multitons;
+
+    /**
+     * @brief    [ActiveRecord] ID Database Column
+     */
+    public static $databaseColumnId = 'id';
+
+    /**
+     * @brief    [Content\Comment]    Item Class
+     */
+    public static $itemClass = '#nodeItemClass#';
+
+    /**
+     * @brief    [ActiveRecord] Database table
+     */
+    public static $databaseTable = '#applications#_#database#';
+
+    /**
+     * @brief    [ActiveRecord] Database Prefix
+     */
+    public static $databasePrefix = '#prefix#';
+
+    /**
+     * @brief   [Content\Comment]   Database Column Map
+     */
+    public static $databaseColumnMap = array();
+
+    /**
+     * @brief    Application
+     */
+    public static $application = '#applications#';
+
+    /**
+     * @brief    Title
+     */
+    public static $title = '#classname#';
+
+    /**
+     * @brief    Icon
+     */
+    public static $icon = '';
+
+    /**
+     * @brief    Reputation Type
+     */
+    public static $reputationType = '';
+
+    /**
+     * @brief    [Content]    Key for hide reasons
+     */
+    public static $hideLogKey = null;
+
+    /**
+     * @brief   Bitwise keys
+     */
+    protected static $bitOptions = array();
+
+    /**
+     * Join profile fields when loading comments?
+     */
+    public static $joinProfileFields = FALSE;
+
+    /**
+     * @brief   [Content\Comment]   Language prefix for forms
+    */
+    public static $formLangPrefix = '';
+
+    /**
+     * @brief   [Content\Item]  Sharelink HTML
+     */
+    protected $sharelinks = array();
+}

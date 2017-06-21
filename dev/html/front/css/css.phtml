@@ -1,0 +1,15 @@
+<ips:template parameters="$url" />
+
+<link rel='stylesheet' href='{expression="\IPS\Http\Url::external( $url )->setQueryString( 'v', \IPS\SUITE_UNIQUE_KEY )"}' media='all'>
+
+
+{{$customCss = \IPS\Theme::i()->css( 'custom.css', 'core', 'front' );}}
+{{foreach $customCss as $css}}
+<link rel='stylesheet' href='{expression="\IPS\Http\Url::external( $css )->setQueryString( 'v', \IPS\SUITE_UNIQUE_KEY )"}' media='all'>
+{{endforeach}}
+
+{{if \IPS\Output::i()->headCss}}
+<style type='text/css'>
+    {expression="\IPS\Output::i()->headCss" raw="true"}
+</style>
+{{endif}}

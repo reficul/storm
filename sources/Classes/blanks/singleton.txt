@@ -1,0 +1,23 @@
+<?php
+
+#header#
+
+namespace #namespace#;
+
+if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
+{
+    header( ( isset( $_SERVER[ 'SERVER_PROTOCOL' ] ) ? $_SERVER[ 'SERVER_PROTOCOL' ] :
+            'HTTP/1.0' ) . ' 403 Forbidden' );
+    exit;
+}
+
+class _#classname# extends \IPS\Patterns\Singleton
+{
+
+    /**
+     * @brief   Singleton Instances
+     * @note    This needs to be declared in any child classes as well, only declaring here for editor code-complete/error-check functionality
+     */
+    protected static $instance = null;
+
+}

@@ -1,0 +1,34 @@
+{
+    "configuration": {
+        "proxyclass": {
+            "tab": "core",
+            "controller": "proxyclass",
+            "do": "",
+            "restriction": "proxyclass_manage"
+        },
+        "apps": {
+            "tab": "core",
+            "controller": "apps",
+            "do": "",
+            "restriction": "apps_manage"
+        },
+        "plugins": {
+            "tab": "core",
+            "controller": "plugins",
+            "do": "",
+            "restriction": "plugins_manage"
+        },
+        "settings": {
+            "tab": "core",
+            "controller": "settings",
+            "do": "",
+            "restriction": "settings_manage"
+        },
+        "generator": {
+            "tab": "core",
+            "controller": "generator",
+            "do": "",
+            "restriction": "members_manage"
+        }
+    }
+}

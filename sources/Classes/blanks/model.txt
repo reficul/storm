@@ -1,0 +1,211 @@
+<?php
+
+#header#
+
+namespace #namespace#;
+
+if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
+{
+    header( ( isset( $_SERVER[ 'SERVER_PROTOCOL' ] ) ? $_SERVER[ 'SERVER_PROTOCOL' ] :
+            'HTTP/1.0' ) . ' 403 Forbidden' );
+    exit;
+}
+
+class _#classname# extends \IPS\Node\Model #implements#
+{
+    /**
+     * @brief    [ActiveRecord] Multiton Store
+     */
+    protected static $multitons;
+
+    /**
+     * @brief    [ActiveRecord] Default Values
+     */
+    protected static $defaultValues = null;
+
+    /**
+     * @brief    [ActiveRecord] Database Table
+     */
+    public static $databaseTable = '#database#';
+
+    /**
+     * @brief    [ActiveRecord] Database Prefix
+     */
+    public static $databasePrefix = '#prefix#';
+
+    /**
+     * @brief    [ActiveRecord] ID Database Column
+     */
+    public static $databaseColumnId = 'id';
+
+    /**
+     * @brief    [ActiveRecord] Database ID Fields
+     */
+    protected static $databaseIdFields = [ '#prefix#id' ];
+
+    /**
+     * @brief    [Node] Order Database Column
+     */
+    public static $databaseColumnOrder = null;
+
+    /**
+     * @brief    [Node] Parent ID Database Column
+     */
+    public static $databaseColumnParent = null;
+
+    /**
+     * @brief   [Node] Parent ID Root Value
+     * @note    This normally doesn't need changing though some legacy areas use -1 to indicate a root node
+     */
+    public static $databaseColumnParentRootValue = 0;
+
+    /**
+     * @brief    [Node] Enabled/Disabled Column
+     */
+    public static $databaseColumnEnabledDisabled = null;
+
+    /**
+     * @brief    [Node] Show forms modally?
+     */
+    public static $modalForms = false;
+
+    /**
+     * @brief    [Node] Node Title
+     */
+    public static $nodeTitle = '#classname#';
+
+    /**
+     * @brief    [Node] ACP Restrictions
+     * @code
+    array(
+     * 'app'        => 'core',                // The application key which holds the restrictrions
+     * 'module'    => 'foo',                // The module key which holds the restrictions
+     * 'map'        => array(                // [Optional] The key for each restriction - can alternatively use "prefix"
+     * 'add'            => 'foo_add',
+     * 'edit'            => 'foo_edit',
+     * 'permissions'    => 'foo_perms',
+     * 'delete'        => 'foo_delete'
+     * ),
+     * 'all'        => 'foo_manage',        // [Optional] The key to use for any restriction not provided in the map (only needed if not providing all 4)
+     * 'prefix'    => 'foo_',                // [Optional] Rather than specifying each  key in the map, you can specify a prefix, and it will automatically look for restrictions with the key "[prefix]_add/edit/permissions/delete"
+     * @encode
+     */
+    protected static $restrictions = array(
+        'app' => '#applications#',
+        'module' => '#module#',
+        'prefix' => '#prefix#'
+    );
+
+    /**
+     * @brief    [Node] App for permission index
+     */
+    public static $permApp = '#applications#';
+
+    /**
+     * @brief    [Node] Type for permission index
+     */
+    public static $permType = '#permtype#';
+
+    /**
+     * @brief    The map of permission columns
+     */
+    public static $permissionMap = array(
+        'view' => 'view',
+        'read' => 2,
+        'add' => 3,
+        'delete' => 4,
+        'reply' => 5,
+        'review' => 6
+    );
+
+    /**
+     * @brief    Bitwise values for members_bitoptions field
+     */
+    public static $bitOptions = array(
+        'bitoptions' => array(
+            'bitoptions' => array()
+        )
+    );
+
+    /**
+     * @brief    [Node] Title search prefix.  If specified, searches for '_title' will be done against the language pack.
+     */
+    public static $titleSearchPrefix = null;
+
+    /**
+     * @brief    [Node] Title prefix.  If specified, will look for a language key with "{$titleLangPrefix}_{$id}" as the key
+     */
+    public static $titleLangPrefix = null;
+
+    /**
+     * @brief    [Node] Prefix string that is automatically prepended to permission matrix language strings
+     */
+    public static $permissionLangPrefix = '';
+
+    /**
+     * @brief    [Node] Moderator Permission
+     */
+    public static $modPerm = '';
+
+    /**
+     * @brief    Follow Area Key
+     */
+    public static $followArea = '';
+
+    /**
+     * @brief    Cached URL
+     */
+    protected $_url = null;
+
+    /**
+     * @brief    URL Base
+     */
+    public static $urlBase = '';
+
+    /**
+     * @brief    URL Base
+     */
+    public static $urlTemplate = '';
+
+    /**
+     * @brief    SEO Title Column
+     */
+    public static $seoTitleColumn = '';
+
+    /**
+     * @brief    Content Item Class
+     */
+    public static $contentItemClass = null;
+
+    /**
+     * [Node] Add/Edit Form
+     *
+     * @param    \IPS\Helpers\Form $form The form
+     * @return    void
+     */
+    public function form( &$form )
+    {
+    }
+
+    /**
+     * [Node] Format form values from add/edit form for save
+     *
+     * @param    array $values Values from the form
+     * @return    array
+     */
+    public function formatFormValues( $values )
+    {
+        return $values;
+    }
+
+    /**
+     * [Node] Save Add/Edit Form
+     *
+     * @param    array $values Values from the form
+     * @return    void
+     */
+    public function saveForm( $values )
+    {
+        parent::saveForm( $values );
+    }
+}
