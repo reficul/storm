@@ -108,7 +108,9 @@
         </ul>
     </li>
     {{endif}}
-</ul>]]></template>
+</ul>
+
+<header>]]></template>
  <template template_group="diff" template_name="diff" template_data="$html" template_location="admin" template_app="storm"><![CDATA[<!DOCTYPE html>
 <html lang="{expression="\IPS\Member::loggedIn()->language()->bcp47()"}" dir="{{if member.language()->isrtl}}rtl{{else}}ltr{{endif}}">
 <head>
@@ -368,26 +370,26 @@
     color:#000 !important;
 }
 </css>
- <css css_location="admin" css_app="storm" css_attributes="" css_path="devbar" css_name="devbar.css"><![CDATA[/*.ipsApp.ipsApp_admin{*/
-    /*padding-top:97px;*/
-/*}*/
-/*html[dir="ltr"] #ipsLayout_header {*/
-    /*height:100px;*/
-/*}*/
+ <css css_location="admin" css_app="storm" css_attributes="" css_path="devbar" css_name="devbar.css"><![CDATA[.ipsApp.ipsApp_admin{
+    padding-top:97px;
+}
+html[dir="ltr"] #ipsLayout_header {
+    height:100px;
+}
 #stormDevBar {
-    /*background:#417ba3;*/
-    /*color: #fff;*/
+    background:#417ba3;
+    color: #fff;
     font-size:14px;
     padding:10px 5px;
-    width: 75%;
+    width: 100%;
 }
-/*#stormDevBar > li {*/
-    /*padding:0px 5px;*/
-/*}*/
+#stormDevBar > li {
+    padding:0px 5px;
+}
 
 #stormDevBar > li > a{
     color:#fff;
-    /*line-height: 18px;*/
-    /*text-align: center;*/
+    line-height: 18px;
+    text-align: center;
 }]]></css>
 </theme>
