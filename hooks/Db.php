@@ -14,7 +14,7 @@ class storm_hook_Db extends _HOOK_CLASS_
 
     protected $currentQ = 1;
 
-    public function query( $query, $log = true )
+    public function query( $query, $log = TRUE, $read=FALSE )
     {
         if( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB )
         {
@@ -41,10 +41,10 @@ class storm_hook_Db extends _HOOK_CLASS_
             return $return;
         }
 
-        return parent::query( $query, $log );
+        return parent::query( $query, $log, $read );
     }
 
-    public function log( $query )
+    protected function log( $query, $server=NULL )
     {
         if( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB )
         {
@@ -71,7 +71,7 @@ class storm_hook_Db extends _HOOK_CLASS_
         }
         else
         {
-            parent::log( $query );
+            parent::log( $query, $server );
         }
     }
 
@@ -87,7 +87,7 @@ class storm_hook_Db extends _HOOK_CLASS_
 
     }
 
-    public function preparedQuery( $query, array $_binds )
+    public function preparedQuery( $query, array $_binds, $read=FALSE )
     {
         if( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB )
         {
@@ -137,12 +137,12 @@ class storm_hook_Db extends _HOOK_CLASS_
             }
 
             $this->log( static::_replaceBinds( $queryS, $bindsS ) );
-            $parent = parent::preparedQuery( $query, $_binds );
+            $parent = parent::preparedQuery( $query, $_binds, $read );
             $this->final = microtime( true ) - $this->start;
             $this->sendToProfiler();
             return $parent;
         }
 
-        return parent::preparedQuery( $query, $_binds );
+        return parent::preparedQuery( $query, $_binds, $read );
     }
 }
