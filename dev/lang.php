@@ -143,6 +143,14 @@ $lang = [
     'storm_query_columns' => 'Table Column',
     'storm_query_code' => 'Query Box',
     'storm_member_creation_done' => 'Dummy data creation done',
-    
+    'storm_remote_key_use' => "Remote Key",
+    'storm_remote_key_use_desc' => "<br>Use this key in another storm instance to sync apps.",
+    'storm_remote_url' => "Remote Interface",
+    'storm_remote_url_desc' => "<br> Use this for the remote interface in another storm instance to sync an app",
+    'storm_ftp_app' => "Remote App",
+    'general_tab' => "General",
+    'remote_tab' => "Sync",
+    'storm_ftp_path' => "FTP Path",
+    'storm_ftp_path_desc' => "Full path to where the synced file is located."
     //    'storm_apps_select_app' => "Select App"
 ];
