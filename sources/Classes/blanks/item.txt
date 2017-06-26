@@ -102,7 +102,7 @@ class _#classname# extends \IPS\Content\Item #implements#
     /**
      * @brief   SEO Title Column
      */
-    public static $seoTitleColumn = '';
+    public static $seoTitleColumn = null;
 
      /**
       * Get URL
