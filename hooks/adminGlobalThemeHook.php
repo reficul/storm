@@ -41,16 +41,51 @@ class storm_hook_adminGlobalThemeHook extends _HOOK_CLASS_
     public function globalTemplate( $title, $html, $location = array() )
     {
 
-        \IPS\Output::i()->cssFiles = \array_merge(
-            \IPS\Output::i()->cssFiles,
-            \IPS\Theme::i()->css(
-                'devbar/devbar.css',
-                'storm',
-                'admin'
-            )
-        );
 
-        return parent::globalTemplate( $title, $html, $location );
 
+        $parent = parent::globalTemplate($title, $html, $location);
+        $version = \IPS\Application::load('core');
+        if( $version->long_version < 101110 )
+        {
+            \IPS\Output::i()->cssFiles = \array_merge(
+                \IPS\Output::i()->cssFiles,
+                \IPS\Theme::i()->css(
+                    'devbar/devbar2.css',
+                    'storm',
+                    'admin'
+                )
+            );
+            $applications = false;
+            //
+            foreach( \IPS\Application::applications() as $apps )
+            {
+                $applications[] = [
+                    'name' => $apps->directory,
+                    'url'  => \IPS\Http\Url::internal( 'app=core&module=applications&controller=developer&appKey=' . $apps->directory )
+                ];
+            }
+            $plugins = false;
+            foreach( \IPS\Plugin::plugins() as $plugin )
+            {
+                $plugins[] = [
+                    'name' => $plugin->name,
+                    'url'  => \IPS\Http\Url::internal( 'app=core&module=applications&controller=plugins&do=developer&id=' . $plugin->id )
+                ];
+            }
+            $devBar = \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar2( $applications, $plugins );
+
+            $parent = str_replace( '<header>', $devBar, $parent );
+        }
+        else{
+            \IPS\Output::i()->cssFiles = \array_merge(
+                \IPS\Output::i()->cssFiles,
+                \IPS\Theme::i()->css(
+                    'devbar/devbar.css',
+                    'storm',
+                    'admin'
+                )
+            );
+        }
+        return $parent;
     }
 }
