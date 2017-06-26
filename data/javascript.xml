@@ -1,148 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <javascript app="storm">
- <file javascript_app="storm" javascript_location="global" javascript_path="controllers/debug" javascript_name="storm.console.js" javascript_type="controller" javascript_version="30000" javascript_position="1000050">;( function ($, _, undefined) {
-    &quot;use strict&quot;;
-    ips.createModule('storm.console', function () {
-        var init = function () {
-                if (ips.getSetting('storm_debug_enabled')) {
-                    _getDebug();
-                }
-            },
-            _getDebug = function () {
-                var ajax = ips.getAjax(),
-                    url = ips.getSetting('storm_debug_url');
-                ajax({
-                    type: &quot;POST&quot;,
-                    url: url,
-                    data: &quot;time=&quot; + ips.getSetting('storm_debug_time'),
-                    dataType: &quot;json&quot;,
-                    bypassRedirect: true,
-                    success: function (data) {
-                        if (data.hasOwnProperty('msg')) {
-                            for (var i in data['msg']) {
-                                var debug = data['msg'][i]
-                                if (debug.hasOwnProperty('message')) {
-                                    var type = debug.type;
-                                    var msg = debug.message;
-                                    switch (type) {
-                                        default:
-                                        case 'log':
-                                            console.log(msg);
-                                            break;
-                                        case 'debug':
-                                            console.debug(msg);
-                                            break;
-                                        case 'dir':
-                                            console.dir(msg);
-                                            break;
-                                        case 'dirxml':
-                                            console.dirxml(msg);
-                                            break;
-                                        case 'error':
-                                            console.error(msg);
-                                            break;
-                                        case 'info':
-                                            console.info(msg);
-                                            break;
-                                    }
-                                }
-
-                                if (debug.hasOwnProperty('bt')) {
-                                    console.log(debug.bt);
-                                }
-                            }
-                        }
-                        ips.setSetting('storm_debug_time', data.time);
-                    },
-                    complete: function (data) {
-                        _getDebug();
-                    },
-                    error: function (data) {
-                    }
-                });
-            };
-        return {
-            init: init
-        }
-    });
+ <file javascript_app="storm" javascript_location="global" javascript_path="controllers/debug" javascript_name="storm.console.js" javascript_type="controller" javascript_version="30000" javascript_position="1000050">;( function ($, _, undefined) {&#13;
+    &quot;use strict&quot;;&#13;
+    ips.createModule('storm.console', function () {&#13;
+        var init = function () {&#13;
+                if (ips.getSetting('storm_debug_enabled')) {&#13;
+                    _getDebug();&#13;
+                }&#13;
+            },&#13;
+            _getDebug = function () {&#13;
+                var ajax = ips.getAjax(),&#13;
+                    url = ips.getSetting('storm_debug_url');&#13;
+                ajax({&#13;
+                    type: &quot;POST&quot;,&#13;
+                    url: url,&#13;
+                    data: &quot;time=&quot; + ips.getSetting('storm_debug_time'),&#13;
+                    dataType: &quot;json&quot;,&#13;
+                    bypassRedirect: true,&#13;
+                    success: function (data) {&#13;
+                        if (data.hasOwnProperty('msg')) {&#13;
+                            for (var i in data['msg']) {&#13;
+                                var debug = data['msg'][i]&#13;
+                                if (debug.hasOwnProperty('message')) {&#13;
+                                    var type = debug.type;&#13;
+                                    var msg = debug.message;&#13;
+                                    switch (type) {&#13;
+                                        default:&#13;
+                                        case 'log':&#13;
+                                            console.log(msg);&#13;
+                                            break;&#13;
+                                        case 'debug':&#13;
+                                            console.debug(msg);&#13;
+                                            break;&#13;
+                                        case 'dir':&#13;
+                                            console.dir(msg);&#13;
+                                            break;&#13;
+                                        case 'dirxml':&#13;
+                                            console.dirxml(msg);&#13;
+                                            break;&#13;
+                                        case 'error':&#13;
+                                            console.error(msg);&#13;
+                                            break;&#13;
+                                        case 'info':&#13;
+                                            console.info(msg);&#13;
+                                            break;&#13;
+                                    }&#13;
+                                }&#13;
+&#13;
+                                if (debug.hasOwnProperty('bt')) {&#13;
+                                    console.log(debug.bt);&#13;
+                                }&#13;
+                            }&#13;
+                        }&#13;
+                        ips.setSetting('storm_debug_time', data.time);&#13;
+                    },&#13;
+                    complete: function (data) {&#13;
+                        _getDebug();&#13;
+                    },&#13;
+                    error: function (data) {&#13;
+                    }&#13;
+                });&#13;
+            };&#13;
+        return {&#13;
+            init: init&#13;
+        }&#13;
+    });&#13;
 }(jQuery, _));</file>
- <file javascript_app="storm" javascript_location="global" javascript_path="controllers/profiler" javascript_name="storm.debug.js" javascript_type="controller" javascript_version="30000" javascript_position="1000100">;( function ($, _, undefined) {
-    &quot;use strict&quot;;
-    ips.createModule('storm.debug', function () {
-        var respond = function (elem, options, e) {
-                var el = $(elem);
-                if (!el.data('_debugObj')) {
-                    var d = _debugObj(options.url);
-                    var el = $('#stormProfilerLogs');
-                    var time = el.attr('data-stormtime');
-                    d.init(time);
-                    el.data('_debugObj', d);
-                }
-        };
-        ips.ui.registerWidget('stormdebug', storm.debug, ['url']);
-        return {
-            respond: respond
-        };
-    });
-    var _debugObj = function(url){
-        var init = function(time){
-            _debug(time);
-        };
-        var _debug = function(time){
-            var ajax = ips.getAjax();
-            var el = $('#stormProfilerLogs');
-            var times = '';
-            ajax({
-                type: &quot;POST&quot;,
-                url: url,
-                data: &quot;time=&quot;+ time,
-                dataType: &quot;json&quot;,
-                bypassRedirect: true,
-                success: function (data) {
-                    if (!data.hasOwnProperty('error')) {
-                        el.prepend( data.html );
-                        var counts = parseInt( $('#profilerLogTabCount').text() )+ parseInt(data.count);
-                        $('#profilerLogTabCount').html( counts );
-                    }
-                    el.attr( 'data-stormtime', data.time);
-                    times = data.time;
-                },
-                complete: function (data) {
-                    _debug(times);
-                },
-                error: function (data) {
-                }
-            });
-        }
-
-        return {
-            init: init
-        }
-    }
-}(jQuery, _));
+ <file javascript_app="storm" javascript_location="global" javascript_path="controllers/profiler" javascript_name="storm.debug.js" javascript_type="controller" javascript_version="30000" javascript_position="1000100">;( function ($, _, undefined) {&#13;
+    &quot;use strict&quot;;&#13;
+    ips.createModule('storm.debug', function () {&#13;
+        var respond = function (elem, options, e) {&#13;
+                var el = $(elem);&#13;
+                if (!el.data('_debugObj')) {&#13;
+                    var d = _debugObj(options.url);&#13;
+                    var el = $('#stormProfilerLogs');&#13;
+                    var time = el.attr('data-stormtime');&#13;
+                    d.init(time);&#13;
+                    el.data('_debugObj', d);&#13;
+                }&#13;
+        };&#13;
+        ips.ui.registerWidget('stormdebug', storm.debug, ['url']);&#13;
+        return {&#13;
+            respond: respond&#13;
+        };&#13;
+    });&#13;
+    var _debugObj = function(url){&#13;
+        var init = function(time){&#13;
+            _debug(time);&#13;
+        };&#13;
+        var _debug = function(time){&#13;
+            var ajax = ips.getAjax();&#13;
+            var el = $('#stormProfilerLogs');&#13;
+            var times = '';&#13;
+            ajax({&#13;
+                type: &quot;POST&quot;,&#13;
+                url: url,&#13;
+                data: &quot;time=&quot;+ time,&#13;
+                dataType: &quot;json&quot;,&#13;
+                bypassRedirect: true,&#13;
+                success: function (data) {&#13;
+                    if (!data.hasOwnProperty('error')) {&#13;
+                        el.prepend( data.html );&#13;
+                        var counts = parseInt( $('#profilerLogTabCount').text() )+ parseInt(data.count);&#13;
+                        $('#profilerLogTabCount').html( counts );&#13;
+                    }&#13;
+                    el.attr( 'data-stormtime', data.time);&#13;
+                    times = data.time;&#13;
+                },&#13;
+                complete: function (data) {&#13;
+                    _debug(times);&#13;
+                },&#13;
+                error: function (data) {&#13;
+                }&#13;
+            });&#13;
+        }&#13;
+&#13;
+        return {&#13;
+            init: init&#13;
+        }&#13;
+    }&#13;
+}(jQuery, _));&#13;
 </file>
- <file javascript_app="storm" javascript_location="global" javascript_path="controllers/profiler" javascript_name="storm.profiler.js" javascript_type="controller" javascript_version="30000" javascript_position="1000100">;( function ($, _, undefined) {
-    &quot;use strict&quot;;
-    ips.createModule('storm.profile', function () {
-        var respond = function (elem, options, e) {
-            e.preventDefault();
-                if( $(this).data('isOpen') != 1){
-                    $(this).data('isOpen',1)
-                    $('#eLstormTabs').slideDown();
-                }
-                else{
-                    $(this).data('isOpen', 0);
-                    $('#eLstormTabs').slideUp();
-                }
-        };
-
-        ips
-            .ui
-            .registerWidget('stormprofile', storm.profile, [], { lazyLoad: true, lazyEvent: 'click'});
-        return {
-            respond: respond
-        };
-    });
+ <file javascript_app="storm" javascript_location="global" javascript_path="controllers/profiler" javascript_name="storm.profiler.js" javascript_type="controller" javascript_version="30000" javascript_position="1000100">;( function ($, _, undefined) {&#13;
+    &quot;use strict&quot;;&#13;
+    ips.createModule('storm.profile', function () {&#13;
+        var respond = function (elem, options, e) {&#13;
+            e.preventDefault();&#13;
+                if( $(this).data('isOpen') != 1){&#13;
+                    $(this).data('isOpen',1)&#13;
+                    $('#eLstormTabs').slideDown();&#13;
+                }&#13;
+                else{&#13;
+                    $(this).data('isOpen', 0);&#13;
+                    $('#eLstormTabs').slideUp();&#13;
+                }&#13;
+        };&#13;
+&#13;
+        ips&#13;
+            .ui&#13;
+            .registerWidget('stormprofile', storm.profile, [], { lazyLoad: true, lazyEvent: 'click'});&#13;
+        return {&#13;
+            respond: respond&#13;
+        };&#13;
+    });&#13;
 }(jQuery, _));</file>
  <file javascript_app="storm" javascript_location="admin" javascript_path="controllers/query" javascript_name="ips.query.query.js" javascript_type="controller" javascript_version="30000" javascript_position="1000050"><![CDATA[;( function($, _, undefined){
     "use strict";
