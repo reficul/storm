@@ -151,6 +151,14 @@ $lang = [
     'general_tab' => "General",
     'remote_tab' => "Sync",
     'storm_ftp_path' => "FTP Path",
-    'storm_ftp_path_desc' => "Full path to where the synced file is located."
+    'storm_ftp_path_desc' => "Full path to where the synced file is located.",
+    'storm_ftp_key' => "Remote Key",
+    'storm_ftp_interface_host' => "Remote Interface",
+    'storm_ftp_host' => "FTP Host",
+    'storm_ftp_username' => "FTP Username",
+    'storm_ftp_pass' => "FTP Password",
+    'storm_ftp_port' => "FTP Port",
+    'storm_ftp_timeout' => "FTP Timeout",
+    'storm_ftp_ssh' => "Use SSH"
     //    'storm_apps_select_app' => "Select App"
 ];
