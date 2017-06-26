@@ -14,11 +14,12 @@ class storm_hook_Db extends _HOOK_CLASS_
 
     protected $currentQ = 1;
 
-    public function query( $query, $log = TRUE, $read=FALSE )
+
+    public function query( $query, $log = true, $read = false )
     {
         if( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB )
         {
-            return parent::query( $query, $log );
+            return parent::query( $query, $log, $read );
         }
 
         $dbMem = true;
@@ -44,11 +45,12 @@ class storm_hook_Db extends _HOOK_CLASS_
         return parent::query( $query, $log, $read );
     }
 
-    protected function log( $query, $server=NULL )
+
+    public function log( $query, $server = null )
     {
         if( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB )
         {
-            parent::log( $query );
+            parent::log( $query, $server );
         }
 
         $dbMem = true;
@@ -87,7 +89,8 @@ class storm_hook_Db extends _HOOK_CLASS_
 
     }
 
-    public function preparedQuery( $query, array $_binds, $read=FALSE )
+
+    public function preparedQuery( $query, array $_binds, $read = false )
     {
         if( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB )
         {

@@ -14,6 +14,7 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
         parent::execute($command);
     }
 
+
     public function addVersionQuery()
     {
         \IPS\Output::i()->jsFiles = array_merge(
