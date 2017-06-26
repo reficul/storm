@@ -109,7 +109,16 @@ class _Settings extends \IPS\Patterns\Singleton
                 'url' => \IPS\Http\Url::internal( 'app=core&module=applications&controller=plugins&do=developer&id=' . $plugin->id )
             ];
         }
-        return \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar( $applications, $plugins );
+        $version = \IPS\Application::load('core');
+
+        if( $version->long_version < 101110 )
+        {
+            return \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar2( $applications, $plugins );
+        }
+        else{
+            return \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar( $applications, $plugins );
+
+        }
 
 
     }
