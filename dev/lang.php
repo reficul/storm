@@ -159,6 +159,9 @@ $lang = [
     'storm_ftp_pass' => "FTP Password",
     'storm_ftp_port' => "FTP Port",
     'storm_ftp_timeout' => "FTP Timeout",
-    'storm_ftp_ssh' => "Use SSH"
+    'storm_ftp_ssh' => "Use SSH",
+    'storm_cron_task' => "Cron Task",
+    'storm_cron_task_desc' => "<br>Add this to your cron, set to however often you want it to run.",
+    'menu__storm_configuration_menu' => "Menu",
     //    'storm_apps_select_app' => "Select App"
 ];

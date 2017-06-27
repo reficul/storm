@@ -171,6 +171,13 @@ class _Settings extends \IPS\Patterns\Singleton
             'desc' => 'storm_remote_url_desc',
             'default' => \IPS\Settings::i()->base_url.'applications/storm/interface/sync/sync.php'
         ];
+
+        $e[] = [
+            'type' => 'dummy',
+            'name' => 'storm_cron_task',
+            'default' => '<strong>'.PHP_BINDIR . '/php -d memory_limit=-1 -d max_execution_time=0 ' . \IPS\ROOT_PATH . '/applications/storm/interface/sync/task.php'.'</strong>',
+            'desc' => 'storm_cron_task_desc'
+        ];
         $e[] = [
             'name' => 'storm_ftp_path'
         ];

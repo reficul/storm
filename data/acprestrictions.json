@@ -13,6 +13,9 @@
             "members_manage": "members_manage",
             "storm_create_members_loop": "storm_create_members_loop",
             "storm_create_generation_loop": "storm_create_generation_loop"
+        },
+        "menu": {
+            "menu_manage": "menu_manage"
         }
     },
     "settings": {
