@@ -1,22 +1,22 @@
-.ipsApp.ipsApp_admin{
-    padding-top:97px;
-}
-html[dir="ltr"] #ipsLayout_header {
-    height:100px;
-}
+/*.ipsApp.ipsApp_admin{*/
+    /*padding-top:97px;*/
+/*}*/
+/*html[dir="ltr"] #ipsLayout_header {*/
+    /*height:100px;*/
+/*}*/
 #stormDevBar {
-    background:#417ba3;
-    color: #fff;
+    /*background:#417ba3;*/
+    /*color: #fff;*/
     font-size:14px;
     padding:10px 5px;
-    width: 100%;
+    width: 75%;
 }
-#stormDevBar > li {
-    padding:0px 5px;
-}
+/*#stormDevBar > li {*/
+    /*padding:0px 5px;*/
+/*}*/
 
 #stormDevBar > li > a{
     color:#fff;
-    line-height: 18px;
-    text-align: center;
+    /*line-height: 18px;*/
+    /*text-align: center;*/
 }

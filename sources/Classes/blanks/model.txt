@@ -170,7 +170,7 @@ class _#classname# extends \IPS\Node\Model #implements#
     /**
      * @brief    SEO Title Column
      */
-    public static $seoTitleColumn = '';
+    public static $seoTitleColumn = null;
 
     /**
      * @brief    Content Item Class

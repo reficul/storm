@@ -68,6 +68,104 @@
                 <a href="{url=" app=core&module=support&controller=systemLogs"}">{lang="system_logs"}</a>
             </li>
             <li class="ipsMenu_item">
+                <a href="{url="app=core&module=settings&controller=advanced&do=tasks"}">Tasks</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=core&module=support&controller=sql"}">{lang="sql_toolbox"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=core&module=support&controller=support"}">{lang="module__core_support"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=core&module=support&controller=errorLogs"}">{lang="error_logs"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url="app=core&module=support&controller=support&do=systemCheck"}">{lang="requirements_checker"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=core&module=support&controller=support&do=phpinfo"}">{lang="phpinfo"}</a>
+            </li>
+        </ul>
+    </li>
+    {{if $plugins and \IPS\IN_DEV}}
+    <li>
+        <a href="#elStormDevPlugins_menu" id="elStormDevPlugins" data-ipsMenu>Plugins Dev</a>
+        <ul id="elStormDevPlugins_menu" class="ipsMenu ipsHide">
+            {{foreach $plugins as $plugin}}
+            <li class="ipsMenu_item">
+                <a href="{$plugin['url']}" id="elStorm_menu_{$plugin['name']}">{$plugin['name']}</a>
+            </li>
+            {{endforeach}}
+        </ul>
+    </li>
+    {{endif}}
+    {{if $apps and \IPS\IN_DEV}}
+    <li>
+        <a href="#elStormDev_menu" id="elStormDev" data-ipsMenu>Apps Dev</a>
+        <ul id="elStormDev_menu" class="ipsMenu ipsHide">
+            {{foreach $apps as $app}}
+            <li class="ipsMenu_item">
+                <a href="{$app['url']}" id="elStorm_menu_{$app['name']}">{lang="__app_{$app['name']}"}</a>
+            </li>
+            {{endforeach}}
+        </ul>
+    </li>
+    {{endif}}
+</ul>]]></template>
+ <template template_group="dev" template_name="devBar2" template_data="$apps, $plugins" template_location="admin" template_app="storm"><![CDATA[<ul id="stormDevBar" class="ipsList_inline ipsType_light ">
+    <li>
+        <a href="#elStormDevStormApp_menu" id="elStormDevStormApp" data-ipsMenu>{lang="__app_storm"}</a>
+        <ul id="elStormDevStormApp_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
+
+            <li class="ipsMenu_item">
+                <a href="{url=" app=storm&module=configuration&controller=settings"}">{lang="menu__storm_configuration_settings"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=storm&module=configuration&controller=generator"}">{lang="menu__storm_configuration_generator"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=storm&module=configuration&controller=proxyclass"}">{lang="menu__storm_configuration_proxyclass"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=storm&module=configuration&controller=apps"}">{lang="menu__storm_configuration_apps"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=storm&module=configuration&controller=plugins"}">{lang="menu__storm_configuration_plugins"}</a>
+            </li>
+
+        </ul>
+    </li>
+    <li>
+        <a href="#elStormDevStormAppIPS_menu" id="elStormDevStormAppIPS" data-ipsMenu>IPS</a>
+        <ul id="elStormDevStormAppIPS_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
+            <li class="ipsMenu_item">
+                <a href="https://invisionpower.com/developers/" target="_blank">Dev Docs</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="https://invisionpower.com/4guides/" target="_blank">Guides</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="https://invisionpower.com/forums/forum/503-customization-resources/" target="_blank">Community
+                                                                                                              Forum</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="https://invisionpower.com/release-notes/" target="_blank">Release Notes</a>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a href="#elStormDevSupport_menu" id="elStormDevSupport" data-ipsMenu>{lang="__app_core"}</a>
+        <ul id="elStormDevSupport_menu" class="ipsMenu ipsHide">
+            <li class="ipsMenu_item">
+                <a href="{url=" app=core&module=applications&controller=applications"}">{lang="applications_and_modules"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=core&module=applications&controller=plugins"}">{lang="app_details_plugins"}</a>
+            </li>
+            <li class="ipsMenu_item">
+                <a href="{url=" app=core&module=support&controller=systemLogs"}">{lang="system_logs"}</a>
+            </li>
+            <li class="ipsMenu_item">
                 <a href="{url=" app=core&module=support&controller=sql"}">{lang="sql_toolbox"}</a>
             </li>
             <li class="ipsMenu_item">
@@ -108,7 +206,9 @@
         </ul>
     </li>
     {{endif}}
-</ul>]]></template>
+</ul>
+
+<header>]]></template>
  <template template_group="diff" template_name="diff" template_data="$html" template_location="admin" template_app="storm"><![CDATA[<!DOCTYPE html>
 <html lang="{expression="\IPS\Member::loggedIn()->language()->bcp47()"}" dir="{{if member.language()->isrtl}}rtl{{else}}ltr{{endif}}">
 <head>
@@ -199,174 +299,174 @@
  <template template_group="widgets" template_name="rows" template_data="$data" template_location="front" template_app="storm"><![CDATA[<li>
     <strong>{$data->hash}:</strong> {$data->displayname} on {$data->date} has pushed to {$data->repo}/{$data->branch} - {$data->message}<br><br>
 </li>]]></template>
- <css css_location="front" css_app="storm" css_attributes="" css_path="." css_name="profiler.css">#elStormProfilerTabsContent {
-    background: #fff;
-}
-.stormProfilerCacheLog {
-    cursor:pointer;
-}
-
-.stormProfilerFixed {
-    position:fixed;
-    bottom:0;
-    left:0;
-}
-.stormProfilerFixed .stormProfileTabs {
-    display:none;
-}
-.stormProfile {
-    width:100%;
-    z-index:1500;
-}
-
-.stormProfileButton {
-    position:absolute;
-    right:25px;
-    bottom: 0;
-    background: #000000;
-    color:#fff;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius:0 !important;
-}
-
-.stormProfilerButtonContainer{
-    position:relative;
-}
-
-.stormProfileTabs {
-    height:400px;
-    overflow-y: hidden;
-}
-
-#elStormProfilerTabsContent,
-.stormProfilerPanels,
-.stormProfilerLogs{
-    height:350px;
-    max-height:350px;
-    min-height:350px;
-}
-
-.stormProfilerConsoleSide{
-    height:75px;
-    line-height: 75px;
-    font-weight:bold;
-    text-align: center;
-    margin-left:0px!important;
-}
-
-.stormProfilerConsoleSide span {
-    display: inline-block;
-    vertical-align: middle;
-    line-height: normal;
-}
-
-#stormProfilerDbQueries,
-.stormProfilerDbQueriesConsole,
-.stormProfilerDbQueriesEven {
-    background: #21610B;
-    color:#fff;
-}
-
-.stormProfilerDbQueriesOdd{
-    background: #298A08;
-    color:#fff;
-}
-
-#stormProfilerMemory,
-.stormProfilerMemoryConsole,
-.stormProfilerMemoryEven {
-    background: #0B0B61;
-    color: #fff;
-}
-
-.stormProfilerMemoryOdd {
-    background: #0404B4;
-    color: #fff;
-}
-
-#stormProfilerFiles,
-.stormProfilerFilesConsole,
-.stormProfilerFilesEven {
-    background: #B40404;
-    color: #fff;
-}
-
-.stormProfilerFilesOdd {
-    background: #FF0000;
-    color: #fff;
-}
-
-.stormProfilerFilesAutoConsole,
-.stormProfilerFilesAutoEven {
-    background:#FE2E9A;
-    color:#fff;
-}
-
-.stormProfilerFilesAutoOdd {
-    color:#fff;
-    background:#FA58AC;
-}
-
-#stormProfilerTime,
-.stormProfileTimeConsole,
-.stormProfilerSpeedEven {
-    background: #0B615E;
-    color:#fff;
-}
-
-.stormProfilerSpeedOdd{
-    background: #088A85;
-    color:#fff;
-}
-
-#stormProfilerLog,
-.stormProfilerLogConsole,
-.stormProfilerLogEven {
-    background: #4C0B5F;
-    color:#fff;
-}
-
-.stormProfilerLogOdd {
-    background:#6A0888;
-    color:#fff;
-}
-
-#stormProfilerCache,
-.stormProfilerCacheConsole,
-.stormProfilerCacheEven{
-    background:#610B21;
-    color:#fff;
-}
-
-.stormProfilerCacheOdd{
-    background:#8A0829;
-    color:#fff;
-}
-
-.stormProfilerLogs {
-    margin-left:0 !important;
-    overflow-y: auto;
-}
-
-.stormProfilerSpacer,
-.stormProfilerBaseContainer .stormProfilerBase{
-    margin-bottom: 5px;
-}
-
-.stormProfilerDbQueriesEven code,
-.stormProfilerDbQueriesOdd code {
-    background:#fff;
- }
-
-.stormProfilerBasePointer {
-    cursor: pointer;
-}
-
-.stormActiveTab  {
-    background: #fff !important;
-    color:#000 !important;
-}
+ <css css_location="front" css_app="storm" css_attributes="" css_path="." css_name="profiler.css">#elStormProfilerTabsContent {&#13;
+    background: #fff;&#13;
+}&#13;
+.stormProfilerCacheLog {&#13;
+    cursor:pointer;&#13;
+}&#13;
+&#13;
+.stormProfilerFixed {&#13;
+    position:fixed;&#13;
+    bottom:0;&#13;
+    left:0;&#13;
+}&#13;
+.stormProfilerFixed .stormProfileTabs {&#13;
+    display:none;&#13;
+}&#13;
+.stormProfile {&#13;
+    width:100%;&#13;
+    z-index:1500;&#13;
+}&#13;
+&#13;
+.stormProfileButton {&#13;
+    position:absolute;&#13;
+    right:25px;&#13;
+    bottom: 0;&#13;
+    background: #000000;&#13;
+    color:#fff;&#13;
+    font-size: 16px;&#13;
+    font-weight: bold;&#13;
+    border-radius:0 !important;&#13;
+}&#13;
+&#13;
+.stormProfilerButtonContainer{&#13;
+    position:relative;&#13;
+}&#13;
+&#13;
+.stormProfileTabs {&#13;
+    height:400px;&#13;
+    overflow-y: hidden;&#13;
+}&#13;
+&#13;
+#elStormProfilerTabsContent,&#13;
+.stormProfilerPanels,&#13;
+.stormProfilerLogs{&#13;
+    height:350px;&#13;
+    max-height:350px;&#13;
+    min-height:350px;&#13;
+}&#13;
+&#13;
+.stormProfilerConsoleSide{&#13;
+    height:75px;&#13;
+    line-height: 75px;&#13;
+    font-weight:bold;&#13;
+    text-align: center;&#13;
+    margin-left:0px!important;&#13;
+}&#13;
+&#13;
+.stormProfilerConsoleSide span {&#13;
+    display: inline-block;&#13;
+    vertical-align: middle;&#13;
+    line-height: normal;&#13;
+}&#13;
+&#13;
+#stormProfilerDbQueries,&#13;
+.stormProfilerDbQueriesConsole,&#13;
+.stormProfilerDbQueriesEven {&#13;
+    background: #21610B;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+.stormProfilerDbQueriesOdd{&#13;
+    background: #298A08;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+#stormProfilerMemory,&#13;
+.stormProfilerMemoryConsole,&#13;
+.stormProfilerMemoryEven {&#13;
+    background: #0B0B61;&#13;
+    color: #fff;&#13;
+}&#13;
+&#13;
+.stormProfilerMemoryOdd {&#13;
+    background: #0404B4;&#13;
+    color: #fff;&#13;
+}&#13;
+&#13;
+#stormProfilerFiles,&#13;
+.stormProfilerFilesConsole,&#13;
+.stormProfilerFilesEven {&#13;
+    background: #B40404;&#13;
+    color: #fff;&#13;
+}&#13;
+&#13;
+.stormProfilerFilesOdd {&#13;
+    background: #FF0000;&#13;
+    color: #fff;&#13;
+}&#13;
+&#13;
+.stormProfilerFilesAutoConsole,&#13;
+.stormProfilerFilesAutoEven {&#13;
+    background:#FE2E9A;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+.stormProfilerFilesAutoOdd {&#13;
+    color:#fff;&#13;
+    background:#FA58AC;&#13;
+}&#13;
+&#13;
+#stormProfilerTime,&#13;
+.stormProfileTimeConsole,&#13;
+.stormProfilerSpeedEven {&#13;
+    background: #0B615E;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+.stormProfilerSpeedOdd{&#13;
+    background: #088A85;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+#stormProfilerLog,&#13;
+.stormProfilerLogConsole,&#13;
+.stormProfilerLogEven {&#13;
+    background: #4C0B5F;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+.stormProfilerLogOdd {&#13;
+    background:#6A0888;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+#stormProfilerCache,&#13;
+.stormProfilerCacheConsole,&#13;
+.stormProfilerCacheEven{&#13;
+    background:#610B21;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+.stormProfilerCacheOdd{&#13;
+    background:#8A0829;&#13;
+    color:#fff;&#13;
+}&#13;
+&#13;
+.stormProfilerLogs {&#13;
+    margin-left:0 !important;&#13;
+    overflow-y: auto;&#13;
+}&#13;
+&#13;
+.stormProfilerSpacer,&#13;
+.stormProfilerBaseContainer .stormProfilerBase{&#13;
+    margin-bottom: 5px;&#13;
+}&#13;
+&#13;
+.stormProfilerDbQueriesEven code,&#13;
+.stormProfilerDbQueriesOdd code {&#13;
+    background:#fff;&#13;
+ }&#13;
+&#13;
+.stormProfilerBasePointer {&#13;
+    cursor: pointer;&#13;
+}&#13;
+&#13;
+.stormActiveTab  {&#13;
+    background: #fff !important;&#13;
+    color:#000 !important;&#13;
+}&#13;
 </css>
  <css css_location="admin" css_app="storm" css_attributes="" css_path="devbar" css_name="devbar.css"><![CDATA[/*.ipsApp.ipsApp_admin{*/
     /*padding-top:97px;*/
@@ -379,15 +479,37 @@
     /*color: #fff;*/
     font-size:14px;
     padding:10px 5px;
-    width: 75%;
+    width: 100%;
 }
-/*#stormDevBar > li {*/
-    /*padding:0px 5px;*/
-/*}*/
+#stormDevBar > li {
+    padding:0px 5px;
+}
 
 #stormDevBar > li > a{
     color:#fff;
-    /*line-height: 18px;*/
-    /*text-align: center;*/
+    line-height: 18px;
+    text-align: center;
+}]]></css>
+ <css css_location="admin" css_app="storm" css_attributes="" css_path="devbar" css_name="devbar2.css"><![CDATA[.ipsApp.ipsApp_admin{
+    padding-top:97px;
+}
+html[dir="ltr"] #ipsLayout_header {
+    height:100px;
+}
+#stormDevBar {
+    background:#417ba3;
+    color: #fff;
+    font-size:14px;
+    padding:10px 5px;
+    width: 100%;
+}
+#stormDevBar > li {
+    padding:0px 5px;
+}
+
+#stormDevBar > li > a{
+    color:#fff;
+    line-height: 18px;
+    text-align: center;
 }]]></css>
 </theme>

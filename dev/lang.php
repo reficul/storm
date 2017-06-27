@@ -142,6 +142,7 @@ $lang = [
     'storm_query_values' => 'Values',
     'storm_query_columns' => 'Table Column',
     'storm_query_code' => 'Query Box',
-
+    'storm_member_creation_done' => 'Dummy data creation done',
+    
     //    'storm_apps_select_app' => "Select App"
 ];
