@@ -19,7 +19,7 @@ class storm_hook_adminGlobalThemeHook extends _HOOK_CLASS_
                         array(
                             'selector' => '#ipsLayout_header',
                             'type' => 'add_inside_start',
-                            'content' => '{{$devBar = \IPS\storm\Settings::i()->devBar();}}{$devBar|raw}',
+                            'content' => ' {{$devBar = \IPS\storm\Settings::i()->devBar();}}{$devBar|raw}',
                         ),
                 ),
         ), parent::hookData() );
@@ -40,17 +40,29 @@ class storm_hook_adminGlobalThemeHook extends _HOOK_CLASS_
 
     public function globalTemplate( $title, $html, $location = array() )
     {
+        $version = \IPS\Application::load('core');
+        if( $version->long_version < 101110 )
+        {
+            \IPS\Output::i()->cssFiles = \array_merge(
+                \IPS\Output::i()->cssFiles,
+                \IPS\Theme::i()->css(
+                    'devbar/devbar2.css',
+                    'storm',
+                    'admin'
+                )
+            );
 
-        \IPS\Output::i()->cssFiles = \array_merge(
-            \IPS\Output::i()->cssFiles,
-            \IPS\Theme::i()->css(
-                'devbar/devbar.css',
-                'storm',
-                'admin'
-            )
-        );
-
-        return parent::globalTemplate( $title, $html, $location );
-
+        }
+        else{
+            \IPS\Output::i()->cssFiles = \array_merge(
+                \IPS\Output::i()->cssFiles,
+                \IPS\Theme::i()->css(
+                    'devbar/devbar.css',
+                    'storm',
+                    'admin'
+                )
+            );
+        }
+        return parent::globalTemplate($title, $html, $location);
     }
 }

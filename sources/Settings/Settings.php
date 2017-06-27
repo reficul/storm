@@ -51,9 +51,74 @@ class _Settings extends \IPS\Patterns\Singleton
 
     public static function form()
     {
-        $form = \IPS\storm\Forms::i( static::elements() );
+        $s = \IPS\Settings::i();
+        $form = \IPS\storm\Forms::i( static::elements(), $s );
+        $status = new \IPS\Helpers\Form\Matrix;
+
+        $status->columns = array(
+            'storm_ftp_key' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Text( $key, $value, $data );
+            },
+            'storm_ftp_interface_host' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Text( $key, $value );
+            },
+            'storm_ftp_app' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Node( $key, $value, false, [ 'class' => 'IPS\Application'] );
+            },
+            'storm_ftp_host' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Text( $key, $value );
+            },
+            'storm_ftp_username' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Text( $key, $value, $data );
+            },
+            'storm_ftp_pass' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Password( $key, $value );
+            },
+            'storm_ftp_port' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Number( $key, $value );
+            },
+            'storm_ftp_timeout' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Number( $key, $value );
+            },
+            'storm_ftp_ssh' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Checkbox( $key, $value, $data );
+            }
+        );
+
+        $data = json_decode( $s->storm_ftp_details, true ) ;
+//        print_r($data);exit;
+        if( $data and is_array( $data ) and count( $data ) )
+        {
+            foreach( $data as $val )
+            {
+                if( $val[ 'storm_ftp_key' ] )
+                {
+                    $status->rows[] = $val;
+                }
+            }
+        }
+
+        $form->addMatrix( 'storm_ftp_details', $status );
         if( $vals = $form->values() )
         {
+            $new = [];
+            foreach( $vals['storm_ftp_details'] as $d){
+                if( $d['storm_ftp_app'] instanceof  \IPS\Application ){
+
+                    $d['storm_ftp_app'] = $d['storm_ftp_app']->directory;
+                }
+                $new[] = $d;
+            }
+            $vals['storm_ftp_details'] = json_encode( $new );
             $form->saveAsSettings( $vals );
             \IPS\Output::i()
                        ->redirect( \IPS\Http\Url::internal( 'app=storm&module=configuration&controller=settings' ) );
@@ -64,29 +129,52 @@ class _Settings extends \IPS\Patterns\Singleton
 
     protected static function elements()
     {
+
+//        $key = md5( \IPS\Settings::i()->);
+
         $e[] = [
             'class' => "YesNo",
             'name' => "storm_settings_tab_debug_templates",
-            'default' => \IPS\Settings::i()->storm_settings_tab_debug_templates
+            'tab' => 'general'
         ];
 
         $e[] = [
             'class' => "YesNo",
-            'name' => "storm_settings_tab_debug_css",
-            'default' => \IPS\Settings::i()->storm_settings_tab_debug_css
+            'name' => "storm_settings_tab_debug_css"
         ];
 
         $e[] = [
             'class' => "YesNo",
-            'name' => "storm_settings_tab_debug_css_alt",
-            'default' => \IPS\Settings::i()->storm_settings_tab_debug_css_alt
+            'name' => "storm_settings_tab_debug_css_alt"
         ];
 
         $e[] = [
             'class' => "YesNo",
-            'name' => 'storm_profiler_is_fixed',
-            'default' => \IPS\Settings::i()->storm_profiler_is_fixed
+            'name' => 'storm_profiler_is_fixed'
         ];
+
+        $e[] = [
+            'type' => 'tab',
+            'name' => 'remote'
+        ];
+        $conf = \IPS\Settings::i();
+        $key = sha1($conf->getFromConfGlobal('base_url').$conf->getFromConfGlobal('board_start'));
+        $e[] = [
+            'type' => 'dummy',
+            'name' => 'storm_remote_key_use',
+            'desc' => 'storm_remote_key_use_desc',
+            'default' => $key
+        ];
+        $e[] = [
+            'type' => 'dummy',
+            'name' => 'storm_remote_url',
+            'desc' => 'storm_remote_url_desc',
+            'default' => \IPS\Settings::i()->base_url.'applications/storm/interface/sync/sync.php'
+        ];
+        $e[] = [
+            'name' => 'storm_ftp_path'
+        ];
+
         return $e;
     }
 
@@ -109,7 +197,16 @@ class _Settings extends \IPS\Patterns\Singleton
                 'url' => \IPS\Http\Url::internal( 'app=core&module=applications&controller=plugins&do=developer&id=' . $plugin->id )
             ];
         }
-        return \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar( $applications, $plugins );
+        $version = \IPS\Application::load('core');
+
+        if( $version->long_version < 101110 )
+        {
+            return \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar2( $applications, $plugins );
+        }
+        else{
+            return \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar( $applications, $plugins );
+
+        }
 
 
     }

@@ -8,11 +8,12 @@ if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 
 class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
 {
-    public function execute()
+    public function execute($command='do')
     {
         \IPS\Output::i()->jsVars[ 'storm_table_url' ] = (string)\IPS\Http\Url::internal( 'app=storm&module=configuration&controller=settings' );
-        parent::execute();
+        parent::execute($command);
     }
+
 
     public function addVersionQuery()
     {
