@@ -8,14 +8,15 @@
  * @subpackage  Storm
  * @since       -storm_since_version-
  * @version     -storm_version-
- * forms version 1.0.5
-*/
+ * forms version 1.0.6
+ */
 
 namespace IPS\storm;
 
-if (!defined('\IPS\SUITE_UNIQUE_KEY')) {
-    header((isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] :
-            'HTTP/1.0') . ' 403 Forbidden');
+if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
+{
+    header( ( isset( $_SERVER[ 'SERVER_PROTOCOL' ] ) ? $_SERVER[ 'SERVER_PROTOCOL' ] :
+            'HTTP/1.0' ) . ' 403 Forbidden' );
     exit;
 }
 
@@ -40,16 +41,8 @@ class _Forms
      *
      * @return mixed
      */
-    public static function i(
-        array $elements,
-        $object = null,
-        $name = 'default',
-        $form = null,
-        $id = 'form',
-        $submitLang = 'save',
-        $action = null,
-        $attributes = []
-    ) {
+    public static function i( array $elements, $object = null, $name = 'default', $form = null, $id = 'form', $submitLang = 'save', $action = null, $attributes = [] )
+    {
         if( !$name )
         {
             $name = md5( rand( 1, 100000 ) );
@@ -299,6 +292,7 @@ class _Forms
                     {
                         throw new \InvalidArgumentException( json_encode( $el ) );
                     }
+                    $default = null;
 
                     if( is_object( $this->obj ) )
                     {
@@ -311,12 +305,22 @@ class _Forms
                         else
                         {
                             $prop = $langPrefix . $prop;
-                            $default = $obj->{$prop};
+                            if( $obj->{$prop} )
+                            {
+                                $default = $obj->{$prop};
+                            }
+                        }
+
+                        if( $default == null )
+                        {
+                            if( isset( $el[ 'default' ] ) or isset( $el[ 'def' ] ) )
+                            {
+                                $default = isset( $el[ 'default' ] ) ? $el[ 'default' ] : $el[ 'def' ];
+                            }
                         }
                     }
                     else
                     {
-                        $default = null;
                         if( isset( $el[ 'default' ] ) or isset( $el[ 'def' ] ) )
                         {
                             $default = isset( $el[ 'default' ] ) ? $el[ 'default' ] : $el[ 'def' ];

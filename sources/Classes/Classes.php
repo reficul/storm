@@ -42,7 +42,7 @@ class _Classes extends \IPS\Patterns\Singleton
 
     protected $blanks = null;
 
-    protected $formVersion = "1.0.5";
+    protected $formVersion = "1.0.6";
 
     protected $prefix = '';
 

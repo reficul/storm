@@ -34,7 +34,7 @@ class _Menu extends \IPS\Node\Model
     /**
      * @brief    [ActiveRecord] Database Table
      */
-    public static $databaseTable = 'storm_storm_menu';
+    public static $databaseTable = 'storm_menu';
 
     /**
      * @brief    [ActiveRecord] Database Prefix
@@ -54,12 +54,12 @@ class _Menu extends \IPS\Node\Model
     /**
      * @brief    [Node] Order Database Column
      */
-    public static $databaseColumnOrder = null;
+    public static $databaseColumnOrder = 'order';
 
     /**
      * @brief    [Node] Parent ID Database Column
      */
-    public static $databaseColumnParent = null;
+    public static $databaseColumnParent = 'parent';
 
     /**
      * @brief   [Node] Parent ID Root Value
@@ -118,12 +118,7 @@ class _Menu extends \IPS\Node\Model
      * @brief    The map of permission columns
      */
     public static $permissionMap = array(
-        'view' => 'view',
-        'read' => 2,
-        'add' => 3,
-        'delete' => 4,
-        'reply' => 5,
-        'review' => 6
+        'view' => 'view'
     );
 
     /**
@@ -136,54 +131,16 @@ class _Menu extends \IPS\Node\Model
     );
 
     /**
-     * @brief    [Node] Title search prefix.  If specified, searches for '_title' will be done against the language pack.
-     */
-    public static $titleSearchPrefix = null;
-
-    /**
-     * @brief    [Node] Title prefix.  If specified, will look for a language key with "{$titleLangPrefix}_{$id}" as the key
-     */
-    public static $titleLangPrefix = null;
-
-    /**
-     * @brief    [Node] Prefix string that is automatically prepended to permission matrix language strings
-     */
-    public static $permissionLangPrefix = '';
-
-    /**
-     * @brief    [Node] Moderator Permission
-     */
-    public static $modPerm = '';
-
-    /**
-     * @brief    Follow Area Key
-     */
-    public static $followArea = '';
-
-    /**
      * @brief    Cached URL
      */
     protected $_url = null;
 
     /**
-     * @brief    URL Base
+     * get title
      */
-    public static $urlBase = '';
-
-    /**
-     * @brief    URL Base
-     */
-    public static $urlTemplate = '';
-
-    /**
-     * @brief    SEO Title Column
-     */
-    public static $seoTitleColumn = null;
-
-    /**
-     * @brief    Content Item Class
-     */
-    public static $contentItemClass = null;
+    public function get__title(){
+        return $this->name;
+    }
 
     /**
      * [Node] Add/Edit Form
@@ -193,6 +150,58 @@ class _Menu extends \IPS\Node\Model
      */
     public function form( &$form )
     {
+        $form = \IPS\storm\Forms::i($this->elements(), $this,null, $form);
+    }
+
+    public function elements(){
+
+        $el['prefix'] = 'storm_menu_';
+        $el[] = [
+            'name' => 'name',
+            'required' => true
+        ];
+
+        $el[] = [
+            'name' => 'parent',
+            'class' => 'node',
+            'default' => \IPS\Request::i()->parent ?: $this->parent,
+            'options' => [
+                'class' => 'IPS\storm\Menu'
+            ]
+        ];
+
+        $el[] = [
+            'name' => 'type',
+            'class' => 'Select',
+            'required' => true,
+            'options' => [
+                'options' => [
+                    0 => 'Select a Type',
+                    'int' => 'Internal',
+                    'ext' => 'External'
+                ],
+                'toggles' => [
+                    'int' => ['internal'],
+                    'ext' => ['external']
+                ]
+            ]
+        ];
+
+
+        $el[] = [
+            'name' => 'internal',
+            'required' => true,
+            'def' => $this->url
+        ];
+
+        $el[] = [
+            'name' => 'external',
+            'class' => 'url',
+            'required' => true,
+            'def' => $this->url
+        ];
+
+        return $el;
     }
 
     /**
@@ -203,7 +212,34 @@ class _Menu extends \IPS\Node\Model
      */
     public function formatFormValues( $values )
     {
-        return $values;
+        $new = [];
+
+        foreach( $values as $key => $val ){
+            $key = str_replace( 'storm_menu_', '', $key );
+            $new[$key] = $val;
+        }
+
+//        echo "<pre>";
+//        print_r($new);exit;
+
+        if( $new['parent'] instanceof \IPS\storm\Menu ){
+            $new['parent'] = $new['parent']->id;
+        }
+        else{
+            $new['parent'] = 0;
+        }
+
+        if(  $new['type'] == 'int' ){
+            $new['url'] = $new['internal'];
+        }
+        else{
+            $new['url'] = $new['external'];
+        }
+
+        unset( $new['internal'] );
+        unset( $new['external'] );
+
+        return $new;
     }
 
     /**
@@ -215,5 +251,25 @@ class _Menu extends \IPS\Node\Model
     public function saveForm( $values )
     {
         parent::saveForm( $values );
+    }
+
+    protected function returnData(){
+        return $this->_data;
+    }
+
+    public static function kerching(){
+        $sql = \IPS\Db::i()->select( '*', 'storm_menu' );
+        $menus = new \IPS\Patterns\ActiveRecordIterator( $sql, 'IPS\storm\Menu');
+        $store = [];
+        foreach( $menus as $menu ){
+            $store[ $menu->parent ][] = $menu->returnData();
+        }
+        unset( \IPS\Data\Store::i()->storm_menu );
+        \IPS\Data\Store::i()->storm_menu = $store;
+    }
+
+    public function save(){
+        parent::save();
+        static::kerching();
     }
 }

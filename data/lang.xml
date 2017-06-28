@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="storm" version="30001">
+ <app key="storm" version="30002">
   <word key="__app_storm" js="0">Storm</word>
   <word key="menu__storm_configuration" js="0">Storm</word>
   <word key="menu__storm_configuration_settings" js="0">Settings</word>
@@ -143,5 +143,25 @@
   <word key="storm_query_columns" js="0">Table Column</word>
   <word key="storm_query_code" js="0">Query Box</word>
   <word key="storm_member_creation_done" js="0">Dummy data creation done</word>
+  <word key="storm_remote_key_use" js="0">Remote Key</word>
+  <word key="storm_remote_key_use_desc" js="0"><![CDATA[<br>Use this key in another storm instance to sync apps.]]></word>
+  <word key="storm_remote_url" js="0">Remote Interface</word>
+  <word key="storm_remote_url_desc" js="0"><![CDATA[<br> Use this for the remote interface in another storm instance to sync an app]]></word>
+  <word key="storm_ftp_app" js="0">Remote App</word>
+  <word key="general_tab" js="0">General</word>
+  <word key="remote_tab" js="0">Sync</word>
+  <word key="storm_ftp_path" js="0">FTP Path</word>
+  <word key="storm_ftp_path_desc" js="0">Full path to where the synced file is located.</word>
+  <word key="storm_ftp_key" js="0">Remote Key</word>
+  <word key="storm_ftp_interface_host" js="0">Remote Interface</word>
+  <word key="storm_ftp_host" js="0">FTP Host</word>
+  <word key="storm_ftp_username" js="0">FTP Username</word>
+  <word key="storm_ftp_pass" js="0">FTP Password</word>
+  <word key="storm_ftp_port" js="0">FTP Port</word>
+  <word key="storm_ftp_timeout" js="0">FTP Timeout</word>
+  <word key="storm_ftp_ssh" js="0">Use SSH</word>
+  <word key="storm_cron_task" js="0">Cron Task</word>
+  <word key="storm_cron_task_desc" js="0"><![CDATA[<br>Add this to your cron, set to however often you want it to run.]]></word>
+  <word key="menu__storm_configuration_menu" js="0">Menu</word>
  </app>
 </language>
