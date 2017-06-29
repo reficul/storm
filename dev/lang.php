@@ -163,5 +163,10 @@ $lang = [
     'storm_cron_task' => "Cron Task",
     'storm_cron_task_desc' => "<br>Add this to your cron, set to however often you want it to run.",
     'menu__storm_configuration_menu' => "Menu",
+    'storm_menu_name' => 'Name',
+    'storm_menu_parent' => "Parent",
+    'storm_menu_type' => 'Type',
+    'storm_menu_internal' => 'Url',
+    'storm_menu_external' => 'Url'
     //    'storm_apps_select_app' => "Select App"
 ];

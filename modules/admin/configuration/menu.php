@@ -39,4 +39,25 @@ class _menu extends \IPS\Node\Controller
 		\IPS\Dispatcher::i()->checkAcpPermission( 'menu_manage' );
 		parent::execute();
 	}
+
+	protected function foo(){
+        $sql = \IPS\Db::i()->select( '*', 'storm_menu', null, 'menu_order asc' );
+        $menus = new \IPS\Patterns\ActiveRecordIterator( $sql, 'IPS\storm\Menu');
+        $store = [];
+        foreach( $menus as $menu ){
+            $store[ $menu->parent ][] = $menu->foo();
+        }
+
+        print_r( json_encode( $store ) );exit;
+    }
+    protected function reorder()
+    {
+        $parent = parent::reorder();
+
+        if (\IPS\Request::i()->isAjax()) {
+            \IPS\storm\Menu::kerching();
+        }
+
+        return $parent;
+    }
 }

@@ -185,36 +185,5 @@ class _Settings extends \IPS\Patterns\Singleton
         return $e;
     }
 
-    public function devBar()
-    {
-        $applications = false;
-        //
-        foreach( \IPS\Application::applications() as $apps )
-        {
-            $applications[] = [
-                'name' => $apps->directory,
-                'url' => \IPS\Http\Url::internal( 'app=core&module=applications&controller=developer&appKey=' . $apps->directory )
-            ];
-        }
-        $plugins = false;
-        foreach( \IPS\Plugin::plugins() as $plugin )
-        {
-            $plugins[] = [
-                'name' => $plugin->name,
-                'url' => \IPS\Http\Url::internal( 'app=core&module=applications&controller=plugins&do=developer&id=' . $plugin->id )
-            ];
-        }
-        $version = \IPS\Application::load('core');
 
-        if( $version->long_version < 101110 )
-        {
-            return \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar2( $applications, $plugins );
-        }
-        else{
-            return \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar( $applications, $plugins );
-
-        }
-
-
-    }
 }

@@ -104,22 +104,6 @@ class _Menu extends \IPS\Node\Model
         'prefix' => 'menu_'
     );
 
-    /**
-     * @brief    [Node] App for permission index
-     */
-    public static $permApp = 'storm';
-
-    /**
-     * @brief    [Node] Type for permission index
-     */
-    public static $permType = 'menu';
-
-    /**
-     * @brief    The map of permission columns
-     */
-    public static $permissionMap = array(
-        'view' => 'view'
-    );
 
     /**
      * @brief    Bitwise values for members_bitoptions field
@@ -173,12 +157,11 @@ class _Menu extends \IPS\Node\Model
         $el[] = [
             'name' => 'type',
             'class' => 'Select',
-            'required' => true,
             'options' => [
                 'options' => [
-                    0 => 'Select a Type',
+                    'root' => 'Root',
                     'int' => 'Internal',
-                    'ext' => 'External'
+                    'ext' => 'External',
                 ],
                 'toggles' => [
                     'int' => ['internal'],
@@ -196,7 +179,6 @@ class _Menu extends \IPS\Node\Model
 
         $el[] = [
             'name' => 'external',
-            'class' => 'url',
             'required' => true,
             'def' => $this->url
         ];
@@ -219,8 +201,10 @@ class _Menu extends \IPS\Node\Model
             $new[$key] = $val;
         }
 
-//        echo "<pre>";
-//        print_r($new);exit;
+        if( !$this->id )
+        {
+            $new[ 'original' ] = \IPS\Http\Url::seoTitle( $new[ 'name' ] );
+        }
 
         if( $new['parent'] instanceof \IPS\storm\Menu ){
             $new['parent'] = $new['parent']->id;
@@ -253,23 +237,122 @@ class _Menu extends \IPS\Node\Model
         parent::saveForm( $values );
     }
 
-    protected function returnData(){
+
+    public function getUrl(){
+        if( $this->type === 'root'){
+            return 'elStormDev' . $this->original . 'App';
+        }
+        else if( $this->type == 'int' ){
+            return (string) \IPS\Http\Url::internal( $this->_data['url'] );
+        }
+        else{
+            return (string) \IPS\Http\Url::external( $this->_data['url'] );
+        }
+    }
+
+    public function foo(){
         return $this->_data;
     }
 
+
     public static function kerching(){
-        $sql = \IPS\Db::i()->select( '*', 'storm_menu' );
+        $sql = \IPS\Db::i()->select( '*', 'storm_menu', null, 'menu_order asc' );
         $menus = new \IPS\Patterns\ActiveRecordIterator( $sql, 'IPS\storm\Menu');
         $store = [];
         foreach( $menus as $menu ){
-            $store[ $menu->parent ][] = $menu->returnData();
+            $store[ $menu->parent ][] = [
+                'name' => $menu->name,
+                'url' => $menu->getUrl(),
+                'id' => $menu->id,
+                'ori' => $menu->original
+            ];
         }
         unset( \IPS\Data\Store::i()->storm_menu );
         \IPS\Data\Store::i()->storm_menu = $store;
     }
 
+    public function delete()
+    {
+         $parent = parent::delete();
+         static::kerching();
+         return $parent;
+    }
+
     public function save(){
         parent::save();
         static::kerching();
+    }
+
+    public static function devBar()
+    {
+//        \IPS\Db::i()->update( 'storm_menu', ['menu_delete' => 0 ] );
+        $applications = false;
+        //
+        foreach( \IPS\Application::applications() as $apps )
+        {
+            $applications[] = [
+                'name' => $apps->directory,
+                'url' => \IPS\Http\Url::internal( 'app=core&module=applications&controller=developer&appKey=' . $apps->directory )
+            ];
+        }
+        $plugins = false;
+        foreach( \IPS\Plugin::plugins() as $plugin )
+        {
+            $plugins[] = [
+                'name' => $plugin->name,
+                'url' => \IPS\Http\Url::internal( 'app=core&module=applications&controller=plugins&do=developer&id=' . $plugin->id )
+            ];
+        }
+        $menus = static::getStore();
+        $version = \IPS\Application::load('core');
+
+        $menu = \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar($menus, $applications, $plugins );
+        if( $version->long_version < 101110 )
+        {
+            $menu = \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar2( $menu );
+        }
+
+        return $menu;
+    }
+
+    public static function getStore(){
+        if( !isset( \IPS\Data\Store::i()->storm_menu ) ){
+            static::kerching();
+        }
+
+        return \IPS\Data\Store::i()->storm_menu;
+    }
+
+    /**
+     * [Node] Does the currently logged in user have permission to add a child node to this node?
+     *
+     * @return	bool
+     */
+    public function canAdd()
+    {
+        if( $this->parent != 0 ){
+            return false;
+        }
+
+        return parent::canAdd();
+
+    }
+
+    public function canDelete(){
+        if( !$this->delete ){
+            return false;
+        }
+        return parent::canDelete();
+    }
+
+    public function canCopy(){
+        return false;
+    }
+
+    protected static $menus = "
+{\"0\":[{\"id\":2,\"name\":\"Storm\",\"parent\":0,\"type\":\"root\",\"url\":null,\"order\":1,\"original\":\"storm\",\"delete\":0},{\"id\":3,\"name\":\"IPS\",\"parent\":0,\"type\":\"root\",\"url\":null,\"order\":2,\"original\":\"ips\",\"delete\":0},{\"id\":4,\"name\":\"System\",\"parent\":0,\"type\":\"root\",\"url\":null,\"order\":3,\"original\":\"system\",\"delete\":0},{\"id\":5,\"name\":\"Plugins\",\"parent\":0,\"type\":\"root\",\"url\":null,\"order\":4,\"original\":\"plugins\",\"delete\":0},{\"id\":6,\"name\":\"Apps\",\"parent\":0,\"type\":\"root\",\"url\":null,\"order\":5,\"original\":\"apps\",\"delete\":0}],\"2\":[{\"id\":7,\"name\":\"Settings\",\"parent\":2,\"type\":\"int\",\"url\":\"storm&module=configuration&controller=settings\",\"order\":1,\"original\":\"settings\",\"delete\":0},{\"id\":8,\"name\":\"Dummy Data Generator\",\"parent\":2,\"type\":\"int\",\"url\":\"app=storm&module=configuration&controller=generator\",\"order\":2,\"original\":\"dummy-data-generator\",\"delete\":0},{\"id\":9,\"name\":\"Proxy Class Generator\",\"parent\":2,\"type\":\"int\",\"url\":\"app=storm&module=configuration&controller=proxyclass\",\"order\":3,\"original\":\"proxy-class-generator\",\"delete\":0},{\"id\":10,\"name\":\"App Dev Folder\",\"parent\":2,\"type\":\"int\",\"url\":\"app=storm&module=configuration&controller=apps\",\"order\":4,\"original\":\"app-dev-folder\",\"delete\":0},{\"id\":11,\"name\":\"Plugins Dev Folder\",\"parent\":2,\"type\":\"int\",\"url\":\"app=storm&module=configuration&controller=plugins\",\"order\":5,\"original\":\"plugins-dev-folder\",\"delete\":0},{\"id\":25,\"name\":\"Menu\",\"parent\":2,\"type\":\"int\",\"url\":\"app=storm&module=configuration&controller=menu\",\"order\":6,\"original\":\"menu\",\"delete\":1}],\"3\":[{\"id\":12,\"name\":\"Guides\",\"parent\":3,\"type\":\"ext\",\"url\":\"https:\/\/invisioncommunity.com\/4guides\/how-to-use-ips-community-suite\/first-steps\/terminology-r7\/\",\"order\":11,\"original\":\"guides\",\"delete\":0},{\"id\":13,\"name\":\"Developer Docs\",\"parent\":3,\"type\":\"ext\",\"url\":\"https:\/\/invisioncommunity.com\/developers\/\",\"order\":12,\"original\":\"developer-docs\",\"delete\":0},{\"id\":14,\"name\":\"Community Forums\",\"parent\":3,\"type\":\"ext\",\"url\":\"https:\/\/invisioncommunity.com\/forums\/forum\/503-customization-resources\/\",\"order\":13,\"original\":\"community-forums\",\"delete\":0},{\"id\":15,\"name\":\"Release Notes\",\"parent\":3,\"type\":\"ext\",\"url\":\"https:\/\/invisioncommunity.com\/release-notes\/\",\"order\":14,\"original\":\"release-notes\",\"delete\":0}],\"4\":[{\"id\":16,\"name\":\"Applications\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=applications&controller=applications\",\"order\":15,\"original\":\"applications\",\"delete\":0},{\"id\":17,\"name\":\"Plugins\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=applications&controller=plugins\",\"order\":16,\"original\":\"plugins\",\"delete\":0},{\"id\":18,\"name\":\"Logs\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=support&controller=systemLogs\",\"order\":17,\"original\":\"logs\",\"delete\":0},{\"id\":19,\"name\":\"Task\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=settings&controller=advanced&do=tasks\",\"order\":18,\"original\":\"task\",\"delete\":0},{\"id\":20,\"name\":\"SQL Toolbox\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=support&controller=sql\",\"order\":19,\"original\":\"sql-toolbox\",\"delete\":0},{\"id\":21,\"name\":\"Support\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=support&controller=support\",\"order\":20,\"original\":\"support\",\"delete\":0},{\"id\":22,\"name\":\"Error Logs\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=support&controller=errorLogs\",\"order\":21,\"original\":\"error-logs\",\"delete\":0},{\"id\":23,\"name\":\"System Check\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=support&controller=support&do=systemCheck\",\"order\":22,\"original\":\"system-check\",\"delete\":0},{\"id\":24,\"name\":\"PHP Info\",\"parent\":4,\"type\":\"int\",\"url\":\"app=core&module=support&controller=support&do=phpinfo\",\"order\":23,\"original\":\"php-info\",\"delete\":0}]}";
+
+    public static function importMenu(){
+
     }
 }

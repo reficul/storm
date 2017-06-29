@@ -19,7 +19,7 @@ class storm_hook_adminGlobalThemeHook extends _HOOK_CLASS_
                         array(
                             'selector' => '#ipsLayout_header',
                             'type' => 'add_inside_start',
-                            'content' => ' {{$devBar = \IPS\storm\Settings::i()->devBar();}}{$devBar|raw}',
+                            'content' => ' {{$devBar = \IPS\storm\Menu::devBar(); }}{$devBar|raw}',
                         ),
                 ),
         ), parent::hookData() );

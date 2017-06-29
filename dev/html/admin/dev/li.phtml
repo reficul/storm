@@ -1,0 +1,37 @@
+<ips:template parameters="$menu, $menus, $other=null"/>
+{{ $wrap = true;}}
+<li>
+    <a href="{$menu['url']}_menu" id="{$menu['url']}" data-ipsMenu>{$menu['name']}</a>
+    {{if isset( $menus[ $menu['id'] ] ) }}
+        {{ $wrap = false; }}
+        <ul id="{$menu['url']}_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
+        {{foreach $menus[ $menu['id'] ] as $m }}
+            <li class="ipsMenu_item">
+                <a href="{$m['url']}">{$m['name']}</a>
+            </li>
+        {{endforeach}}
+    {{endif}}
+    {{if $other }}
+        {{if $wrap }}
+        <ul id="{$menu['url']}_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
+            {{$wrap = false;}}
+        {{endif}}
+            {{if $menu['ori'] == 'plugins'}}
+                {{foreach $other as $plugin}}
+                <li class="ipsMenu_item">
+                    <a href="{$plugin['url']}" id="elStorm_menu_{$plugin['name']}">{$plugin['name']}</a>
+                </li>
+                {{endforeach}}
+            {{endif}}
+            {{if $menu['ori'] == 'apps'}}
+                {{foreach $other as $app}}
+                <li class="ipsMenu_item">
+                    <a href="{$app['url']}" id="elStorm_menu_{$app['name']}">{lang="__app_{$app['name']}"}</a>
+                </li>
+                {{endforeach}}
+            {{endif}}
+    {{endif}}
+    {{if !$wrap }}
+        </ul>
+    {{endif}}
+</li>
