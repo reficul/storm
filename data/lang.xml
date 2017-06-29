@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="storm" version="30002">
+ <app key="storm" version="30003">
   <word key="__app_storm" js="0">Storm</word>
   <word key="menu__storm_configuration" js="0">Storm</word>
   <word key="menu__storm_configuration_settings" js="0">Settings</word>
@@ -163,5 +163,10 @@
   <word key="storm_cron_task" js="0">Cron Task</word>
   <word key="storm_cron_task_desc" js="0"><![CDATA[<br>Add this to your cron, set to however often you want it to run.]]></word>
   <word key="menu__storm_configuration_menu" js="0">Menu</word>
+  <word key="storm_menu_name" js="0">Name</word>
+  <word key="storm_menu_parent" js="0">Parent</word>
+  <word key="storm_menu_type" js="0">Type</word>
+  <word key="storm_menu_internal" js="0">Url</word>
+  <word key="storm_menu_external" js="0">Url</word>
  </app>
 </language>

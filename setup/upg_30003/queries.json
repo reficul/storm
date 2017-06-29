@@ -1,5 +1,5 @@
-[
-    {
+{
+    "1": {
         "method": "changeColumn",
         "params": [
             "storm_menu",
@@ -20,7 +20,7 @@
             }
         ]
     },
-    {
+    "2": {
         "method": "addColumn",
         "params": [
             "storm_menu",
@@ -40,7 +40,7 @@
             }
         ]
     },
-    {
+    "3": {
         "method": "changeColumn",
         "params": [
             "storm_menu",
@@ -61,7 +61,7 @@
             }
         ]
     },
-    {
+    "4": {
         "method": "changeColumn",
         "params": [
             "storm_menu",
@@ -82,7 +82,7 @@
             }
         ]
     },
-    {
+    "5": {
         "method": "addColumn",
         "params": [
             "storm_menu",
@@ -102,7 +102,7 @@
             }
         ]
     },
-    {
+    "6": {
         "method": "addColumn",
         "params": [
             "storm_menu",
@@ -122,4 +122,4 @@
             }
         ]
     }
-]
+}
