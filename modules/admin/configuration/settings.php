@@ -44,7 +44,17 @@ class _settings extends \IPS\Dispatcher\Controller
     {
         \IPS\Output::i()->title = "Settings";
         $form = \IPS\storm\Settings::form();
+        \IPS\Output::i()->sidebar['actions']['sync'] = array(
+            'icon'		=> 'syn',
+            'title'		=> 'Sync',
+            'link'		=> \IPS\Http\Url::internal( 'app=storm&module=configuration&controller=settings&do=sync' )
+        );
         \IPS\Output::i()->output = $form;
+    }
+
+    protected function sync(){
+        \IPS\storm\Sync::i()->send();
+        \IPS\Output::i()->redirect( \IPS\Http\Url::internal( 'app=storm&module=configuration&controller=settings'));
     }
 
     // Create new methods with the same name as the 'do' parameter which should execute it

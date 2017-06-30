@@ -169,7 +169,8 @@ class _Sync extends \IPS\Patterns\Singleton
             $trigger = [];
             foreach( $sites as $site )
             {
-                $trigger[ $site->storm_ftp_key ] = [
+                $trigger[ ] = [
+                    'key' => $site->storm_ftp_key,
                     'app' => $site->storm_ftp_app,
                     'url' => $site->storm_ftp_interface_host
                 ];
@@ -196,8 +197,10 @@ class _Sync extends \IPS\Patterns\Singleton
                 }
 
                 $application = \IPS\Application::load( $site->storm_ftp_app );
-                $long = $application->long_version++;
-                $human = $application->version++;
+                $long = $application->long_version;
+                $human = $application->version;
+                $long++;
+                $human++;
                 $application->assignNewVersion( $long, $human );
 
                 try
@@ -234,7 +237,12 @@ class _Sync extends \IPS\Patterns\Singleton
         }
     }
 
-    protected function trigger(array $trigger ){
-
+    protected function trigger(array $triggers ){
+        if( is_array( $triggers ) and count( $triggers) ){
+            foreach( $triggers as $trigger ){
+                $url = \IPS\Http\Url::external( $trigger['url']);
+                $url->setQueryString(['key' => $trigger['key'], 'app' => $trigger['app'] ] )->request(2)->get();
+            }
+        }
     }
 }

@@ -88,6 +88,10 @@ class _Settings extends \IPS\Patterns\Singleton
             {
                 return new \IPS\Helpers\Form\Number( $key, $value );
             },
+            'storm_ftp_secure' => function( $key, $value, $data )
+            {
+                return new \IPS\Helpers\Form\Checkbox( $key, $value, $data );
+            },
             'storm_ftp_ssh' => function( $key, $value, $data )
             {
                 return new \IPS\Helpers\Form\Checkbox( $key, $value, $data );
@@ -184,6 +188,5 @@ class _Settings extends \IPS\Patterns\Singleton
 
         return $e;
     }
-
 
 }
