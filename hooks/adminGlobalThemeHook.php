@@ -28,41 +28,69 @@ class storm_hook_adminGlobalThemeHook extends _HOOK_CLASS_
     /* End Hook Data */
     public function tabs( $tabNames, $activeId, $defaultContent, $url, $tabParam = 'tab' )
     {
-
-        if( \IPS\Request::i()->app == "core" and \IPS\Request::i()->module == "applications" and \IPS\Request::i()->controller == "developer" and !\IPS\Request::i()->do )
-        {
-            $tabNames[ 'class' ] = 'dev_class';
-            $tabNames[ 'DevFolder' ] = 'storm_dev_folder';
-        }
-
-        return parent::tabs( $tabNames, $activeId, $defaultContent, $url, $tabParam );
+	try
+	{
+	
+	        if( \IPS\Request::i()->app == "core" and \IPS\Request::i()->module == "applications" and \IPS\Request::i()->controller == "developer" and !\IPS\Request::i()->do )
+	        {
+	            $tabNames[ 'class' ] = 'dev_class';
+	            $tabNames[ 'DevFolder' ] = 'storm_dev_folder';
+	        }
+	
+	        return parent::tabs( $tabNames, $activeId, $defaultContent, $url, $tabParam );
+	}
+	catch ( \RuntimeException $e )
+	{
+		if ( method_exists( get_parent_class(), __FUNCTION__ ) )
+		{
+			return call_user_func_array( 'parent::' . __FUNCTION__, func_get_args() );
+		}
+		else
+		{
+			throw $e;
+		}
+	}
     }
 
     public function globalTemplate( $title, $html, $location = array() )
     {
-        $version = \IPS\Application::load('core');
-        if( $version->long_version < 101110 )
-        {
-            \IPS\Output::i()->cssFiles = \array_merge(
-                \IPS\Output::i()->cssFiles,
-                \IPS\Theme::i()->css(
-                    'devbar/devbar2.css',
-                    'storm',
-                    'admin'
-                )
-            );
-
-        }
-        else{
-            \IPS\Output::i()->cssFiles = \array_merge(
-                \IPS\Output::i()->cssFiles,
-                \IPS\Theme::i()->css(
-                    'devbar/devbar.css',
-                    'storm',
-                    'admin'
-                )
-            );
-        }
-        return parent::globalTemplate($title, $html, $location);
+	try
+	{
+	        $version = \IPS\Application::load('core');
+	        if( $version->long_version < 101110 )
+	        {
+	            \IPS\Output::i()->cssFiles = \array_merge(
+	                \IPS\Output::i()->cssFiles,
+	                \IPS\Theme::i()->css(
+	                    'devbar/devbar2.css',
+	                    'storm',
+	                    'admin'
+	                )
+	            );
+	
+	        }
+	        else{
+	            \IPS\Output::i()->cssFiles = \array_merge(
+	                \IPS\Output::i()->cssFiles,
+	                \IPS\Theme::i()->css(
+	                    'devbar/devbar.css',
+	                    'storm',
+	                    'admin'
+	                )
+	            );
+	        }
+	        return parent::globalTemplate($title, $html, $location);
+	}
+	catch ( \RuntimeException $e )
+	{
+		if ( method_exists( get_parent_class(), __FUNCTION__ ) )
+		{
+			return call_user_func_array( 'parent::' . __FUNCTION__, func_get_args() );
+		}
+		else
+		{
+			throw $e;
+		}
+	}
     }
 }

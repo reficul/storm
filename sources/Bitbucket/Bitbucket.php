@@ -2,12 +2,12 @@
 
 /**
  * @brief       Bitbucket Class
- * @author      -storm_author-
- * @copyright   -storm_copyright-
+ * @author      <a href='http://codingjungle.com'>Michael Edwards</a>
+ * @copyright   (c) 2017 Michael Edwards
  * @package     IPS Social Suite
  * @subpackage  Storm
  * @since       1.0.4
- * @version     -storm_version-
+ * @version     3.0.4
  */
 
 namespace IPS\storm;
