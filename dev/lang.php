@@ -167,6 +167,7 @@ $lang = [
     'storm_menu_parent' => "Parent",
     'storm_menu_type' => 'Type',
     'storm_menu_internal' => 'Url',
-    'storm_menu_external' => 'Url'
+    'storm_menu_external' => 'Url',
+    'storm_ftp_secure' => "Secure Connection"
     //    'storm_apps_select_app' => "Select App"
 ];
