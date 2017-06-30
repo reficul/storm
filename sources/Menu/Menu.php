@@ -285,9 +285,8 @@ class _Menu extends \IPS\Node\Model
 
     public static function devBar()
     {
-//        \IPS\Db::i()->update( 'storm_menu', ['menu_delete' => 0 ] );
+
         $applications = false;
-        //
         foreach( \IPS\Application::applications() as $apps )
         {
             $applications[] = [
