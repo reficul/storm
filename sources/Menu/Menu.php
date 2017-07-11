@@ -308,7 +308,25 @@ class _Menu extends \IPS\Node\Model
         $menu = \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar($menus, $applications, $plugins );
         if( $version->long_version < 101110 )
         {
+            \IPS\Output::i()->cssFiles = \array_merge(
+                \IPS\Output::i()->cssFiles,
+                \IPS\Theme::i()->css(
+                    'devbar2.css',
+                    'storm',
+                    'admin'
+                )
+            );
             $menu = \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar2( $menu );
+        }
+        else{
+            \IPS\Output::i()->cssFiles = \array_merge(
+                \IPS\Output::i()->cssFiles,
+                \IPS\Theme::i()->css(
+                    'devbar.css',
+                    'storm',
+                    'admin'
+                )
+            );
         }
 
         return $menu;

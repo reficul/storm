@@ -2,12 +2,12 @@
 
 /**
  * @brief       Classes Class
- * @author      <a href='http://codingjungle.com'>Michael Edwards</a>
- * @copyright   (c) 2017 Michael Edwards
+ * @author      -storm_author-
+ * @copyright   -storm_copyright-
  * @package     IPS Social Suite
  * @subpackage  Storm
  * @since       1.0.3
- * @version     3.0.4
+ * @version     -storm_version-
  */
 
 namespace IPS\storm;
