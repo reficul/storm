@@ -242,11 +242,8 @@ class _Menu extends \IPS\Node\Model
         if( $this->type === 'root'){
             return 'elStormDev' . $this->original . 'App';
         }
-        else if( $this->type == 'int' ){
-            return (string) \IPS\Http\Url::internal( $this->_data['url'] );
-        }
         else{
-            return (string) \IPS\Http\Url::external( $this->_data['url'] );
+            return  $this->_data['url'];
         }
     }
 
@@ -264,7 +261,8 @@ class _Menu extends \IPS\Node\Model
                 'name' => $menu->name,
                 'url' => $menu->getUrl(),
                 'id' => $menu->id,
-                'ori' => $menu->original
+                'ori' => $menu->original,
+                'type' => $menu->type
             ];
         }
         unset( \IPS\Data\Store::i()->storm_menu );
@@ -286,6 +284,9 @@ class _Menu extends \IPS\Node\Model
     public static function devBar()
     {
 
+        if( \IPS\Settings::i()->storm_settings_disable_menu ){
+            return;
+        }
         $applications = false;
         foreach( \IPS\Application::applications() as $apps )
         {
@@ -303,30 +304,29 @@ class _Menu extends \IPS\Node\Model
             ];
         }
         $menus = static::getStore();
+        $newMenus = [];
+        if( isset( $menus[0] ) ){
+            foreach( $menus[0] as $roots ){
+                $newMenus[0][] = $roots;
+                if( isset( $menus[$roots['id']])){
+                    foreach( $menus[$roots['id']] as $child ){
+                        if( $child['type'] == 'int'){
+                            $child['url'] = \IPS\Http\Url::internal( $child['url'] );
+                        }
+                        else{
+                            $child['url'] = \IPS\Http\Url::external( $child['url'] );
+                        }
+                        $newMenus[$roots['id']][] = $child;
+                    }
+                }
+            }
+        }
         $version = \IPS\Application::load('core');
-
-        $menu = \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar($menus, $applications, $plugins );
+        $menu = \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar($newMenus, $applications, $plugins );
         if( $version->long_version < 101110 )
         {
-            \IPS\Output::i()->cssFiles = \array_merge(
-                \IPS\Output::i()->cssFiles,
-                \IPS\Theme::i()->css(
-                    'devbar2.css',
-                    'storm',
-                    'admin'
-                )
-            );
+
             $menu = \IPS\Theme::i()->getTemplate( 'dev', 'storm', 'admin' )->devBar2( $menu );
-        }
-        else{
-            \IPS\Output::i()->cssFiles = \array_merge(
-                \IPS\Output::i()->cssFiles,
-                \IPS\Theme::i()->css(
-                    'devbar.css',
-                    'storm',
-                    'admin'
-                )
-            );
         }
 
         return $menu;

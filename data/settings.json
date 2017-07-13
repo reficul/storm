@@ -12,6 +12,10 @@
         "default": ""
     },
     {
+        "key": "storm_settings_disable_menu",
+        "default": ""
+    },
+    {
         "key": "storm_settings_tab_debug_css",
         "default": ""
     },

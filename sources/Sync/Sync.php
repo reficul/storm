@@ -161,6 +161,7 @@ class _Sync extends \IPS\Patterns\Singleton
 
     public function send()
     {
+        set_time_limit(0);
         $s = \IPS\Settings::i();
         $sites = json_decode( $s->storm_ftp_details );
 

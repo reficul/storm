@@ -39,29 +39,33 @@ class storm_hook_adminGlobalThemeHook extends _HOOK_CLASS_
     public function globalTemplate( $title, $html, $location = [] )
     {
 
-        $version = \IPS\Application::load( 'core' );
-        if ( $version->long_version < 101110 ) {
-            \IPS\Output::i()->cssFiles = \array_merge(
-                \IPS\Output::i()->cssFiles,
-                \IPS\Theme::i()->css(
-                    'devbar/devbar2.css',
-                    'storm',
-                    'admin'
-                )
-            );
+        if( !\IPS\Settings::i()->storm_settings_disable_menu)
+        {
+            $version = \IPS\Application::load( 'core' );
+            if( $version->long_version < 101110 )
+            {
+                \IPS\Output::i()->cssFiles = \array_merge(
+                    \IPS\Output::i()->cssFiles,
+                    \IPS\Theme::i()->css(
+                        'devbar/devbar2.css',
+                        'storm',
+                        'admin'
+                    )
+                );
 
+            }
+            else
+            {
+                \IPS\Output::i()->cssFiles = \array_merge(
+                    \IPS\Output::i()->cssFiles,
+                    \IPS\Theme::i()->css(
+                        'devbar/devbar.css',
+                        'storm',
+                        'admin'
+                    )
+                );
+            }
         }
-        else {
-            \IPS\Output::i()->cssFiles = \array_merge(
-                \IPS\Output::i()->cssFiles,
-                \IPS\Theme::i()->css(
-                    'devbar/devbar.css',
-                    'storm',
-                    'admin'
-                )
-            );
-        }
-
         return parent::globalTemplate( $title, $html, $location );
 
     }

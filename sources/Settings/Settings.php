@@ -158,6 +158,11 @@ class _Settings extends \IPS\Patterns\Singleton
         ];
 
         $e[] = [
+            'class' => 'YesNo',
+            'name' => 'storm_settings_disable_menu'
+        ];
+
+        $e[] = [
             'type' => 'tab',
             'name' => 'remote'
         ];

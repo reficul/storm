@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="storm" version="30005">
+ <app key="storm" version="30006">
   <word key="__app_storm" js="0">Storm</word>
   <word key="menu__storm_configuration" js="0">Storm</word>
   <word key="menu__storm_configuration_settings" js="0">Settings</word>
@@ -169,5 +169,7 @@
   <word key="storm_menu_internal" js="0">Url</word>
   <word key="storm_menu_external" js="0">Url</word>
   <word key="storm_ftp_secure" js="0">Secure Connection</word>
+  <word key="storm_settings_disable_menu" js="0">Disable Menu</word>
+  <word key="storm_settings_disable_menu_desc" js="0">Disables the header menu.</word>
  </app>
 </language>
