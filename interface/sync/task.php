@@ -5,4 +5,4 @@ require_once str_replace(
     )
     ) . 'init.php';
 \IPS\Session\Front::i();
-\IPS\storm\Sync::i()->send();
+\IPS\storm\Sync::send();

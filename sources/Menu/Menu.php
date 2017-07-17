@@ -49,7 +49,7 @@ class _Menu extends \IPS\Node\Model
     /**
      * @brief    [ActiveRecord] Database ID Fields
      */
-    protected static $databaseIdFields = [ 'menu_id' ];
+    protected static $databaseIdFields = [ 'menu_id', 'menu_name' ];
 
     /**
      * @brief    [Node] Order Database Column
@@ -251,7 +251,6 @@ class _Menu extends \IPS\Node\Model
         return $this->_data;
     }
 
-
     public static function kerching(){
         $sql = \IPS\Db::i()->select( '*', 'storm_menu', null, 'menu_order asc' );
         $menus = new \IPS\Patterns\ActiveRecordIterator( $sql, 'IPS\storm\Menu');
@@ -366,7 +365,7 @@ class _Menu extends \IPS\Node\Model
         return false;
     }
 
-    public static $installMenus = '{"0":[{"id":2,"name":"Storm","parent":0,"type":"root","url":null,"order":1,"original":"storm","delete":0},{"id":3,"name":"IPS","parent":0,"type":"root","url":null,"order":2,"original":"ips","delete":0},{"id":4,"name":"System","parent":0,"type":"root","url":null,"order":3,"original":"system","delete":0},{"id":5,"name":"Plugins","parent":0,"type":"root","url":null,"order":4,"original":"plugins","delete":0},{"id":6,"name":"Apps","parent":0,"type":"root","url":null,"order":5,"original":"apps","delete":0}],"2":[{"id":7,"name":"Settings","parent":2,"type":"int","url":"app=storm&module=configuration&controller=settings","order":1,"original":"settings","delete":0},{"id":8,"name":"Dummy Data Generator","parent":2,"type":"int","url":"app=storm&module=configuration&controller=generator","order":2,"original":"dummy-data-generator","delete":0},{"id":9,"name":"Proxy Class Generator","parent":2,"type":"int","url":"app=storm&module=configuration&controller=proxyclass","order":3,"original":"proxy-class-generator","delete":0},{"id":10,"name":"App Dev Folder","parent":2,"type":"int","url":"app=storm&module=configuration&controller=apps","order":4,"original":"app-dev-folder","delete":0},{"id":11,"name":"Plugins Dev Folder","parent":2,"type":"int","url":"app=storm&module=configuration&controller=plugins","order":5,"original":"plugins-dev-folder","delete":0},{"id":25,"name":"Menu","parent":2,"type":"int","url":"app=storm&module=configuration&controller=menu","order":6,"original":"menu","delete":1}],"3":[{"id":12,"name":"Guides","parent":3,"type":"ext","url":"https:\/\/invisioncommunity.com\/4guides\/how-to-use-ips-community-suite\/first-steps\/terminology-r7\/","order":11,"original":"guides","delete":0},{"id":13,"name":"Developer Docs","parent":3,"type":"ext","url":"https:\/\/invisioncommunity.com\/developers\/","order":12,"original":"developer-docs","delete":0},{"id":14,"name":"Community Forums","parent":3,"type":"ext","url":"https:\/\/invisioncommunity.com\/forums\/forum\/503-customization-resources\/","order":13,"original":"community-forums","delete":0},{"id":15,"name":"Release Notes","parent":3,"type":"ext","url":"https:\/\/invisioncommunity.com\/release-notes\/","order":14,"original":"release-notes","delete":0}],"4":[{"id":16,"name":"Applications","parent":4,"type":"int","url":"app=core&module=applications&controller=applications","order":15,"original":"applications","delete":0},{"id":17,"name":"Plugins","parent":4,"type":"int","url":"app=core&module=applications&controller=plugins","order":16,"original":"plugins","delete":0},{"id":18,"name":"Logs","parent":4,"type":"int","url":"app=core&module=support&controller=systemLogs","order":17,"original":"logs","delete":0},{"id":19,"name":"Task","parent":4,"type":"int","url":"app=core&module=settings&controller=advanced&do=tasks","order":18,"original":"task","delete":0},{"id":20,"name":"SQL Toolbox","parent":4,"type":"int","url":"app=core&module=support&controller=sql","order":19,"original":"sql-toolbox","delete":0},{"id":21,"name":"Support","parent":4,"type":"int","url":"app=core&module=support&controller=support","order":20,"original":"support","delete":0},{"id":22,"name":"Error Logs","parent":4,"type":"int","url":"app=core&module=support&controller=errorLogs","order":21,"original":"error-logs","delete":0},{"id":23,"name":"System Check","parent":4,"type":"int","url":"app=core&module=support&controller=support&do=systemCheck","order":22,"original":"system-check","delete":0},{"id":24,"name":"PHP Info","parent":4,"type":"int","url":"app=core&module=support&controller=support&do=phpinfo","order":23,"original":"php-info","delete":0}]}';
+    public static $installMenus = '{"0":[{"id":2,"name":"Storm","parent":0,"type":"root","url":null,"order":1,"original":"storm","delete":0},{"id":3,"name":"IPS","parent":0,"type":"root","url":null,"order":2,"original":"ips","delete":0},{"id":4,"name":"System","parent":0,"type":"root","url":null,"order":3,"original":"system","delete":0},{"id":5,"name":"Plugins","parent":0,"type":"root","url":null,"order":4,"original":"plugins","delete":0},{"id":6,"name":"Apps","parent":0,"type":"root","url":null,"order":5,"original":"apps","delete":0}],"2":[{"id":7,"name":"Settings","parent":2,"type":"int","url":"app=storm&module=configuration&controller=settings","order":1,"original":"settings","delete":0},{"id":40000,"name":"Sync","parent":1,"type":"int","url":"app=storm&module=configuration&controller=sync","order":28,"original":"sync","delete":0},{"id":8,"name":"Dummy Data Generator","parent":2,"type":"int","url":"app=storm&module=configuration&controller=generator","order":2,"original":"dummy-data-generator","delete":0},{"id":9,"name":"Proxy Class Generator","parent":2,"type":"int","url":"app=storm&module=configuration&controller=proxyclass","order":3,"original":"proxy-class-generator","delete":0},{"id":10,"name":"App Dev Folder","parent":2,"type":"int","url":"app=storm&module=configuration&controller=apps","order":4,"original":"app-dev-folder","delete":0},{"id":11,"name":"Plugins Dev Folder","parent":2,"type":"int","url":"app=storm&module=configuration&controller=plugins","order":5,"original":"plugins-dev-folder","delete":0},{"id":25,"name":"Menu","parent":2,"type":"int","url":"app=storm&module=configuration&controller=menu","order":6,"original":"menu","delete":1}],"3":[{"id":12,"name":"Guides","parent":3,"type":"ext","url":"https:\/\/invisioncommunity.com\/4guides\/how-to-use-ips-community-suite\/first-steps\/terminology-r7\/","order":11,"original":"guides","delete":0},{"id":13,"name":"Developer Docs","parent":3,"type":"ext","url":"https:\/\/invisioncommunity.com\/developers\/","order":12,"original":"developer-docs","delete":0},{"id":14,"name":"Community Forums","parent":3,"type":"ext","url":"https:\/\/invisioncommunity.com\/forums\/forum\/503-customization-resources\/","order":13,"original":"community-forums","delete":0},{"id":15,"name":"Release Notes","parent":3,"type":"ext","url":"https:\/\/invisioncommunity.com\/release-notes\/","order":14,"original":"release-notes","delete":0}],"4":[{"id":16,"name":"Applications","parent":4,"type":"int","url":"app=core&module=applications&controller=applications","order":15,"original":"applications","delete":0},{"id":17,"name":"Plugins","parent":4,"type":"int","url":"app=core&module=applications&controller=plugins","order":16,"original":"plugins","delete":0},{"id":18,"name":"Logs","parent":4,"type":"int","url":"app=core&module=support&controller=systemLogs","order":17,"original":"logs","delete":0},{"id":19,"name":"Task","parent":4,"type":"int","url":"app=core&module=settings&controller=advanced&do=tasks","order":18,"original":"task","delete":0},{"id":20,"name":"SQL Toolbox","parent":4,"type":"int","url":"app=core&module=support&controller=sql","order":19,"original":"sql-toolbox","delete":0},{"id":21,"name":"Support","parent":4,"type":"int","url":"app=core&module=support&controller=support","order":20,"original":"support","delete":0},{"id":22,"name":"Error Logs","parent":4,"type":"int","url":"app=core&module=support&controller=errorLogs","order":21,"original":"error-logs","delete":0},{"id":23,"name":"System Check","parent":4,"type":"int","url":"app=core&module=support&controller=support&do=systemCheck","order":22,"original":"system-check","delete":0},{"id":24,"name":"PHP Info","parent":4,"type":"int","url":"app=core&module=support&controller=support&do=phpinfo","order":23,"original":"php-info","delete":0}]}';
 
     public static function importMenus( $menus ){
         if( !is_array( $menus ) ){
@@ -390,6 +389,8 @@ class _Menu extends \IPS\Node\Model
                         $children = $menus[$id];
                         foreach( $children as $child ){
                             unset( $child['parent'] );
+                            unset( $child['id'] );
+
                             $c = new \IPS\storm\Menu;
                             $c->parent = $m->id;
                             foreach( $child as $k => $v ){
@@ -399,9 +400,35 @@ class _Menu extends \IPS\Node\Model
                         }
                     }
                 }
+
                 \IPS\storm\Menu::kerching();
 
             }
         }
+    }
+
+    public static function addMenu( $menu ){
+        $parent = $menu['parent'];
+
+        try{
+
+            if( $parent === 0 ){
+                $parent = 0;
+            }
+            else {
+                $parent = \IPS\Db::i()->select( '*', 'storm_menu', [ 'menu_name = ?', $parent ] )->first();
+                $parent = $parent['menu_id'];
+            }
+
+            unset( $menu['parent'] );
+            $menus = new \IPS\storm\Menu;
+            $menus->parent = $parent;
+            foreach( $menu as $k => $m ){
+                $menus->{$k} = $m;
+            }
+
+            $menus->save();
+        }
+        catch( \Exception $e ){}
     }
 }

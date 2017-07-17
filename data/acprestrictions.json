@@ -16,6 +16,9 @@
         },
         "menu": {
             "menu_manage": "menu_manage"
+        },
+        "sync": {
+            "sync_manage": "sync_manage"
         }
     },
     "settings": {

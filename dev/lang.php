@@ -170,6 +170,7 @@ $lang = [
     'storm_menu_external' => 'Url',
     'storm_ftp_secure' => "Secure Connection",
     'storm_settings_disable_menu' => "Disable Menu",
-    'storm_settings_disable_menu_desc' => "Disables the header menu."
+    'storm_settings_disable_menu_desc' => "Disables the header menu.",
+    'menu__storm_configuration_sync' => "Sync"
     //    'storm_apps_select_app' => "Select App"
 ];
