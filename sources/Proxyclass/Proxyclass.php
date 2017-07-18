@@ -90,7 +90,11 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         $content = \file_get_contents( $file );
         $content = \preg_replace( '!/\*.*?\*/!s', '', $content );
         $content = \preg_replace( '/\n\s*\n/', "\n", $content );
-
+        preg_match( '#\$databaseTable(.*?)\=(.*?)[\'|"](.*?)[\'|"]\;#msu', $content, $match);
+        $db = null;
+        if( isset( $match[3] ) ){
+            $db = $match[3];
+        }
         \preg_match( '/namespace(.+?)([^\;]+)/', $content, $matched );
 
         $namespace = null;
@@ -99,9 +103,9 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         {
             $namespace = $matched[ 0 ];
         }
-
         $regEx = '#(?:(?<!\w))(?:[^\w]|\s+)(?:(?:(?:abstract|final|static)\s+)*)class\s+([-a-zA-Z0-9_]+)?#';
-        $run = function( $matches ) use ( $namespace, $save )
+
+        $run = function( $matches ) use ( $namespace, $save, $db )
         {
             if( isset( $matches[ 1 ] ) )
             {
@@ -113,7 +117,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                     $alt = \str_replace( [
                         "\\",
                         " ",
-                        ";"
+                        ";",
                     ], "_", $namespace );
 
                     if( !\is_file( $save . $alt . '.php' ) )
@@ -125,8 +129,36 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                             $content .= $namespace . ";\n";
                         }
                     }
+                    $extra = '';
+                    $testClass = \str_replace( 'namespace ', '', $namespace ) . '\\' . $class;
 
-                    $content .= str_replace( '_', '', $matches[ 0 ] ) . ' extends ' . $append . '{}' . "\n";
+                    //took less than 5 minutes to implement this 'ultra complex' code
+                    try
+                    {
+                        if( $db and method_exists( $testClass, 'db' ) )
+                        {
+                            if( $testClass::db()->checkForTable( $testClass::$databaseTable ) )
+                            {
+                                $foo = $testClass::db()->getTableDefinition( $testClass::$databaseTable );
+                                if( isset( $foo[ 'columns' ] ) )
+                                {
+                                    foreach( $foo[ 'columns' ] as $key => $val )
+                                    {
+                                        if( mb_substr( $key, 0, mb_strlen( $testClass::$databasePrefix ) ) ==
+                                            $testClass::$databasePrefix
+                                        )
+                                        {
+                                            $key = mb_substr( $key, mb_strlen( $testClass::$databasePrefix ) );
+                                        }
+                                        $extra .= "public \${$key} = '';\n";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch( \Exception $e ){};
+
+                    $content .= str_replace( '_', '', $matches[ 0 ] ) . ' extends ' . $append . '{' . PHP_EOL . $extra . '}' . "\n";
                     $createdClass[ \str_replace( 'namespace ', '', $namespace ) ][] = $class;
 
                     \file_put_contents( $save . $alt . ".php", $content, FILE_APPEND );
@@ -193,7 +225,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
             'init.php',
             'error.php',
             '404error.php',
-            'StormTemplates'
+            'StormTemplates',
         ];
 
         $filter = function( $file, $key, $iterator ) use ( $exclude )
