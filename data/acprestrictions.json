@@ -19,6 +19,9 @@
         },
         "sync": {
             "sync_manage": "sync_manage"
+        },
+        "guide": {
+            "guide_manage": "guide_manage"
         }
     },
     "settings": {

@@ -9,22 +9,19 @@ class storm_hook_adminGlobalThemeHook extends _HOOK_CLASS_
 {
 
     /* !Hook Data - DO NOT REMOVE */
-    public static function hookData()
-    {
-        return array_merge_recursive( [
-                                          'globalTemplate' =>
-                                              [
-                                                  0 =>
-                                                      [
-                                                          'selector' => '#ipsLayout_header',
-                                                          'type'     => 'add_inside_start',
-                                                          'content'  => ' {{$devBar = \IPS\storm\Menu::devBar(); }}{$devBar|raw}',
-                                                      ],
-                                              ],
-                                      ], parent::hookData() );
-    }
-
-    /* End Hook Data */
+public static function hookData() {
+ return array_merge_recursive( array (
+  'globalTemplate' => 
+  array (
+    0 => 
+    array (
+      'selector' => '#ipsLayout_header',
+      'type' => 'add_inside_start',
+      'content' => '{{$devBar = \IPS\storm\Menu::devBar(); }}{$devBar|raw}',
+    ) )
+), parent::hookData() );
+}
+/* End Hook Data */
     public function tabs( $tabNames, $activeId, $defaultContent, $url, $tabParam = 'tab' )
     {
         if ( \IPS\Request::i()->app == "core" and \IPS\Request::i()->module == "applications" and \IPS\Request::i()->controller == "developer" and !\IPS\Request::i()->do ) {
@@ -66,7 +63,9 @@ class storm_hook_adminGlobalThemeHook extends _HOOK_CLASS_
                 );
             }
         }
-        return parent::globalTemplate( $title, $html, $location );
+        $parent = parent::globalTemplate( $title, $html, $location );
+        $parent = \str_replace( '</body>', "<!--ipsQueryLog--></body>", $parent);
+        return $parent;
 
     }
 }

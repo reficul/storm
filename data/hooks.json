@@ -51,10 +51,6 @@
         "type": "S",
         "class": "\\IPS\\Theme\\class_core_global_global"
     },
-    "Output": {
-        "type": "C",
-        "class": "\\IPS\\Output"
-    },
     "adminGlobalThemeHook": {
         "type": "S",
         "class": "\\IPS\\Theme\\class_core_admin_global"
@@ -62,5 +58,9 @@
     "Javascript": {
         "type": "C",
         "class": "\\IPS\\Output\\Javascript"
+    },
+    "frontGlobal": {
+        "type": "S",
+        "class": "\\IPS\\Theme\\class_core_front_global"
     }
 }

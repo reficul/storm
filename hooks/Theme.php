@@ -29,10 +29,7 @@ class storm_hook_Theme extends _HOOK_CLASS_
 
     protected static function runDebugTemplate( $functionName, $content )
     {
-        if ( ( mb_strpos( $functionName,
-                          'css_' ) === false and \IPS\Settings::i()->storm_settings_tab_debug_templates ) or ( mb_strpos( $functionName,
-                                                                                                                          'css_' ) !== false and \IPS\Settings::i()->storm_settings_tab_debug_css )
-        ) {
+        if ( ( mb_strpos( $functionName, 'css_' ) === false and \IPS\Settings::i()->storm_settings_tab_debug_templates ) or ( mb_strpos( $functionName, 'css_' ) !== false and \IPS\Settings::i()->storm_settings_tab_debug_css ) ) {
             $dir = \IPS\ROOT_PATH . "/StormTemplates";
 
             if ( !is_dir( $dir ) ) {
@@ -44,7 +41,7 @@ class storm_hook_Theme extends _HOOK_CLASS_
             $fname = str_replace( "/", "_", $functionName );
             $file = $dir . "/" . $fname . ".php";
             $hash = false;
-            $content = preg_replace( "#<!--(.*?)-->#", '', $content );
+            //$content = preg_replace( "#<!--(.*?)-->#", '', $content );
 
             if ( file_exists( $file ) ) {
                 $hash = md5_file( $file );
