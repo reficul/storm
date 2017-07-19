@@ -165,7 +165,7 @@
                         "type": "primary",
                         "name": "PRIMARY",
                         "columns": [
-                            "id"
+                            "sync_id"
                         ],
                         "length": [
                             null

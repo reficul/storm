@@ -12,16 +12,22 @@ class storm_hook_Javascript extends _HOOK_CLASS_
     {
         parent::save();
         $path = \IPS\ROOT_PATH . '/plugins/' . $this->plugin;
-        $it = new \RecursiveDirectoryIterator( $path, \RecursiveDirectoryIterator::SKIP_DOTS );
-        $files = new \RecursiveIteratorIterator( $it, \RecursiveIteratorIterator::CHILD_FIRST );
-        foreach ( $files as $file ) {
-            if ( $file->isDir() ) {
-                rmdir( $file->getRealPath() );
+        if( is_file( $path ) )
+        {
+            $it = new \RecursiveDirectoryIterator( $path, \RecursiveDirectoryIterator::SKIP_DOTS );
+            $files = new \RecursiveIteratorIterator( $it, \RecursiveIteratorIterator::CHILD_FIRST );
+            foreach( $files as $file )
+            {
+                if( $file->isDir() )
+                {
+                    rmdir( $file->getRealPath() );
+                }
+                else
+                {
+                    unlink( $file->getRealPath() );
+                }
             }
-            else {
-                unlink( $file->getRealPath() );
-            }
+            rmdir( $path );
         }
-        rmdir( $path );
     }
 }
