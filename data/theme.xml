@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<theme name="Default" author_name="Invision Power Services, Inc" author_url="http://www.invisionpower.com">
+<theme name="Default" author_name="Invision Power Services, Inc" author_url="https://www.invisioncommunity.com">
  <template template_group="css" template_name="css" template_data="$url" template_location="front" template_app="storm"><![CDATA[
 <link rel='stylesheet' href='{expression="\IPS\Http\Url::external( $url )->setQueryString( 'v', \IPS\SUITE_UNIQUE_KEY )"}' media='all'>
 
@@ -31,9 +31,7 @@
             {{endif}}
         {{endforeach}}
     {{endif}}
- </ul>
-
-<header>]]></template>
+ </ul>]]></template>
  <template template_group="dev" template_name="devBar2" template_data="$menu" template_location="admin" template_app="storm"><![CDATA[{$menu|raw}
 <header>]]></template>
  <template template_group="dev" template_name="li" template_data="$menu, $menus, $other=null" template_location="admin" template_app="storm"><![CDATA[{{ $wrap = true;}}
@@ -330,7 +328,9 @@
     background: #fff !important;&#13;
     color:#000 !important;&#13;
 }&#13;
-</css>
+html[dir=&quot;ltr&quot;] body {&#13;
+    margin-right: 0;&#13;
+}</css>
  <css css_location="admin" css_app="storm" css_attributes="" css_path="devbar" css_name="devbar.css"><![CDATA[/*.ipsApp.ipsApp_admin{*/
     /*padding-top:97px;*/
 /*}*/

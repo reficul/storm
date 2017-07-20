@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="storm" version="30007">
+ <app key="storm" version="30008">
   <word key="__app_storm" js="0">Storm</word>
   <word key="menu__storm_configuration" js="0">Storm</word>
   <word key="menu__storm_configuration_settings" js="0">Settings</word>
