@@ -62,5 +62,9 @@
     "frontGlobal": {
         "type": "S",
         "class": "\\IPS\\Theme\\class_core_front_global"
+    },
+    "Settings": {
+        "type": "C",
+        "class": "\\IPS\\Settings"
     }
 }

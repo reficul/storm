@@ -70,6 +70,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         }
         else
         {
+            $this->buildConstants();
             return null;
         }
     }
@@ -114,24 +115,10 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                     $content = '';
                     $append = \ltrim( $matches[ 1 ], '\\' );
                     $class = \str_replace( '_', '', \ltrim( $matches[ 1 ], '\\' ) );
-                    $alt = \str_replace( [
-                        "\\",
-                        " ",
-                        ";",
-                    ], "_", $namespace );
 
-                    if( !\is_file( $save . $alt . '.php' ) )
-                    {
-                        $content = "<?php\n\n";
-
-                        if( $namespace )
-                        {
-                            $content .= $namespace . ";\n";
-                        }
-                    }
                     $extra = '';
                     $testClass = \str_replace( 'namespace ', '', $namespace ) . '\\' . $class;
-
+                    $isSettings = false;
                     //took less than 5 minutes to implement this 'ultra complex' code
                     try
                     {
@@ -155,9 +142,36 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                                 }
                             }
                         }
+
+                        if( $testClass === 'IPS\Settings' ){
+                            $isSettings = true;
+                            $load = $testClass::i()->getData();
+                            foreach( $load as $key => $val ){
+                                $extra .= "public \${$key} = '';\n";
+                            }
+                        }
                     }
                     catch( \Exception $e ){};
 
+                    if( !$isSettings ) {
+                        $alt = \str_replace( [
+                            "\\",
+                            " ",
+                            ";",
+                        ], "_", $namespace );
+                    }
+                    else{
+                        $alt = 'IPS_Settings_lone';
+                    }
+                    if( !\is_file( $save . $alt . '.php' ) )
+                    {
+                        $content = "<?php\n\n";
+
+                        if( $namespace )
+                        {
+                            $content .= $namespace . ";\n";
+                        }
+                    }
                     $content .= str_replace( '_', '', $matches[ 0 ] ) . ' extends ' . $append . '{' . PHP_EOL . $extra . '}' . "\n";
                     $createdClass[ \str_replace( 'namespace ', '', $namespace ) ][] = $class;
 
@@ -168,6 +182,48 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         };
         preg_replace_callback( $regEx, $run, $content, 1 );
 
+    }
+
+    public function buildConstants(){
+        $load = \IPS\IPS::defaultConstants();
+        $ds = DIRECTORY_SEPARATOR;
+        $root = \IPS\ROOT_PATH;
+        $save = $root . $ds . $this->save . $ds;
+        $extra = "\n";
+        foreach( $load as $key => $val ){
+            if( !is_numeric( $val ) ){
+                $val = "'".$val."'";
+            }
+            $extra .= 'define( "IPS\\'.$key.'",'. $val.");\n";
+        }
+        $php = <<<EOF
+<?php
+{$extra}
+EOF;
+        \file_put_contents( $save .  "IPS_Constants_lone.php", $php );
+        \chmod( $save .  "IPS_Constants_lone.php", 0777 );
+    }
+
+    public function generateSettings(){
+        $ds = DIRECTORY_SEPARATOR;
+        $root = \IPS\ROOT_PATH;
+        $save = $root . $ds . $this->save . $ds;
+        $load = \IPS\Settings::i()->getData();
+        $extra = "\n";
+        foreach( $load as $key => $val ){
+            $extra .= "public \${$key} = '';\n";
+        }
+        $php = <<<EOF
+<?php
+
+namespace IPS;
+
+class Settings extends _Settings {
+{$extra}
+}
+EOF;
+        \file_put_contents( $save .  "IPS_Settings_lone.php", $php );
+        \chmod( $save .  "IPS_Settings_lone.php", 0777 );
     }
 
     public function dirIterator()

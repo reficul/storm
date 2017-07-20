@@ -20,4 +20,9 @@ class storm_hook_Plugin extends _HOOK_CLASS_
 
         return parent::addExceptionHandlingToHookFile( $file );
     }
+
+    public function save(){
+        parent::save();
+        \IPS\storm\Proxyclass::i()->generateSettings();
+    }
 }

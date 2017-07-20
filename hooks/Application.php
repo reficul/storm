@@ -21,6 +21,11 @@ class storm_hook_Application extends _HOOK_CLASS_
         parent::build();
     }
 
+    public function installJavascript( $offset=null, $limit=null ){
+        parent::installJavascript($offset, $limit);
+        \IPS\storm\Proxyclass::i()->generateSettings();
+    }
+
     public function installOther()
     {
         if ( \IPS\IN_DEV and defined( 'CJ_STORM_BUILD_DEV' ) and CJ_STORM_BUILD_DEV ) {

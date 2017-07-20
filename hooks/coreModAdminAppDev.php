@@ -13,7 +13,6 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
         parent::execute( $command );
     }
 
-
     public function addVersionQuery()
     {
         \IPS\Output::i()->jsFiles = array_merge(
@@ -568,6 +567,15 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
     protected function _manageDevFolder()
     {
         return \IPS\storm\Classes\DevFolder::i()->form();
+    }
+
+    protected function _writeJson( $file, $data )
+    {
+        if( $file == \IPS\ROOT_PATH . "/applications/{$this->application->directory}/data/settings.json" ){
+            \IPS\storm\Proxyclass::i()->generateSettings();
+        }
+
+        parent::_writeJson( $file, $data );
     }
 
 }
