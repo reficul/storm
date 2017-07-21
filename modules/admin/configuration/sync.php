@@ -54,4 +54,10 @@ class _sync extends \IPS\Node\Controller
 
 
     }
+
+    protected function sync()
+    {
+        \IPS\storm\Sync::send();
+        \IPS\Output::i()->redirect( \IPS\Http\Url::internal( 'app=storm&module=configuration&controller=sync' ) );
+    }
 }
