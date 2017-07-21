@@ -10,6 +10,10 @@
                     d.init(time);
                     el.data('_debugObj', d);
                 }
+            $('body').bind('beforeunload',function(){
+                var obj = el.data('_debugObj');
+                obj.abort();
+            });
         };
         ips.ui.registerWidget('stormdebug', storm.debug, ['url']);
         return {
@@ -17,14 +21,19 @@
         };
     });
     var _debugObj = function(url){
+        var ajax = null;
+        var current = null
         var init = function(time){
+            ajax = ips.getAjax();
             _debug(time);
         };
+        var abort = function(){
+            current.abort();
+        };
         var _debug = function(time){
-            var ajax = ips.getAjax();
             var el = $('#stormProfilerLogs');
             var times = '';
-            ajax({
+            current = ajax({
                 type: "POST",
                 url: url,
                 data: "time="+ time,
@@ -48,7 +57,8 @@
         }
 
         return {
-            init: init
+            init: init,
+            abort:abort,
         }
     }
 }(jQuery, _));
