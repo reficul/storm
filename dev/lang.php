@@ -171,6 +171,9 @@ $lang = [
     'storm_ftp_secure' => "Secure Connection",
     'storm_settings_disable_menu' => "Disable Menu",
     'storm_settings_disable_menu_desc' => "Disables the header menu.",
-    'menu__storm_configuration_sync' => "Sync"
+    'menu__storm_configuration_sync' => "Sync",
+    'storm_sources_trait_exists' => "Trait already exists!",
+    'storm_sources_interface_exists' => "Interface already exists!",
+    'storm_sources_no_trait' => "Trait doesn't exist: %s",
     //    'storm_apps_select_app' => "Select App"
 ];
