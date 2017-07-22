@@ -569,6 +569,10 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
         return \IPS\storm\Classes\DevFolder::i()->form();
     }
 
+    protected function _manageclassDev(){
+        return \IPS\storm\Sources::i()->form();
+    }
+
     protected function _writeJson( $file, $data )
     {
         if( $file == \IPS\ROOT_PATH . "/applications/{$this->application->directory}/data/settings.json" ){

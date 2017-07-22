@@ -131,8 +131,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                                 {
                                     foreach( $foo[ 'columns' ] as $key => $val )
                                     {
-                                        if( mb_substr( $key, 0, mb_strlen( $testClass::$databasePrefix ) ) ==
-                                            $testClass::$databasePrefix
+                                        if( mb_substr( $key, 0, mb_strlen( $testClass::$databasePrefix ) ) == $testClass::$databasePrefix
                                         )
                                         {
                                             $key = mb_substr( $key, mb_strlen( $testClass::$databasePrefix ) );
