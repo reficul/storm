@@ -173,6 +173,11 @@ EOF;
             return $before . "\n\n  public";
         }, $content );
 
+        $r = <<<EOF
+require __DIR__ . '/applications/storm/sources/Debug/Helpers.php';
+class IPS
+EOF;
+        $file = \str_replace( 'class IPS', $r, $file );
         \file_put_contents( $foo, $file );
 
         \IPS\Output::i()->redirect( $this->url, 'init.php patched');

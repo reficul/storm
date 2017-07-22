@@ -47,11 +47,11 @@ class _Sources extends \IPS\Patterns\Singleton
     {
         $form = \IPS\storm\Forms::i( $this->elements(), null, 'classes' );
 
-        if( $vals = $form->values() )
+        if( $values = $form->values() )
         {
-            $this->process( $vals, $app );
+            ( new \IPS\storm\Sources\Base( $values, $this->app ) )->process();
             $msg = $this->lang->addToStack( 'storm_class_created', false, [ 'sprintf' => [ $this->type, $this->className ] ] );
-            $url = \IPS\Http\Url::internal( "app=core&module=applications&controller=developer&appKey={$app->directory}&tab=class");
+            $url = \IPS\Http\Url::internal( "app=core&module=applications&controller=developer&appKey={$this->app->directory}&tab=class");
             \IPS\Output::i() ->redirect( $url, $msg );
         }
 
@@ -133,8 +133,6 @@ class _Sources extends \IPS\Patterns\Singleton
         $el[ 'prefix' ] = 'storm_class_';
         return $el;
     }
-
-    protected function process($vals){}
 
     public function classCheck( $data )
     {

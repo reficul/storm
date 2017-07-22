@@ -2,7 +2,7 @@
 
 #header#
 
-0.+c lass _#classname# extends \IPS\Patterns\ActiveRecord
+class _#classname# extends \IPS\Patterns\ActiveRecord
 {
 
     #traits#
