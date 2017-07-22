@@ -124,8 +124,7 @@ class _generator extends \IPS\Dispatcher\Controller
             }
             else
             {
-                $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=generator" )
-                                    ->setQueryString( [
+                $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=generator" )->setQueryString( [
                                         'type' => $vals[ 'storm_gen_type' ],
                                         'limit' => $vals[ 'storm_mc_limit' ]
                                     ] );
@@ -321,8 +320,7 @@ class _generator extends \IPS\Dispatcher\Controller
         \IPS\Output::i()->title = "Generator";
         $type = \IPS\Request::i()->type ?: "forums";
         $limit = \IPS\Request::i()->limit ?: 10;
-        $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=generator" )
-                            ->setQueryString( [
+        $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=generator" )->setQueryString( [
                                 'type' => $type,
                                 'limit' => $limit
                             ] );
