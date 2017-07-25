@@ -1,8 +1,6 @@
-<?php
-
 #header#
 
-class _#classname# extends \IPS\Patterns\ActiveRecord
+class _#classname# extends \IPS\Patterns\ActiveRecord #implements#
 {
 
     #traits#

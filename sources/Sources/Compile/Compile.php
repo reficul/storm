@@ -17,8 +17,10 @@ if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) ) {
     exit;
 }
 
-class _Base
+abstract class _Compile extends \IPS\Patterns\Singleton
 {
+    protected static $instance = null;
+    
     /**
      * @var \IPS\Application
      */
@@ -28,27 +30,23 @@ class _Base
 
     protected $content = null;
 
-    /**
-     * @brief	Data Store
-     */
-    protected $data = array();
-
-    /* this is here or the autoloader will spaz out */
-    public function __construct( array $values, $app )
+    public function process( array $values, $app )
     {
         $this->appNode = $app;
+        
         $this->directory = $this->appNode->directory;
+       
         $this->application = $this->directory;
+        
         $this->app = \IPS\storm\Settings::mbUcfirst($this->directory );
+        
         $this->header = $this->buildHeader();
+        
         foreach( $values as $key => $val ) {
             $key = \mb_strtolower( \mb_substr( $key, \mb_strlen( 'storm_class_' ) ) );
             $this->{$key} = $val;
         }
-    }
-
-    public function process()
-    {
+        
         if( isset( $this->prefix ) and $this->prefix ) {
             $this->prefix = $this->prefix . "_";
         }
@@ -74,11 +72,13 @@ class _Base
             $this->classname = \IPS\storm\Settings::mbUcfirst( $this->interfaceName );
         }
         else if( isset( $this->traitName ) and $this->traitName ){
-            $this->classname = \IPS\storm\Settings::mbUcfirst( $this->interfaceName );
+            $this->classname = \IPS\storm\Settings::mbUcfirst( $this->traitName );
         }else{
             $this->classname = "Forms";
         }
 
+        $this->classname_lower = \mb_strtolower( $this->classname );
+        
         $ns = $this->namespace . "\\" . $this->className;
 
         if( $this->classname != "Forms" ) {
@@ -90,63 +90,46 @@ class _Base
         if( isset( $this->extends ) and $this->extends ) {
             $this->extends = "extends " . $this->extends;
         }
+ 
+        $this->module = \mb_strtolower($this->classname);
 
+        $this->permtype = $this->module;
+        
+        $this->content();
+        
+        $this->build();
+        
+        $this->writeFile( );
+    }
+    
+    protected function build(){
         if( isset( $this->implements ) and is_array( $this->implements ) and count( $this->implements ) ) {
             $new = [];
             //lets loop thru it to add in ln's and lets get rid of any dupes
             foreach( $this->implements as $imp ) {
                 $new[ $imp ] = $imp . "\n";
             }
-
+        
             $this->implements = "implements " . rtrim( implode( ',', $new ) );
         }
-
+    
         if( isset( $this->traits ) and is_array( $this->traits ) and count( $this->traits ) ){
-            $this->traits = '';
+            $this->traits = 'use '.rtrim( implode( ',', $this->traits ) );
         }
-        else{
-            $this->traits = '';
-        }
-
-        $this->module = \mb_strtolower($this->classname);
-
-        $this->permtype = $this->module;
-
-        $type = $this->type;
-        $this->{$type}();
-
-        $this->compile();
-
-        $dir = \IPS\ROOT_PATH . '/applications/' . $this->directory . '/sources/' . $this->getDir();
-
-        $file = $this->classname . ".php";
-
-        $toWrite = $dir . '/' . $file;
-        if( !file_exists( $dir ) ) {
-            \mkdir( $dir, 0777, true );
-        }
-
-        \file_put_contents( $toWrite, $this->content );
-        \chmod( $toWrite, 0777 );
-        \IPS\storm\Proxyclass::i()->build( $toWrite );
-    }
-
-    protected function compile(){
+        
         $find = [];
         $replace = [];
+        
         foreach( $this->data as $key => $val ){
             $find[] = '#'.$key.'#';
             $replace[] = $val;
         }
+        
         $this->content = \str_replace( $find, $replace, $this->content);
-
     }
-
-    protected function ar(){
-        $this->brief = 'Active Record';
-        $this->content = $this->getFile( 'ar.txt' );
-    }
-
+    
+    abstract public function content();
+    
     protected function buildHeader(){
         return \file_get_contents( $this->blanks .'/'. "header.txt" );
     }
@@ -172,54 +155,19 @@ class _Base
 
         return $this->classname;
     }
-
-    /**
-     * Magic Method: Get
-     *
-     * @param	mixed	$key	Key
-     * @return	mixed	Value from the datastore
-     */
-    public function __get( $key )
-    {
-        if( !isset( $this->data[ $key ] ) )
-        {
-            return NULL;
+    
+    protected function writeFile(){
+    
+        $dir = \IPS\ROOT_PATH . '/applications/' . $this->directory . '/sources/' . $this->getDir();
+    
+        $file = $this->classname . ".php";
+        
+        if( !file_exists( $dir ) ) {
+            \mkdir( $dir, 0777, true );
         }
-
-        return $this->data[ $key ];
-    }
-
-    /**
-     * Magic Method: Set
-     *
-     * @param	mixed	$key	Key
-     * @param	mixed	$value	Value
-     * @return	void
-     */
-    public function __set( $key, $value )
-    {
-        $this->data[ $key ] = $value;
-    }
-
-    /**
-     * Magic Method: Isset
-     *
-     * @param	mixed	$key	Key
-     * @return	bool
-     */
-    public function __isset( $key )
-    {
-        return isset( $this->data[ $key ] );
-    }
-
-    /**
-     * Magic Method: Unset
-     *
-     * @param	mixed	$key	Key
-     * @return	void
-     */
-    public function __unset( $key )
-    {
-        unset( $this->data[ $key ] );
+        
+        \file_put_contents( $dir.'/'.$file, $this->content );
+        \chmod( $dir.'/'.$file, 0777 );
+        \IPS\storm\Proxyclass::i()->build( $dir.'/'.$file );
     }
 }

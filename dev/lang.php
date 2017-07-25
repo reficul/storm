@@ -175,5 +175,10 @@ $lang = [
     'storm_sources_trait_exists' => "Trait already exists!",
     'storm_sources_interface_exists' => "Interface already exists!",
     'storm_sources_no_trait' => "Trait doesn't exist: %s",
+    'storm_class_content_item_class' => "Item Class",
+    'storm_class_traits' => 'Traits',
+    'storm_class_subnode_class' => 'Subnode Class',
+    'storm_class_traitName' => 'Trait Name',
+    'storm_class_interfaceName' => "Interface Name"
     //    'storm_apps_select_app' => "Select App"
 ];

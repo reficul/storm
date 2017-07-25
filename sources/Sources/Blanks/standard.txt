@@ -1,0 +1,9 @@
+#header#
+
+class _#classname# #extends# #implements#
+{
+    #traits#
+
+    /* this is here or the autoloader will spaz out */
+    public function __construct(){}
+}

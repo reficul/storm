@@ -1,0 +1,26 @@
+    /**
+     * @brief    [Node] App for permission index
+     */
+    public static $permApp = '#applications#';
+
+    /**
+     * @brief    [Node] Type for permission index
+     */
+    public static $permType = '#permtype#';
+
+    /**
+     * @brief    The map of permission columns
+     */
+    public static $permissionMap = array(
+        'view' => 'view',
+        'read' => 2,
+        'add' => 3,
+        'delete' => 4,
+        'reply' => 5,
+        'review' => 6
+    );
+
+    /**
+     * @brief    [Node] Prefix string that is automatically prepended to permission matrix language strings
+     */
+    public static $permissionLangPrefix = '#app#_#classname_lower#';

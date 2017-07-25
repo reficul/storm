@@ -1,0 +1,47 @@
+<?php
+
+#header#
+
+namespace #namespace#;
+
+if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
+{
+    header( ( isset( $_SERVER[ 'SERVER_PROTOCOL' ] ) ? $_SERVER[ 'SERVER_PROTOCOL' ] :
+            'HTTP/1.0' ) . ' 403 Forbidden' );
+    exit;
+}
+
+class _#classname# extends \IPS\Patterns\ActiveRecord
+{
+    /**
+     * @brief    [ActiveRecord] Database Prefix
+     */
+    public static $databasePrefix = '#prefix#';
+
+    /**
+     * @brief    [ActiveRecord] ID Database Column
+     */
+     public static $databaseColumnId = 'id';
+
+    /**
+     * @brief    [ActiveRecord] Database table
+     */
+    public static $databaseTable = '#applications#_#database#';
+
+    /**
+     * @brief   [ActiveRecord] Database ID Fields
+     * @note    If using this, declare a static $multitonMap = array(); in the child class to prevent duplicate loading queries
+     */
+    protected static $databaseIdFields = [ '#prefix#id' ];
+
+    /**
+     * @brief   Bitwise keys
+     */
+    protected static $bitOptions = array();
+
+    /**
+     * @brief    [ActiveRecord] Multiton Store
+     */
+    protected static $multitons;
+
+}

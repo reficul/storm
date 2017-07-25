@@ -1,0 +1,14 @@
+#header#
+
+class _#classname# extends \IPS\Patterns\Singleton #implements#
+{
+
+    #traits#
+
+    /**
+     * @brief   Singleton Instances
+     * @note    This needs to be declared in any child class.
+     */
+    protected static $instance = null;
+
+}

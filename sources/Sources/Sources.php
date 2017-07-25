@@ -49,8 +49,21 @@ class _Sources extends \IPS\Patterns\Singleton
 
         if( $values = $form->values() )
         {
-            ( new \IPS\storm\Sources\Base( $values, $this->app ) )->process();
-            $msg = $this->lang->addToStack( 'storm_class_created', false, [ 'sprintf' => [ $this->type, $this->className ] ] );
+            $type = $values['storm_class_type'];
+            switch( $type ){
+                case 'ar':
+                    $class = 'ActiveRecord';
+                    break;
+                case 'node':
+                    $class = 'Node';
+                    break;
+                default:
+                    $class = \IPS\storm\Settings::mbUcfirst($type);
+                    break;
+            }
+            $class = $class::i();
+            $class->process( $values, $this->app );
+            $msg = $this->lang->addToStack( 'storm_class_created', false, [ 'sprintf' => [ $type, $class->classname ] ] );
             $url = \IPS\Http\Url::internal( "app=core&module=applications&controller=developer&appKey={$this->app->directory}&tab=class");
             \IPS\Output::i() ->redirect( $url, $msg );
         }
@@ -108,6 +121,14 @@ class _Sources extends \IPS\Patterns\Singleton
                 'validation' => array( $this, 'itemNodeCheck')
             ],
             [
+                'name' => 'content_item_class',
+                'prefix' => 'IPS\\'
+            ],
+            [
+                    'name' => 'subnode_class',
+                    'prefix' => 'IPS\\',
+            ],
+            [
                 'name' => "extends",
                 'validation' => array($this, 'extendsCheck'),
             ],
@@ -132,6 +153,68 @@ class _Sources extends \IPS\Patterns\Singleton
         ];
         $el[ 'prefix' ] = 'storm_class_';
         return $el;
+    }
+    
+    protected function toggles(){
+        return [
+                'standard' => [
+                        'namespace',
+                        'className',
+                        'extends',
+                        'implements',
+                        'traits'
+                ],
+                'interface' => [
+                        'namespace',
+                        'interfaceName'
+                ],
+                'trait' => [
+                        'namespace',
+                        'traitName'
+                ],
+                'singleton' => [
+                        'namespace',
+                        'className',
+                        'implements',
+                        'traits'
+                ],
+                'ar' => [
+                        'namespace',
+                        'className',
+                        'database',
+                        'prefix',
+                        'traits'
+                ],
+                'node' => [
+                        'namespace',
+                        'className',
+                        'implements',
+                        'database',
+                        'prefix',
+                        'traits',
+                        'content_item_class',
+                        'subnode_class'
+                
+                ],
+                'item' => [
+                        'namespace',
+                        'className',
+                        'implements',
+                        'item_node_class',
+                        'database',
+                        'prefix',
+                        'traits'
+                ],
+                'comment' => [
+                        'namespace',
+                        'className',
+                        'implements',
+                        'item_node_class',
+                        'database',
+                        'prefix',
+                        'traits'
+                ],
+        ];
     }
 
     public function classCheck( $data )
@@ -259,74 +342,15 @@ class _Sources extends \IPS\Patterns\Singleton
     protected function classType(){
         return [
             'select' => "Select Type",
-            'normal' => "Class",
+            'standard' => "Standard Class",
             'singleton' => "Singleton",
             'ar' => "Active Record",
-            'model' => "Node",
+            'node' => "Node",
             'item' => "Item",
             'comment' => "Comment",
             'interface' => 'Interface',
             'trait' => 'Trait',
             'forms' => "Forms Class",
-        ];
-    }
-
-    protected function toggles(){
-        return [
-            'normal' => [
-                'namespace',
-                'className',
-                'extends',
-                'implements',
-                'traits'
-            ],
-            'interface' => [
-                'namespace',
-                'interfaceName'
-            ],
-            'trait' => [
-                'namespace',
-                'traitName'
-            ],
-            'singleton' => [
-                'namespace',
-                'className',
-                'implements',
-                'traits'
-            ],
-            'ar' => [
-                'namespace',
-                'className',
-                'database',
-                'prefix',
-                'traits'
-            ],
-            'model' => [
-                'namespace',
-                'className',
-                'implements',
-                'database',
-                'prefix',
-                'traits'
-            ],
-            'item' => [
-                'namespace',
-                'className',
-                'implements',
-                'item_node_class',
-                'database',
-                'prefix',
-                'traits'
-            ],
-            'comment' => [
-                'namespace',
-                'className',
-                'implements',
-                'item_node_class',
-                'database',
-                'prefix',
-                'traits'
-            ],
         ];
     }
 }

@@ -1,0 +1,9 @@
+    /**
+     * @brief    Content Item Class
+     */
+    public static $contentItemClass = 'IPS\\#content_item_class#';
+
+    /**
+     * @brief    [Node] Moderator Permission
+     */
+    public static $modPerm = '#app#_#classname_lower#';
