@@ -12,8 +12,7 @@ class storm_hook_Db extends _HOOK_CLASS_
     protected $final = null;
 
     protected $currentQ = 1;
-
-
+    
     public function query( $query, $log = true, $read = false )
     {
         if ( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB ) {
@@ -40,8 +39,7 @@ class storm_hook_Db extends _HOOK_CLASS_
 
         return parent::query( $query, $log, $read );
     }
-
-
+    
     public function log( $query, $server = null )
     {
         if ( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB ) {
@@ -77,8 +75,7 @@ class storm_hook_Db extends _HOOK_CLASS_
             $this->currentQ++;
         }
     }
-
-
+    
     public function preparedQuery( $query, array $_binds, $read = false )
     {
         if ( defined( 'CJ_STORM_PROFILER_DISABLE_DB' ) and CJ_STORM_PROFILER_DISABLE_DB ) {

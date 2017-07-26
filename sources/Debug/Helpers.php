@@ -11,6 +11,9 @@ function _print(){
             echo "<br>";
             print_r($a);
         }
+        
+        echo "<br><br>".var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true );
+    
         exit;
     }
 }
@@ -25,6 +28,9 @@ function _dump(){
             echo "<br>";
             var_dump($a);
         }
+    
+        echo "<br><br>".var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true );
+    
         exit;
     }
 }
@@ -39,6 +45,9 @@ function _export(){
             echo "<br>";
             var_export($a);
         }
+    
+        echo "<br><br>".var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true );
+    
         exit;
     }
 }
