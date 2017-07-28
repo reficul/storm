@@ -14,6 +14,7 @@ try
     {
         \IPS\Session\Front::i();
     }
+    $names = [];
 
     $needsParsing = false;
     $cs = [];
@@ -115,7 +116,7 @@ try
 }
 catch( \Exception $e )
 {
-    \IPS\storm\Debug::log( $e );
+    \IPS\Log::log( $e );
 }
 
 /**

@@ -39,12 +39,15 @@ class _Settings extends \IPS\Patterns\Singleton
 
         foreach( $css as $c )
         {
-            $data = \IPS\Http\Url::external( $c );
-            $files[] = $data->queryString[ 'css' ];
+
+                $data = \IPS\Http\Url::external( $c );
+                $f = $data->queryString[ 'css' ];
+                $f = explode( ',', $f);
+            foreach( $f as $cc ) {
+                $files[] = $cc;
+            }
         }
-
         \IPS\Data\Store::i()->dev_css = $files;
-
         return str_replace( [ 'http://', 'https://' ], '//',
                 \IPS\Settings::i()->base_url ) . "applications/storm/interface/css/css.php";
     }

@@ -22,7 +22,10 @@ class storm_hook_themeCoreGlobalGlobal extends _HOOK_CLASS_
                     unset( \IPS\Output::i()->cssFiles[ $key ] );
                 }
             }
-
+            $d = \IPS\Theme::i()->css( 'custom.css', 'core', 'front' );
+            foreach( $d as $dd ){
+                \IPS\Output::i()->cssFiles[] = $dd;
+            }
             $url = \IPS\storm\Settings::buildCss( \IPS\Output::i()->cssFiles );
 
             return \IPS\Theme::i()->getTemplate( 'css', 'storm', 'front' )->css( $url );
