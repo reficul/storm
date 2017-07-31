@@ -107,7 +107,11 @@ try
         $contents = str_replace( '\\', '\\\\', $contents );
         \IPS\Theme::makeProcessFunction( $contents, $functionName );
         $functionName = "IPS\\Theme\\{$functionName}";
-        \IPS\Output::i()->sendOutput( $functionName(), 200, 'text/css' );
+        if( function_exists( $functionName ) ) {
+            \IPS\Output::i()->sendOutput( $functionName(), 200, 'text/css' );
+        }else{
+            \IPS\Output::i()->sendOutput( '', 200, 'text/css' );
+        }
     }
     else
     {
@@ -153,22 +157,23 @@ function processFile( $contents )
     {
         preg_match_all( '#([\d\w]+?)=\"([^"]+?)"#i', $param[ 1 ], $items, PREG_SET_ORDER );
 
-        foreach( $items as $id => $attr )
+        foreach( $items as $key => $attr )
         {
-            switch( trim( $attr[ 1 ] ) )
-            {
-                case 'module':
-                    $return[ 'module' ] = trim( $attr[ 2 ] );
-                    break;
-                case 'app':
-                    $return[ 'app' ] = trim( $attr[ 2 ] );
-                    break;
-                case 'position':
-                    $return[ 'pos' ] = intval( $attr[ 2 ] );
-                    break;
-                case 'hidden':
-                    $return[ 'hidden' ] = intval( $attr[ 2 ] );
-                    break;
+            if( isset( $attr[1] ) and isset( $attr[2] ) ) {
+                switch( trim( $attr[ 1 ] ) ) {
+                    case 'module':
+                        $return[ 'module' ] = trim( $attr[ 2 ] );
+                        break;
+                    case 'app':
+                        $return[ 'app' ] = trim( $attr[ 2 ] );
+                        break;
+                    case 'position':
+                        $return[ 'pos' ] = intval( $attr[ 2 ] );
+                        break;
+                    case 'hidden':
+                        $return[ 'hidden' ] = intval( $attr[ 2 ] );
+                        break;
+                }
             }
         }
     }
