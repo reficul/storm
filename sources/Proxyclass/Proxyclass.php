@@ -203,16 +203,14 @@ EOF;
         \chmod( $save .  "IPS_Constants_lone.php", 0777 );
     }
 
-    public function generateSettings($check=false){
+    public function generateSettings(){
         $ds = DIRECTORY_SEPARATOR;
         $root = \IPS\ROOT_PATH;
         $save = $root . $ds . $this->save . $ds;
 
-        if( !$check ) {
-            if( !file_exists($save .  "IPS_Settings_lone.php") )
-            {
-                return false;
-            }
+        if( !file_exists($save .  "IPS_Settings_lone.php") )
+        {
+            return false;
         }
 
         $load = \IPS\Settings::i()->getData();
