@@ -20,14 +20,14 @@ class _Forms
     /**
      * instantiate Forms class
      *
-     * @param array                  $elements   the array of elements to build
-     * @param object                 $object     a record element for the form
-     * @param string                 $name       name of the form
-     * @param \IPS\Helpers\Form|null $form       can pass an existing form object
-     * @param string                 $id         html id of the form
-     * @param string                 $submitLang lang string for submit button
-     * @param null                   $action     where it post to
-     * @param array                  $attributes any addition attributes that need to be pass
+     * @param array $elements the array of elements to build
+     * @param object $object a record element for the form
+     * @param string $name name of the form
+     * @param \IPS\Helpers\Form|null $form can pass an existing form object
+     * @param string $id html id of the form
+     * @param string $submitLang lang string for submit button
+     * @param null $action where it post to
+     * @param array $attributes any addition attributes that need to be pass
      *
      * @return mixed
      */
@@ -92,61 +92,57 @@ class _Forms
      * @var array
      */
     protected $classMap = [
-            'address'      => 'Address',
-            'addy'         => 'Address',
-            'captcha'      => 'Captcha',
-            'checkbox'     => 'Checkbox',
-            'cb'           => 'Checkbox',
-            'checkboxset'  => 'CheckboxSet',
-            'cbs'          => 'CheckboxSet',
-            'codemirror'   => 'Codemirror',
-            'cm'           => 'Codemirror',
-            'color'        => 'Color',
-            'custom'       => 'Custom',
-            'date'         => 'Date',
-            'daterange'    => 'DateRange',
-            'dr'           => 'DateRange',
-            'editor'       => 'Editor',
-            'email'        => 'Email',
-            'ftp'          => 'Ftp',
-            'item'         => 'Item',
-            'keyvalue'     => 'KeyValue',
-            'kv'           => 'KeyValue',
-            'matrix'       => 'Matrix',
-            'member'       => 'Member',
-            'node'         => 'Node',
-            'number'       => 'Number',
-            '#'            => 'Number',
-            'password'     => 'Password',
-            'pw'           => 'Password',
-            'poll'         => 'Poll',
-            'radio'        => 'Radio',
-            'rating'       => 'Rating',
-            'search'       => 'Search',
-            'select'       => 'Select',
-            'socialgroup'  => 'SocialGroup',
-            'sg'           => 'SocialGroup',
-            'sort'         => 'Sort',
-            'stack'        => 'Stack',
-            'tel'          => 'Tel',
-            'text'         => 'Text',
-            'textarea'     => 'TextArea',
-            'ta'           => 'TextArea',
-            'timezone'     => 'TimeZone',
-            'translatable' => 'Translatable',
-            'trans'        => 'Translatable',
-            'upload'       => 'Upload',
-            'up'           => 'Upload',
-            'url'          => 'Url',
-            'widthheight'  => 'WidthHeight',
-            'wh'           => 'WidthHeight',
-            'yesno'        => 'YesNo',
-            'yn'           => 'YesNo',
+        'address' => 'Address',
+        'addy' => 'Address',
+        'captcha' => 'Captcha',
+        'checkbox' => 'Checkbox',
+        'cb' => 'Checkbox',
+        'checkboxset' => 'CheckboxSet',
+        'cbs' => 'CheckboxSet',
+        'codemirror' => 'Codemirror',
+        'cm' => 'Codemirror',
+        'color' => 'Color',
+        'custom' => 'Custom',
+        'date' => 'Date',
+        'daterange' => 'DateRange',
+        'dr' => 'DateRange',
+        'editor' => 'Editor',
+        'email' => 'Email',
+        'ftp' => 'Ftp',
+        'item' => 'Item',
+        'keyvalue' => 'KeyValue',
+        'kv' => 'KeyValue',
+        'matrix' => 'Matrix',
+        'member' => 'Member',
+        'node' => 'Node',
+        'number' => 'Number',
+        '#' => 'Number',
+        'password' => 'Password',
+        'pw' => 'Password',
+        'poll' => 'Poll',
+        'radio' => 'Radio',
+        'rating' => 'Rating',
+        'search' => 'Search',
+        'select' => 'Select',
+        'socialgroup' => 'SocialGroup',
+        'sg' => 'SocialGroup',
+        'sort' => 'Sort',
+        'stack' => 'Stack',
+        'tel' => 'Tel',
+        'text' => 'Text',
+        'textarea' => 'TextArea',
+        'ta' => 'TextArea',
+        'timezone' => 'TimeZone',
+        'translatable' => 'Translatable',
+        'trans' => 'Translatable',
+        'upload' => 'Upload',
+        'up' => 'Upload',
+        'url' => 'Url',
+        'widthheight' => 'WidthHeight',
+        'wh' => 'WidthHeight',
+        'yesno' => 'YesNo',
+        'yn' => 'YesNo'
     ];
-
-    protected $tab = null;
-
-    protected $e = [];
 
     /**
      * _Forms constructor.
@@ -162,20 +158,21 @@ class _Forms
      */
     public function run()
     {
+        $langPrefix = '';
         if( isset( $this->elements[ 'prefix' ] ) )
         {
-            $this->langPrefix = $this->elements[ 'prefix' ];
+            $this->langPrefix = $langPrefix = $this->elements[ 'prefix' ];
             unset( $this->elements[ 'prefix' ] );
         }
 
         $typesWName = [
-                'tab',
-                'header',
-                'sidebar',
-                'helper',
-                'dummy',
-                'matrix',
-                'hidden',
+            'tab',
+            'header',
+            'sidebar',
+            'helper',
+            'dummy',
+            'matrix',
+            'hidden',
         ];
 
         foreach( $this->elements as $el )
@@ -198,7 +195,13 @@ class _Forms
             {
                 if( isset( $el[ 'name' ] ) )
                 {
-                    $name = $this->langPrefix . $el[ 'name' ];
+                    if( isset( $el['skip'] ) and $el['skip']){
+                        $name = $el['name'];
+                    }
+                    else
+                    {
+                        $name = $langPrefix . $el[ 'name' ];
+                    }
                 }
                 else
                 {
@@ -211,19 +214,18 @@ class _Forms
             switch( $type )
             {
                 case 'tab':
-                    $this->form->addTab( $name . '_tab' );
-                    $this->tab = $name . '_tab';
+                    $this->form->addTab(  $name . '_tab' );
                     break;
                 case 'header':
-                    $this->form->addHeader( $name . '_header' );
+                    $this->form->addHeader(  $name . '_header' );
                     break;
                 case 'sidebar':
                     if( \IPS\Member::loggedIn()->language()->checkKeyExists( $name ) )
                     {
-                        $element = \IPS\Member::loggedIn()->language()->addToStack( $name );
+                        $name = \IPS\Member::loggedIn()->language()->addToStack( $name );
                     }
 
-                    $this->form->addSidebar( $element );
+                    $this->form->addSidebar( $name );
                     break;
                 case 'separator':
                     $this->form->addSeparator();
@@ -286,9 +288,17 @@ class _Forms
                     {
                         throw new \InvalidArgumentException( json_encode( $el ) );
                     }
+
                     $default = null;
 
-                    if( is_object( $this->obj ) )
+                    if( array_key_exists( 'default', $el)  )
+                    {
+                        $default = $el[ 'default' ];
+                    }
+                    else if( array_key_exists( 'def', $el) ){
+                        $default = $el['def'];
+                    }
+                    else if( ( !array_key_exists( 'default', $el) or !array_key_exists( 'def', $el)  )  and is_object( $this->obj ) )
                     {
                         $obj = $this->obj;
                         $prop = $el[ 'name' ];
@@ -298,7 +308,7 @@ class _Forms
                         }
                         else
                         {
-                            $prop = $this->langPrefix . $prop;
+                            $prop = $langPrefix . $prop;
                             if( $obj->{$prop} )
                             {
                                 $default = $obj->{$prop};
@@ -307,17 +317,13 @@ class _Forms
 
                         if( $default == null )
                         {
-                            if( isset( $el[ 'default' ] ) or isset( $el[ 'def' ] ) )
+                            if( array_key_exists( 'default', $el)  )
                             {
-                                $default = isset( $el[ 'default' ] ) ? $el[ 'default' ] : $el[ 'def' ];
+                                $default = $el[ 'default' ];
                             }
-                        }
-                    }
-                    else
-                    {
-                        if( isset( $el[ 'default' ] ) or isset( $el[ 'def' ] ) )
-                        {
-                            $default = isset( $el[ 'default' ] ) ? $el[ 'default' ] : $el[ 'def' ];
+                            else if( array_key_exists( 'def', $el) ){
+                                $default = $el['def'];
+                            }
                         }
                     }
 
@@ -345,7 +351,7 @@ class _Forms
                             {
                                 foreach( $val as $k => $v )
                                 {
-                                    $options[ 'toggles' ][ $key ][ $k ] = 'js_' . $this->langPrefix . $v;
+                                    $options[ 'toggles' ][ $key ][ $k ] = 'js_' . $langPrefix . $v;
                                 }
                             }
                         }
@@ -354,7 +360,7 @@ class _Forms
                         {
                             foreach( $options[ 'togglesOn' ] as $key => $val )
                             {
-                                $options[ 'togglesOn' ][] = 'js_' . $this->langPrefix . $val;
+                                $options[ 'togglesOn' ][] = 'js_' . $langPrefix . $val;
                             }
                         }
 
@@ -362,7 +368,7 @@ class _Forms
                         {
                             foreach( $options[ 'togglesOff' ] as $key => $val )
                             {
-                                $options[ 'togglesOff' ][] = 'js_' . $this->langPrefix . $val;
+                                $options[ 'togglesOff' ][] = 'js_' . $langPrefix . $val;
                             }
                         }
                     }
@@ -427,8 +433,8 @@ class _Forms
                                     $sprintf = [ $sprintf ];
                                 }
                                 $desc = \IPS\Member::loggedIn()
-                                                   ->language()
-                                                   ->addToStack( $desc, false, [ 'sprintf' => $sprintf ] );
+                                    ->language()
+                                    ->addToStack( $desc, false, [ 'sprintf' => $sprintf ] );
                             }
                             else
                             {
@@ -439,26 +445,19 @@ class _Forms
                         \IPS\Member::loggedIn()->language()->words[ $name . '_desc' ] = $desc;
                     }
 
-                    $tab = $this->tab;
+                    $tab = null;
                     $after = null;
 
-                    if( isset( $el[ 'tab' ] ) and $el[ 'tab' ] )
+                    if( isset( $el[ 'tab' ] ) )
                     {
-                        $tab = $this->langPrefix . $el[ 'tab' ] . '_tab';
-                        $this->tab = $this->langPrefix . $el[ 'tab' ] . '_tab';
-
+                        $tab = $langPrefix . $el[ 'tab' ] . '_tab';
                     }
 
-                    if( isset( $el[ 'after' ] ) and $el[ 'after' ] )
+                    if( isset( $el[ 'after' ] ) )
                     {
-                        $after = $this->langPrefix . $el[ 'after' ];
-                        if( isset( $this->e[ $after ] ) )
-                        {
-                            $tab = $this->e[ $after ];
-                        }
+                        $after = $langPrefix . $el[ 'after' ];
                     }
 
-                    $this->e[ $name ] = $tab;
                     $this->form->add( $element, $after, $tab );
                     break;
                 case 'dummy':
@@ -535,20 +534,18 @@ class _Forms
 
     /**
      * adds a header/tab/sidebar to an element
-     *
      * @param $el
      */
     final protected function setExtra( $el )
     {
+        if( isset( $el[ 'tab' ] ) )
+        {
+            $this->form->addTab( $this->langPrefix . $el[ 'tab' ] . '_tab' );
+        }
 
         if( isset( $el[ 'header' ] ) )
         {
             $this->form->addHeader( $this->langPrefix . $el[ 'header' ] . '_header' );
-        }
-
-        if( isset( $el[ 'tab' ] ) )
-        {
-            $this->form->addTab( $this->langPrefix . $el[ 'tab' ] . '_tab' );
         }
 
         if( isset( $el[ 'sidebar' ] ) )

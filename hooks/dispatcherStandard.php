@@ -7,8 +7,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) ) {
 
 abstract class storm_hook_dispatcherStandard extends _HOOK_CLASS_
 {
-
-
     protected static function baseJs()
     {
         parent::baseJs();
@@ -33,6 +31,7 @@ abstract class storm_hook_dispatcherStandard extends _HOOK_CLASS_
                 )
             );
         }
+
         if ( defined( 'CJ_STORM_DEBUG' ) and CJ_STORM_DEBUG ) {
             $settings[ 'storm_debug_url' ] = \IPS\Settings::i()->base_url . 'applications/storm/interface/debug/index.php';
             $settings[ 'storm_debug_enabled' ] = ( defined( 'CJ_STORM_DEBUG' ) and CJ_STORM_DEBUG ) ? true : false;

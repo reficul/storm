@@ -69,11 +69,6 @@ class _Settings extends \IPS\Patterns\Singleton
 
     protected static function elements()
     {
-        $e[] = [
-            'class' => "YesNo",
-            'name' => "storm_settings_tab_debug_templates",
-            'tab' => 'general'
-        ];
 
         $e[] = [
             'class' => "YesNo",
