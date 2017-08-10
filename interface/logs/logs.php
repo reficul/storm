@@ -1,6 +1,5 @@
 <?php
-require_once str_replace( 'applications/storm/interface/logs/logs.php', '',
-        str_replace( '\\', '/', __FILE__ ) ) . 'init.php';
+require_once str_replace( 'applications/storm/interface/logs/logs.php', '', str_replace( '\\', '/', __FILE__ ) ) . 'init.php';
 \IPS\Session\Front::i();
 $max = ( ini_get( 'max_execution_time' ) / 2 );
 $time = (int)\IPS\Request::i()->time;

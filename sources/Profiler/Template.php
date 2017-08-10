@@ -489,8 +489,10 @@ EOF;
     {
         if( $this->storm->dbEnabled )
         {
-            $u = \IPS\Http\Url::internal( 'app=storm&module=general&controller=general&do=backtrace&id=' . $query[ 'backtrace' ],
-                'front' );
+//            $u = \IPS\Http\Url::internal( 'app=storm&module=general&controller=general&do=backtrace&id=' . $query[ 'backtrace' ],
+//                'front' );
+            $u = \IPS\Http\Url::internal( 'applications/storm/interface/backtrace/backtrace.php?do=backtrace&id='.$query[ 'backtrace' ], 'none' );
+
             $lang = sprintf( $this->db_execution_time, $query[ 'time' ] );
             $html = <<<EOF
 <div class="stormProfilerBase" data-ipsDialog data-ipsDialog-url="{$u}">
@@ -508,7 +510,7 @@ EOF;
     {
         if( $this->storm->cacheEnabled )
         {
-            $u = \IPS\Http\Url::internal( 'app=storm&module=general&controller=general&do=cache&id=' . $num, 'front' );
+            $u = \IPS\Http\Url::internal( 'applications/storm/interface/backtrace/backtrace.php?do=cache&id='.$num, 'none' );
             $type = sprintf( 'Type: %s', $type );
             $key = sprintf( 'Key: %s', $key );
             $html = <<<EOF

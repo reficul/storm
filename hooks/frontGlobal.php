@@ -16,8 +16,8 @@ public static function hookData() {
 /* End Hook Data */
 
 function queryLog( $log ){
-    if( defined( 'CJ_STORM_PROFILER') and CJ_STORM_PROFILER ) {
-        return \IPS\storm\Profiler::i( 1 )->run();
+    if( defined( 'CJ_STORM_PROFILER') and CJ_STORM_PROFILER) {
+        return \IPS\storm\Profiler::i()->run(true);
     }
     else{
         return parent::queryLog( $log );

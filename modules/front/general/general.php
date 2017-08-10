@@ -45,49 +45,6 @@ class _general extends \IPS\Dispatcher\Controller
         // This is the default method if no 'do' parameter is specified
     }
 
-    // Create new methods with the same name as the 'do' parameter which should execute it
-    protected function backtrace()
-    {
-        $bt = \IPS\Request::i()->id;
-        $back = [];
 
-        if( \IPS\Data\Store::i()->exists( 'storm_bt' ) )
-        {
-            $back = \IPS\Data\Store::i()->storm_bt;
-        }
-
-        $output = "Nothing found";
-
-        if( isset( $back[ $bt ] ) )
-        {
-            $bt = $back[ $bt ];
-            $bt[ 'backtrace' ] = str_replace( "\\\\", "\\", $bt[ 'backtrace' ] );
-            $output = "<code>" . $bt[ 'query' ] . "</code><br><pre class=\"prettyprint lang-php \">" . $bt[ 'backtrace' ] . "</pre>";
-        }
-
-        \IPS\Output::i()->output = "<div class='ipsPad'>{$output}</div>";
-    }
-
-    protected function cache()
-    {
-        $bt = \IPS\Request::i()->id;
-        $back = [];
-
-        if( \IPS\Data\Store::i()->exists( 'storm_cache' ) )
-        {
-            $back = \IPS\Data\Store::i()->storm_cache;
-        }
-
-        $output = "Nothing found";
-
-        if( isset( $back[ $bt ] ) )
-        {
-            $bt = $back[ $bt ];
-            $bt[ 'backtrace' ] = str_replace( "\\\\", "\\", $bt[ 'backtrace' ] );
-            $output = "<div>Type: " . $bt[ 'type' ] . "</div><div>Key: " . $bt[ 'key' ] . "</div><br><pre class='prettyprint lang-php'>" . $bt[ 'backtrace' ] . "</pre>";
-        }
-
-        \IPS\Output::i()->output = "<div class='ipsPad'>{$output}</div>";
-    }
 
 }

@@ -631,5 +631,76 @@
         },
         "collation": "utf8mb4_unicode_ci",
         "engine": "InnoDB"
+    },
+    "storm_query": {
+        "name": "storm_query",
+        "columns": {
+            "query_hash": {
+                "allow_null": false,
+                "auto_increment": false,
+                "binary": false,
+                "comment": "",
+                "decimals": null,
+                "default": "",
+                "length": 255,
+                "name": "query_hash",
+                "type": "VARCHAR",
+                "unsigned": false,
+                "values": [],
+                "zerofill": false
+            },
+            "query_bt": {
+                "allow_null": false,
+                "auto_increment": false,
+                "binary": false,
+                "comment": "",
+                "decimals": null,
+                "default": "",
+                "length": 0,
+                "name": "query_bt",
+                "type": "TEXT",
+                "unsigned": false,
+                "values": [],
+                "zerofill": false
+            },
+            "query_time": {
+                "allow_null": false,
+                "auto_increment": false,
+                "binary": false,
+                "comment": "",
+                "decimals": null,
+                "default": "0",
+                "length": 15,
+                "name": "query_time",
+                "type": "INT",
+                "unsigned": true,
+                "values": [],
+                "zerofill": false
+            }
+        },
+        "indexes": {
+            "hash": {
+                "type": "key",
+                "name": "hash",
+                "length": [
+                    191
+                ],
+                "columns": [
+                    "query_hash"
+                ]
+            },
+            "time": {
+                "type": "key",
+                "name": "time",
+                "columns": [
+                    "query_time"
+                ],
+                "length": [
+                    null
+                ]
+            }
+        },
+        "collation": "utf8mb4_unicode_ci",
+        "engine": "InnoDB"
     }
 }
