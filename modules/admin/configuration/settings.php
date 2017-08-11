@@ -112,72 +112,72 @@ class _settings extends \IPS\Dispatcher\Controller
         $content = \file_get_contents( $foo );
 
         rename($foo, $path.'init_backup.php');
-
-        $preg = "#public static function monkeyPatch\((.*?)public#msu";
-
-
-        $before = <<<EOF
-public static function monkeyPatch( \$namespace, \$finalClass, \$extraCode = '' )
-    {
-        \$extraCode = '';
-        \$realClass = "_{\$finalClass}";
-        
-        if( isset( self::\$hooks[ "\\\\{\$namespace}\\\\{\$finalClass}" ] ) AND \\IPS\\RECOVERY_MODE === FALSE )
-        {
-            \$path = __DIR__ . "/hook_temp/";
-            
-            if( !is_dir( \$path ) )
-            {
-                \\mkdir( \$path, 0777, true );
-            }
-            
-            foreach( self::\$hooks[ "\\\\{\$namespace}\\\\{\$finalClass}" ] as \$id => \$data ) 
-            {
-                if( \\file_exists( ROOT_PATH . '/' . \$data[ 'file' ] ) )
-                {
-                    \$contents = "namespace {\$namespace}; " . str_replace( '_HOOK_CLASS_', \$realClass, file_get_contents( ROOT_PATH . '/' . \$data[ 'file' ] ) );
-                    
-                    \$hash = md5( \$contents );
-                    
-                    \$filename = \\str_replace( [ "\\\\", "/" ], "_", \$namespace . \$realClass . \$finalClass . \$data[ 'file' ] );
-                    
-                    \$fileHash = false;
-                    
-                    if( file_exists( \$path . \$filename ) )
-                    {
-                        \$fileHash = \\md5_file( \$path . \$filename );
-                    }
-                    
-                    if( \$hash != \$fileHash )
-                    {
-                        \\file_put_contents( \$path . \$filename, "<?php\\n\\n" . \$contents );
-                    }
-
-                    require_once( \$path . \$filename );
-                    
-                    \$realClass = \$data[ 'class' ];
-                }
-            }
-        }
-        
-        \$reflection = new \ReflectionClass( "{\$namespace}\\\\_{\$finalClass}" );
-        
-        if( eval( "namespace {\$namespace}; " . \$extraCode . ( \$reflection->isAbstract() ? 'abstract' : '' ) . " class {\$finalClass} extends {\$realClass} {}" ) === false ) 
-        {
-            trigger_error( "There was an error initiating the class {\$namespace}\\\\{\$finalClass}.", E_USER_ERROR );
-        }
-    }
-EOF;
-
-        $file = preg_replace_callback( $preg, function( $e ) use ( $before ) {
-            return $before . "\n\n  public";
-        }, $content );
+//
+//        $preg = "#public static function monkeyPatch\((.*?)public#msu";
+//
+//
+//        $before = <<<EOF
+//public static function monkeyPatch( \$namespace, \$finalClass, \$extraCode = '' )
+//    {
+//        \$extraCode = '';
+//        \$realClass = "_{\$finalClass}";
+//
+//        if( isset( self::\$hooks[ "\\\\{\$namespace}\\\\{\$finalClass}" ] ) AND \\IPS\\RECOVERY_MODE === FALSE )
+//        {
+//            \$path = __DIR__ . "/hook_temp/";
+//
+//            if( !is_dir( \$path ) )
+//            {
+//                \\mkdir( \$path, 0777, true );
+//            }
+//
+//            foreach( self::\$hooks[ "\\\\{\$namespace}\\\\{\$finalClass}" ] as \$id => \$data )
+//            {
+//                if( \\file_exists( ROOT_PATH . '/' . \$data[ 'file' ] ) )
+//                {
+//                    \$contents = "namespace {\$namespace}; " . str_replace( '_HOOK_CLASS_', \$realClass, file_get_contents( ROOT_PATH . '/' . \$data[ 'file' ] ) );
+//
+//                    \$hash = md5( \$contents );
+//
+//                    \$filename = \\str_replace( [ "\\\\", "/" ], "_", \$namespace . \$realClass . \$finalClass . \$data[ 'file' ] );
+//
+//                    \$fileHash = false;
+//
+//                    if( file_exists( \$path . \$filename ) )
+//                    {
+//                        \$fileHash = \\md5_file( \$path . \$filename );
+//                    }
+//
+//                    if( \$hash != \$fileHash )
+//                    {
+//                        \\file_put_contents( \$path . \$filename, "<?php\\n\\n" . \$contents );
+//                    }
+//
+//                    require_once( \$path . \$filename );
+//
+//                    \$realClass = \$data[ 'class' ];
+//                }
+//            }
+//        }
+//
+//        \$reflection = new \ReflectionClass( "{\$namespace}\\\\_{\$finalClass}" );
+//
+//        if( eval( "namespace {\$namespace}; " . \$extraCode . ( \$reflection->isAbstract() ? 'abstract' : '' ) . " class {\$finalClass} extends {\$realClass} {}" ) === false )
+//        {
+//            trigger_error( "There was an error initiating the class {\$namespace}\\\\{\$finalClass}.", E_USER_ERROR );
+//        }
+//    }
+//EOF;
+//
+//        $file = preg_replace_callback( $preg, function( $e ) use ( $before ) {
+//            return $before . "\n\n  public";
+//        }, $content );
 
         $r = <<<EOF
 require __DIR__ . '/applications/storm/sources/Debug/Helpers.php';
 class IPS
 EOF;
-        $file = \str_replace( 'class IPS', $r, $file );
+        $file = \str_replace( 'class IPS', $r, $content );
         \file_put_contents( $foo, $file );
 
         \IPS\Output::i()->redirect( $this->url, 'init.php patched');
