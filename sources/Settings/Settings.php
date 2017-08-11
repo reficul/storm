@@ -48,8 +48,7 @@ class _Settings extends \IPS\Patterns\Singleton
             }
         }
         \IPS\Data\Store::i()->dev_css = $files;
-        return str_replace( [ 'http://', 'https://' ], '//',
-                \IPS\Settings::i()->base_url ) . "applications/storm/interface/css/css.php";
+        return str_replace( [ 'http://', 'https://' ], '//', \IPS\Settings::i()->base_url ) . "applications/storm/interface/css/css.php";
     }
 
     public static function form()

@@ -65,7 +65,9 @@ public static function hookData() {
             }
         }
         $parent = parent::globalTemplate( $title, $html, $location );
-        $parent = \str_replace( '</body>', "<!--ipsQueryLog--></body>", $parent);
+        if( defined( 'CJ_STORM_PROFILER_ACP' ) and CJ_STORM_PROFILER_ACP ) {
+            $parent = \str_replace( '</body>', "<!--ipsQueryLog--></body>", $parent );
+        }
         return $parent;
 
     }

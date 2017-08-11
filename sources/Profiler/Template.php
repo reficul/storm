@@ -504,9 +504,7 @@ EOF;
         {$query[ 'query' ]}
     </code>
     <br>
-    <pre class="prettyprint lang-php">
-        {$query[ 'backtrace' ]}
-    </pre>
+    <pre class="prettyprint lang-php">{$query[ 'backtrace' ]}</pre>
 </div>
 EOF;
             return $html;
@@ -547,9 +545,7 @@ EOF;
         <div>{$key}</div>
     </code>
     <br>
-    <pre class="prettyprint lang-php">
-        {$cache[ 'backtrace' ]}
-    </pre>
+    <pre class="prettyprint lang-php">{$cache[ 'backtrace' ]}</pre>
 </div>
 EOF;
             return $html;
@@ -571,7 +567,6 @@ EOF;
             return $html;
         }
     }
-
 
     public function speed( $for, $time, $percent )
     {
