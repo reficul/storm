@@ -278,33 +278,21 @@ class _Profiler
                 $this->consoleTab++;
                 $this->dbQueriesTab++;
                 $hash = sha1( 'db_'. trim( $query[ 'backtrace' ] ) );
-                $dt = [];
-                if( isset( \IPS\Data\Store::i()->storm_bt ) ){
-                    $dt = \IPS\Data\Store::i()->storm_bt;
-                }
-
-                $dt[$hash] = $query;
-                \IPS\Data\Store::i()->storm_bt = $dt;
-//                try{
-//                    $ar = \IPS\storm\Query::load( $hash );
-//                }
-//                catch( \Exception $e )
-//                {
-//                    $ar = new \IPS\storm\Query;
-//                }
-//                $ar->hash = $hash;
-//                $ar->bt = json_encode($query);
-//                $ar->time = time();
-//                $ar->save();
-//                $this->dbLogs[ $hash ] = $query;
                 $msg = \IPS\storm\Profiler\Template::i()->db( [
                     'query' => $query[ 'query' ],
-                    'backtrace' => $hash,
+                    'backtrace' => $query[ 'backtrace' ],
+                    'hash' => $hash,
+                    'time' => $time
+                ] );
+
+                $msg2 = \IPS\storm\Profiler\Template::i()->db2( [
+                    'query' => $query[ 'query' ],
                     'time' => $time
                 ] );
                 $msg = \IPS\storm\Profiler\Template::i()->consoleContainer( 'DbQueries', $msg, "DB Query", $this->oddEven( $this->dbQueriesTab ) );
+                $msg2 = \IPS\storm\Profiler\Template::i()->consoleContainer( 'DbQueries', $msg2, 'DB Query', $this->oddEven( $this->dbQueriesTab ) );
                 $this->dbQueriesList = $msg . "\n" . $this->dbQueriesList;
-                $this->processedLogs = $msg . "\n" . $this->processedLogs;
+                $this->processedLogs = $msg2 . "\n" . $this->processedLogs;
 
                 if( $this->dbEnabledSpeed )
                 {
@@ -383,21 +371,14 @@ class _Profiler
             {
                 $this->consoleTab++;
                 $this->cacheTab++;
-//                $this->cacheLogs[ $this->cacheTab ] = $cache;
                 $hash = sha1( 'cache_'. trim( $cache[ 'backtrace' ] ) );
+                $msg = \IPS\storm\Profiler\Template::i()->cache( $cache , $hash );
+                $msg2 = \IPS\storm\Profiler\Template::i()->cache2( $cache[ 'type' ], $cache[ 'key' ]);
 
-                $dt = [];
-                if( isset( \IPS\Data\Store::i()->storm_cache ) ){
-                    $dt = \IPS\Data\Store::i()->storm_cache;
-                }
-
-                $dt[$hash] = $cache;
-                \IPS\Data\Store::i()->storm_cache = $dt;
-
-                $msg = \IPS\storm\Profiler\Template::i()->cache( $cache[ 'type' ], $cache[ 'key' ], $hash );
                 $msg = \IPS\storm\Profiler\Template::i()->consoleContainer( 'Cache', $msg, "Cache", $this->oddEven( $this->cacheTab ) );
+                $msg2 = \IPS\storm\Profiler\Template::i()->consoleContainer( 'Cache', $msg2, "Cache", $this->oddEven( $this->cacheTab ) );
                 $this->cacheList = $msg . "\n" . $this->cacheList;
-                $this->processedLogs = $msg . "\n" . $this->processedLogs;
+                $this->processedLogs = $msg2 . "\n" . $this->processedLogs;
             }
         }
     }
