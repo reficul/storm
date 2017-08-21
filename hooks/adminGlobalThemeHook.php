@@ -36,7 +36,6 @@ public static function hookData() {
 
     public function globalTemplate( $title, $html, $location = [] )
     {
-
         if( !\IPS\Settings::i()->storm_settings_disable_menu)
         {
             $version = \IPS\Application::load( 'core' );
@@ -69,6 +68,5 @@ public static function hookData() {
             $parent = \str_replace( '</body>', "<!--ipsQueryLog--></body>", $parent );
         }
         return $parent;
-
     }
 }

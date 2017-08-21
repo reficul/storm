@@ -99,24 +99,32 @@ class _Generator extends \IPS\Patterns\Singleton
             $date = \IPS\Settings::i()->getFromConfGlobal( 'board_start' );
         }
 
+        $diff = $cur - $date;
+
         switch( $rand )
         {
             case 1:
                 $time = 60;
+                $diff = round( $diff / $time);
+                $foo = rand( 1, $diff );
                 break;
             case 2:
                 $time = 3600;
+                $diff = round( $diff / $time);
+                $foo = rand( 1, $diff );
                 break;
             case 3:
                 $time = 84000;
+                $diff = round( $diff / $time);
+                $foo = rand( 1, $diff );
                 break;
         }
-        $foo = rand( 1, 1000 );
+
         $time = $date + ( $foo * $time );
 
         if( $time > $cur )
         {
-            $time = static::getTime( $date );
+            $time = $cur;
         }
 
         return $time;
@@ -143,18 +151,12 @@ class _Generator extends \IPS\Patterns\Singleton
         }
 
         $rand = \array_rand( $this->adjective, 1 );
-
         $rand2 = \array_rand( $this->noun, 1 );
-
         $name = \str_replace( "_", " ", $this->adjective[ $rand ] . " " . $this->noun[ $rand2 ] );
         $name = \ucwords( mb_strtolower( $name ) );
-
         $desc = $this->adjectiveGloss[ $rand ] . "; " . $this->nounGloss[ $rand2 ];
-
         $findType = ( $rand + $rand2 ) / 17;
-
         $type = "normal";
-
         $makeCat = $rand / 29;
 
         if( !$category )
@@ -296,7 +298,6 @@ class _Generator extends \IPS\Patterns\Singleton
         if( !$topic )
         {
             $topic = $this->getTopic();
-
             $comment = $topic->comments(1, 0, 'date', 'desc' );
             $time = $comment->post_date;
             $time = static::getTime( $time );
@@ -307,7 +308,6 @@ class _Generator extends \IPS\Patterns\Singleton
 
             if( !$first ) {
                 $time = $topic->last_post;
-
                 $time = static::getTime( $time );
             }
         }

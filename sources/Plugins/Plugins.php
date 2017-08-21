@@ -57,6 +57,7 @@ class _Plugins extends \IPS\Patterns\Singleton
         $js = $folder . 'js/';
         $resources = $folder . 'resources/';
         $setup = $folder . 'setup/';
+        $widgets = [];
         $filename = '';
         $content = '';
 
@@ -165,8 +166,22 @@ class _Plugins extends \IPS\Patterns\Singleton
                     $langJs[ $key ] = $value;
                 }
             }
+
+            if( $xml->name == 'widget'){
+                $widgets[ $xml->getAttribute('key')] = [
+                    'class' => $xml->getAttribute('class'),
+                    'restrict' => $xml->getAttribute('restrict'),
+                    'default_area' => $xml->getAttribute('default_area'),
+                    'allow_reuse' => ( $xml->getAttribute('allow_reuse') == 1) ? true : false,
+                    'menu_style' => $xml->getAttribute('menu_style'),
+                    'embeddable' => ( $xml->getAttribute('embeddable') == 1) ? true : false
+                ];
+            }
         }
 
+        if( count( $widgets ) ){
+            \file_put_contents( $folder . 'widgets.json', json_encode( $widgets, JSON_PRETTY_PRINT ) );
+        }
         \file_put_contents( $folder . 'settings.json', json_encode( $settings, JSON_PRETTY_PRINT ) );
         \file_put_contents( $folder . 'versions.json', json_encode( $versions, JSON_PRETTY_PRINT ) );
         \file_put_contents( $folder . "lang.php", "<?php\n\n \$lang = " . var_export( $lang, true ) . ";\n" );

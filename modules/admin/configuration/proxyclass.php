@@ -44,9 +44,31 @@ class _proxyclass extends \IPS\Dispatcher\Controller
     protected function manage()
     {
         \IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'storm_proxyclass_title' );
-        \IPS\Output::i()->output = \IPS\Theme::i()
-                                             ->getTemplate( 'proxyclass', 'storm', 'admin' )
-                                             ->button( $this->url->setQueryString( [ 'do' => 'queue' ] ) );
+
+        $e[] = [
+            'class' => 'yn',
+            'name' => 'storm_proxy_include_data'
+        ];
+
+        $e[] = [
+            'type' => 'sidebar',
+            'name' => 'storm_proxyclass_sidebar'
+        ];
+        $form = \IPS\storm\Forms::i($e, null, 'default', null, 'default_js', 'storm_proxyclass_button');
+
+        if( $vals = $form->values()){
+            if( isset( $vals['storm_proxy_include_data']) and $vals['storm_proxy_include_data']){
+                $url = $this->url->setQueryString([ 'do' => 'queue', 'includes' => 1 ] );
+            }
+            else{
+                $url = $this->url->setQueryString([ 'do' => 'queue', 'includes' => 0 ] );
+            }
+
+            \IPS\Output::i()->redirect( $url );
+        }
+
+        \IPS\Output::i()->output = $form;
+            //\IPS\Theme::i() ->getTemplate( 'proxyclass', 'storm', 'admin' ) ->button( $this->url->setQueryString( [ 'do' => 'queue' ] ) );
     }
 
     // Create new methods with the same name as the 'do' parameter which should execute it
@@ -56,7 +78,7 @@ class _proxyclass extends \IPS\Dispatcher\Controller
         \IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'storm_proxyclass_title' );
 
         \IPS\Output::i()->output = new \IPS\Helpers\MultipleRedirect(
-            \IPS\Http\Url::internal( "app=storm&module=configuration&controller=proxyclass&do=queue" ),
+            \IPS\Http\Url::internal( "app=storm&module=configuration&controller=proxyclass&do=queue&includes".\IPS\Request::i()->includes ),
             function( $data )
             {
                 if( !isset( $data[ 'total' ] ) )

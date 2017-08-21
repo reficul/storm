@@ -29,6 +29,8 @@ class _Proxyclass extends \IPS\Patterns\Singleton
     public function run( $data = [] )
     {
         $i = 0;
+        $includes = \IPS\Request::i()->includes;
+
         if( isset( \IPS\Data\Store::i()->storm_proxyclass_files ) )
         {
             $iterator = \IPS\Data\Store::i()->storm_proxyclass_files;
@@ -39,7 +41,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
             {
                 $i++;
                 $filePath = $file[ 0 ];
-                $this->build( $filePath );
+                $this->build( $filePath, $includes );
                 unset( $iterator[ $key ] );
                 if( $i == $limit )
                 {
@@ -70,12 +72,14 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         }
         else
         {
-            $this->buildConstants();
+            if( $includes ) {
+                $this->buildConstants();
+            }
             return null;
         }
     }
 
-    public function build( $file )
+    public function build( $file, $includes = 0)
     {
         $ds = DIRECTORY_SEPARATOR;
 
@@ -106,7 +110,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         }
         $regEx = '#(?:(?<!\w))(?:[^\w]|\s+)(?:(?:(?:abstract|final|static)\s+)*)class\s+([-a-zA-Z0-9_]+)?#';
 
-        $run = function( $matches ) use ( $namespace, $save, $db )
+        $run = function( $matches ) use ( $namespace, $save, $db, $includes )
         {
             if( isset( $matches[ 1 ] ) )
             {
@@ -122,7 +126,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                     //took less than 5 minutes to implement this 'ultra complex' code
                     try
                     {
-                        if( $db and method_exists( $testClass, 'db' ) )
+                        if( $db and method_exists( $testClass, 'db' ) and $includes )
                         {
                             if( $testClass::db()->checkForTable( $testClass::$databaseTable ) )
                             {
@@ -142,7 +146,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                             }
                         }
 
-                        if( $testClass === 'IPS\Settings' ){
+                        if( $testClass === 'IPS\Settings' and $includes ){
                             $isSettings = true;
                             $load = $testClass::i()->getData();
                             foreach( $load as $key => $val ){
