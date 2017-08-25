@@ -132,21 +132,26 @@ class _Generator extends \IPS\Patterns\Singleton
 
     public function generateForum( $category = false, $start = false )
     {
+        $parent = null;
         if( $start )
         {
             try
             {
-                \IPS\Db::i()->select( "*", "forums_forums", [], "RAND()" )->first();
-                if( \IPS\Db::i()->select('*', 'forums_forums')->count() > 2 ){
-                    throw new \Exception;
+                $parent = \IPS\Db::i()->select( "*", "forums_forums", [], "RAND()" )->first();
+                $parent = \IPS\forums\Forum::constructFromData( $parent );
+                try {
+                    $rand = rand( 1, 10);
+                    if( \IPS\Db::i()->select( '*', 'forums_forums', [ 'parent_id = ?', $parent ] )->count() > $rand) {
+                        throw new \Exception;
+                    }
+                }
+                catch( \Exception $e ){
+                    $category = false;
                 }
             }
             catch( \Exception $e )
             {
-                for( $i = 0; $i <= 3; $i++ )
-                {
-                    static::generateForum( true );
-                }
+                $parent = static::generateForum( true );
             }
         }
 
@@ -161,23 +166,18 @@ class _Generator extends \IPS\Patterns\Singleton
 
         if( !$category )
         {
-            if( !is_int( $makeCat ) )
+            if( $parent == null )
             {
                 try
                 {
                     $parent = $this->getForum();
-                    $parent = $parent->id;
                 }
                 catch( \Exception $e )
                 {
                     $parent = static::generateForum( true );
                 }
             }
-            else
-            {
-                $parent = static::generateForum( true );
-            }
-
+            $parent = $parent->id;
             if( \is_int( $findType ) )
             {
                 $type = "qa";
@@ -227,7 +227,7 @@ class _Generator extends \IPS\Patterns\Singleton
         \IPS\storm\Generator::create( "forums", $f->id );
         if( $category )
         {
-            return $f->id;
+            return $f;
         }
         else if( $start )
         {
