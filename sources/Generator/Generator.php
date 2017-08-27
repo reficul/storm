@@ -60,6 +60,11 @@ class _Generator extends \IPS\Patterns\ActiveRecord
         $d->save();
     }
 
+    public static function finished( $type )
+    {
+        
+    }
+
     public function process()
     {
         try

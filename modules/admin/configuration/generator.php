@@ -308,6 +308,8 @@ class _generator extends \IPS\Dispatcher\Controller
             },
             function()
             {
+                \IPS\storm\Generator::finished( "members" );
+
                 $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator" );
                 \IPS\Output::i()->redirect( $url, 'storm_member_creation_done' );
             }
@@ -330,7 +332,7 @@ class _generator extends \IPS\Dispatcher\Controller
             function( $data )
             {
                 $offset = 0;
-                $type = \IPS\Request::i()->type ?: "Forum";
+                $type = \IPS\Request::i()->type ?: "forums";
                 $limit = \IPS\Request::i()->limit ?: 10;
                 if( isset( $data[ 'offset' ] ) )
                 {
@@ -389,6 +391,9 @@ class _generator extends \IPS\Dispatcher\Controller
             },
             function()
             {
+                $type = \IPS\Request::i()->type ?: "forums";
+                \IPS\storm\Generator::finished( $type );
+                
                 $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator" );
                 \IPS\Output::i()->redirect( $url, 'storm_member_creation_done' );
             }
