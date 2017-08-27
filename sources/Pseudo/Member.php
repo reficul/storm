@@ -47,6 +47,9 @@ class _Member
 
     protected $font = '';
 
+    static protected $availableClubIds = [];
+    static protected $thereAreNoClubs = false;
+
     final public function __construct()
     {
         $this->first();
@@ -95,7 +98,7 @@ class _Member
         $this->email = $this->user . "@" . $domain;
     }
 
-    public function run( $password = null, $group = null, $avatar = null )
+    public function run( $password = null, $group = null, $avatar = null, $club = null )
     {
         $existing = \IPS\Member::load( $this->user, 'name' );
 
@@ -140,6 +143,50 @@ class _Member
             }
 
             $member->save();
+
+            /* Add member to club? */
+            if ( $club )
+            {
+                if ( self::$thereAreNoClubs == false AND count( self::$availableClubIds ) == 0 )
+                {
+                    self::$availableClubIds = iterator_to_array( \IPS\Db::i()->select( 'id', 'core_clubs' ) );
+
+                    if ( count( self::$availableClubIds ) == 0 )
+                    {
+                        self::$thereAreNoClubs = true;
+                    }
+                }
+
+                if ( self::$thereAreNoClubs == false )
+                {
+                    $joinedAClub = false;
+
+                    foreach( self::$availableClubIds as $club )
+                    {
+                        $areWeJoining = rand( 0, 1 ); /* 50% chance of joinging the club */
+
+                        if ( $areWeJoining == 1 )
+                        {
+                            \IPS\Db::i()->insert( 'core_clubs_memberships', array(
+                                'club_id'   => $club,
+                                'member_id' => $member->member_id,
+                                'joined'    => time(),
+                                'status'    => 'member',
+                                'added_by'  => NULL,
+                                'invited_by'=> NULL,
+                            ) );
+
+                            $joinedAClub = true;
+                        }
+                    }
+
+                    if ( $joinedAClub )
+                    {
+                        $member->rebuildPermissionArray();
+                    }
+                }
+            }
+
             \IPS\storm\Generator::create( "members", $member->member_id );
         }
         else
@@ -148,7 +195,7 @@ class _Member
             $this->last();
             $this->username();
             $this->email();
-            $this->run( $password, $group, $avatar );
+            $this->run( $password, $group, $avatar, $club );
         }
     }
 
