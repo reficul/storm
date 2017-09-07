@@ -101,6 +101,7 @@ $lang = [
     'storm_mc_limit_desc' => "How many dummy records to create",
     'storm_mc_passwords' => "Random Password",
     'storm_mc_avatars' => "Create Avatars",
+    'storm_mc_club' => "Randomly join available clubs",
     'storm_mc_group' => "Group",
     'menu__storm_configuration_generator' => "Dummy Data Generator",
     'storm_gen_type' => "Type",

@@ -60,6 +60,17 @@ class _Generator extends \IPS\Patterns\ActiveRecord
         $d->save();
     }
 
+    public static function finished( $type )
+    {
+        if ( $type == 'members' OR $type == 'delete' )
+        {
+            foreach( new \IPS\Patterns\ActiveRecordIterator( \IPS\Db::i()->select( '*', 'core_clubs' ), 'IPS\Member\Club' ) as $club )
+            {
+                $club->recountMembers();
+            }
+        }
+    }
+
     public function process()
     {
         try
