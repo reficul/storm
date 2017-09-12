@@ -1,8 +1,7 @@
 //<?php
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
-if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
-{
+if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) ) {
     exit;
 }
 
@@ -22,13 +21,16 @@ class storm_hook_Application extends _HOOK_CLASS_
         parent::build();
     }
 
+    public function installJavascript( $offset=null, $limit=null ){
+        parent::installJavascript($offset, $limit);
+        \IPS\storm\Proxyclass::i()->generateSettings();
+    }
+
     public function installOther()
     {
-        if( \IPS\IN_DEV and defined( 'CJ_STORM_BUILD_DEV' ) and CJ_STORM_BUILD_DEV )
-        {
+        if ( \IPS\IN_DEV and defined( 'CJ_STORM_BUILD_DEV' ) and CJ_STORM_BUILD_DEV ) {
             $dir = \IPS\ROOT_PATH . "/applications/" . $this->directory . "/dev/";
-            if( !file_exists( $dir ) and $this->directory !== "storm" )
-            {
+            if ( !file_exists( $dir ) and $this->directory !== "storm" ) {
                 $app = new \IPS\storm\Apps( $this );
                 $app->addToStack = true;
                 $app->email();

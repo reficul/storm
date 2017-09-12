@@ -29,6 +29,18 @@
             "controller": "generator",
             "do": "",
             "restriction": "members_manage"
+        },
+        "menu": {
+            "tab": "core",
+            "controller": "menu",
+            "do": "",
+            "restriction": "menu_manage"
+        },
+        "sync": {
+            "tab": "core",
+            "controller": "sync",
+            "do": "",
+            "restriction": "sync_manage"
         }
     }
 }

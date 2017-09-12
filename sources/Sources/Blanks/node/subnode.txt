@@ -1,0 +1,4 @@
+	/**
+	 * @brief	[Node] Subnode class
+	 */
+	public static $subnodeClass = 'IPS\\#subnode_class#';

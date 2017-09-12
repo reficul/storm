@@ -68,7 +68,8 @@ class _generator extends \IPS\Dispatcher\Controller
                         'members' => [
                             'storm_mc_passwords',
                             'storm_mc_avatars',
-                            'storm_mc_group'
+                            'storm_mc_group',
+                            'storm_mc_club'
                         ]
                     ]
                 ],
@@ -99,6 +100,11 @@ class _generator extends \IPS\Dispatcher\Controller
                 'name' => "storm_mc_avatars"
             ],
             [
+                'class' => "YesNo",
+                'default' => 1,
+                'name' => "storm_mc_club"
+            ],
+            [
                 'class' => "Select",
                 'name' => "storm_mc_group",
                 'default' => \IPS\Settings::i()->getFromConfGlobal( 'member_group' ),
@@ -119,13 +125,13 @@ class _generator extends \IPS\Dispatcher\Controller
                                         'password' => $vals[ 'storm_mc_passwords' ],
                                         'limit' => $vals[ 'storm_mc_limit' ],
                                         'avatar' => $vals[ 'storm_mc_avatars' ],
-                                        'group' => $vals[ 'storm_mc_group' ]
+                                        'group' => $vals[ 'storm_mc_group' ],
+                                        'club' => $vals[ 'storm_mc_club' ]
                                     ] );
             }
             else
             {
-                $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=generator" )
-                                    ->setQueryString( [
+                $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=generator" )->setQueryString( [
                                         'type' => $vals[ 'storm_gen_type' ],
                                         'limit' => $vals[ 'storm_mc_limit' ]
                                     ] );
@@ -209,6 +215,9 @@ class _generator extends \IPS\Dispatcher\Controller
             },
             function()
             {
+
+                \IPS\storm\Generator::finished( "delete" );
+
                 /* And redirect back to the overview screen */
                 $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator" );
                 \IPS\Output::i()->redirect( $url, 'storm_generation_delete_done' );
@@ -224,12 +233,14 @@ class _generator extends \IPS\Dispatcher\Controller
         $password = \IPS\Request::i()->password ?: null;
         $group = \IPS\Request::i()->group ?: null;
         $avatar = \IPS\Request::i()->avatar ?: null;
+        $club = \IPS\Request::i()->club ?: null;
         $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=createMembers" )
                             ->setQueryString( [
                                 'password' => $password,
                                 'limit' => $limit,
                                 'avatar' => $avatar,
-                                'group' => $group
+                                'group' => $group,
+                                'club'  => $club,
                             ] );
 
         \IPS\Output::i()->output = new \IPS\Helpers\MultipleRedirect(
@@ -241,6 +252,8 @@ class _generator extends \IPS\Dispatcher\Controller
                 $password = \IPS\Request::i()->password ?: null;
                 $group = \IPS\Request::i()->group ?: null;
                 $avatar = \IPS\Request::i()->avatar ?: null;
+                $club = \IPS\Request::i()->club ?: null;
+
                 if( isset( $data[ 'offset' ] ) )
                 {
                     $offset = $data[ 'offset' ];
@@ -266,6 +279,11 @@ class _generator extends \IPS\Dispatcher\Controller
                     $avatar = $data[ 'avatar' ];
                 }
 
+                if ( isset( $data[ 'club' ] ) )
+                {
+                    $club = $data[ 'club' ];
+                }
+
                 $max = 10;
 
                 if( $limit < $max )
@@ -282,7 +300,7 @@ class _generator extends \IPS\Dispatcher\Controller
                 for( $i = 0; $i < $max; $i++ )
                 {
                     $mem = new \IPS\storm\Pseudo\Member;
-                    $mem->run( $password, $group, $avatar );
+                    $mem->run( $password, $group, $avatar, $club );
                     $offset++;
                 }
 
@@ -300,6 +318,7 @@ class _generator extends \IPS\Dispatcher\Controller
                         'password' => $password,
                         'group' => $group,
                         'avatar' => $avatar,
+                        'club' => $club,
                         'limit' => $limit,
                         'offset' => $offset
                     ],
@@ -309,6 +328,8 @@ class _generator extends \IPS\Dispatcher\Controller
             },
             function()
             {
+                \IPS\storm\Generator::finished( "members" );
+
                 $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator" );
                 \IPS\Output::i()->redirect( $url, 'storm_member_creation_done' );
             }
@@ -321,8 +342,7 @@ class _generator extends \IPS\Dispatcher\Controller
         \IPS\Output::i()->title = "Generator";
         $type = \IPS\Request::i()->type ?: "forums";
         $limit = \IPS\Request::i()->limit ?: 10;
-        $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=generator" )
-                            ->setQueryString( [
+        $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator&do=generator" )->setQueryString( [
                                 'type' => $type,
                                 'limit' => $limit
                             ] );
@@ -332,7 +352,7 @@ class _generator extends \IPS\Dispatcher\Controller
             function( $data )
             {
                 $offset = 0;
-                $type = \IPS\Request::i()->type ?: "Forum";
+                $type = \IPS\Request::i()->type ?: "forums";
                 $limit = \IPS\Request::i()->limit ?: 10;
                 if( isset( $data[ 'offset' ] ) )
                 {
@@ -391,6 +411,9 @@ class _generator extends \IPS\Dispatcher\Controller
             },
             function()
             {
+                $type = \IPS\Request::i()->type ?: "forums";
+                \IPS\storm\Generator::finished( $type );
+                
                 $url = \IPS\Http\Url::internal( "app=storm&module=configuration&controller=generator" );
                 \IPS\Output::i()->redirect( $url, 'storm_member_creation_done' );
             }

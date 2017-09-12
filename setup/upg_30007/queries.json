@@ -1,0 +1,178 @@
+{
+    "1": {
+        "method": "createTable",
+        "params": [
+            {
+                "name": "storm_sync",
+                "columns": {
+                    "sync_id": {
+                        "name": "sync_id",
+                        "type": "BIGINT",
+                        "length": 20,
+                        "decimals": null,
+                        "values": null,
+                        "allow_null": false,
+                        "default": null,
+                        "comment": "ID Number",
+                        "unsigned": true,
+                        "zerofill": false,
+                        "auto_increment": true,
+                        "binary": false
+                    },
+                    "sync_key": {
+                        "name": "sync_key",
+                        "type": "VARCHAR",
+                        "length": 50,
+                        "decimals": null,
+                        "values": null,
+                        "allow_null": false,
+                        "default": "",
+                        "comment": "",
+                        "unsigned": false,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_host": {
+                        "name": "sync_host",
+                        "type": "TINYTEXT",
+                        "length": null,
+                        "decimals": null,
+                        "values": null,
+                        "allow_null": false,
+                        "default": null,
+                        "comment": "",
+                        "unsigned": false,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_pass": {
+                        "name": "sync_pass",
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "decimals": null,
+                        "values": null,
+                        "allow_null": false,
+                        "default": "",
+                        "comment": "",
+                        "unsigned": false,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_port": {
+                        "name": "sync_port",
+                        "type": "INT",
+                        "length": 10,
+                        "decimals": null,
+                        "values": null,
+                        "allow_null": false,
+                        "default": "",
+                        "comment": "",
+                        "unsigned": true,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_timeout": {
+                        "name": "sync_timeout",
+                        "type": "INT",
+                        "length": 10,
+                        "decimals": null,
+                        "values": null,
+                        "allow_null": false,
+                        "default": "",
+                        "comment": "",
+                        "unsigned": true,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_secure": {
+                        "name": "sync_secure",
+                        "type": "TINYINT",
+                        "length": 1,
+                        "decimals": null,
+                        "values": null,
+                        "allow_null": false,
+                        "default": "0",
+                        "comment": "",
+                        "unsigned": true,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_ssh": {
+                        "name": "sync_ssh",
+                        "type": "TINYINT",
+                        "length": 1,
+                        "decimals": null,
+                        "values": null,
+                        "allow_null": true,
+                        "default": "0",
+                        "comment": "",
+                        "unsigned": true,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_interface_host": {
+                        "name": "sync_interface_host",
+                        "type": "TINYTEXT",
+                        "length": 0,
+                        "decimals": null,
+                        "values": [],
+                        "allow_null": false,
+                        "default": "",
+                        "comment": "",
+                        "unsigned": false,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_username": {
+                        "name": "sync_username",
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "decimals": null,
+                        "values": [],
+                        "allow_null": false,
+                        "default": "",
+                        "comment": "",
+                        "unsigned": false,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    },
+                    "sync_app": {
+                        "name": "sync_app",
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "decimals": null,
+                        "values": [],
+                        "allow_null": false,
+                        "default": "",
+                        "comment": "",
+                        "unsigned": true,
+                        "zerofill": false,
+                        "auto_increment": false,
+                        "binary": false
+                    }
+                },
+                "indexes": {
+                    "PRIMARY": {
+                        "type": "primary",
+                        "name": "PRIMARY",
+                        "columns": [
+                            "sync_id"
+                        ],
+                        "length": [
+                            null
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

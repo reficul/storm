@@ -1,8 +1,7 @@
 //<?php
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
-if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
-{
+if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) ) {
     exit;
 }
 
@@ -10,34 +9,29 @@ abstract class storm_hook_AbstractData extends _HOOK_CLASS_
 {
     protected $closedKeys = [
         'storm_bt',
-        'storm_cache'
+        'storm_cache',
     ];
 
     public function __get( $key )
     {
-        if( ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
-        {
+        if ( ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) ) {
 
-            if( !isset( $this->_data[ $key ] ) )
-            {
-                if( $this->exists( $key ) )
-                {
+            if ( !isset( $this->_data[ $key ] ) ) {
+                if ( $this->exists( $key ) ) {
                     $cache = $this->get( $key );
                     $value = json_decode( $cache, true );
 
-                    if( !in_array( $key, $this->closedKeys ) )
-                    {
+                    if ( !in_array( $key, $this->closedKeys ) ) {
                         \IPS\storm\Profiler::i()->cacheLog( [
-                            'type' => 'get',
-                            'key' => $key,
-                            //                            'cache' => var_export($cache, TRUE),
-                            'backtrace' => var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true )
-                        ] );
+                                                                'type'      => 'get',
+                                                                'key'       => $key,
+                                                                //                            'cache' => var_export($cache, TRUE),
+                                                                'backtrace' => var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true ),
+                                                            ] );
                     }
                     $this->_data[ $key ] = $value;
                 }
-                else
-                {
+                else {
                     throw new \OutOfRangeException;
                 }
             }
@@ -50,17 +44,14 @@ abstract class storm_hook_AbstractData extends _HOOK_CLASS_
 
     public function __set( $key, $value )
     {
-
-        if( ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
-        {
-            if( !in_array( $key, $this->closedKeys ) )
-            {
+        if ( ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) ) {
+            if ( !in_array( $key, $this->closedKeys ) ) {
                 \IPS\storm\Profiler::i()->cacheLog( [
-                    'type' => 'set',
-                    'key' => $key,
-                    //                    'cache' => var_export($value, TRUE),
-                    'backtrace' => var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true )
-                ] );
+                                                        'type'      => 'set',
+                                                        'key'       => $key,
+                                                        //                    'cache' => var_export($value, TRUE),
+                                                        'backtrace' => var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ), true ),
+                                                    ] );
             }
         }
 
@@ -69,16 +60,14 @@ abstract class storm_hook_AbstractData extends _HOOK_CLASS_
 
     public function storeWithExpire( $key, $value, \IPS\DateTime $expire, $fallback = false )
     {
-        if( ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
-        {
-            if( !in_array( $key, $this->closedKeys ) )
-            {
+        if ( ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) ) {
+            if ( !in_array( $key, $this->closedKeys ) ) {
                 \IPS\storm\Profiler::i()->cacheLog( [
-                    'type' => 'set',
-                    'key' => $key,
-                    //                    'cache' => var_export($value, TRUE),
-                    'backtrace' => var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) )
-                ] );
+                                                        'type'      => 'set',
+                                                        'key'       => $key,
+                                                        //                    'cache' => var_export($value, TRUE),
+                                                        'backtrace' => var_export( debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) ),
+                                                    ] );
             }
         }
 

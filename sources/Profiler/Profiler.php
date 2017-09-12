@@ -2,12 +2,12 @@
 
 /**
  * @brief       Profiler Active Record
- * @author      -storm_author-
- * @copyright   -storm_copyright-
+ * @author      <a href='http://codingjungle.com'>Michael Edwards</a>
+ * @copyright   (c) 2017 Michael Edwards
  * @package     IPS Social Suite
  * @subpackage  Storm
  * @since       -storm_since_version-
- * @version     -storm_version-
+ * @version     3.0.4
  */
 
 namespace IPS\storm;
@@ -54,9 +54,8 @@ class _Profiler
     protected $memEnabled = true;
     protected $cacheEnabled = true;
     protected $timeEnabled = true;
-    protected $type = 0;
 
-    final protected function __construct( $type )
+    final protected function __construct()
     {
 
         if( defined( 'CJ_STORM_PROFILER_DISABLE_LOGS' ) and CJ_STORM_PROFILER_DISABLE_LOGS )
@@ -95,39 +94,22 @@ class _Profiler
         }
     }
 
-    public static function i( $type = 0 )
+    public static function i( )
     {
         if( static::$instance === null )
         {
-            static::$instance = new static( $type );
+            static::$instance = new static( );
         }
-        static::$instance->type = $type;
         return static::$instance;
     }
 
-    public function run()
+    public function run($type = false)
     {
-        if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+        if( !\IPS\Request::i()->isAjax() and (  ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
         {
             $this->fileTab();
             $this->memoryTotal();
             $this->totalTime();
-            if( $this->type == 1 )
-            {
-                if( isset( \IPS\Data\Store::i()->storm_bt ) )
-                {
-                    unset( \IPS\Data\Store::i()->storm_bt );
-                }
-
-                if( isset( \IPS\Data\Store::i()->storm_cache ) )
-                {
-                    unset( \IPS\Data\Store::i()->storm_cache );
-                }
-            }
-
-            \IPS\Data\Store::i()->storm_bt = $this->dbLogs;
-            \IPS\Data\Store::i()->storm_cache = $this->cacheLogs;
-
             return \IPS\storm\Profiler\Template::i()->tabs();
         }
     }
@@ -166,7 +148,7 @@ class _Profiler
     {
         if( $this->memEnabled )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
 
                 $mem = ( \is_object( $object ) ) ? mb_strlen( \serialize( $object ) ) : \memory_get_usage();
@@ -207,7 +189,7 @@ class _Profiler
 
     protected function totalTime()
     {
-        if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+        if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
         {
 
             $this->totalTime = round( microtime( true ) - $_SERVER[ "REQUEST_TIME_FLOAT" ], 4 );
@@ -236,7 +218,7 @@ class _Profiler
     {
         if( $this->logsTab )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
                 $exception_class = '';
                 $exception_code = '';
@@ -290,23 +272,27 @@ class _Profiler
     {
         if( $this->dbEnabled )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
 
                 $this->consoleTab++;
                 $this->dbQueriesTab++;
-                $hash = sha1( trim( $query[ 'backtrace' ] ) );
-                $this->dbLogs[ $hash ] = $query;
+                $hash = sha1( 'db_'. trim( $query[ 'backtrace' ] ) );
                 $msg = \IPS\storm\Profiler\Template::i()->db( [
                     'query' => $query[ 'query' ],
-                    'backtrace' => $hash,
+                    'backtrace' => $query[ 'backtrace' ],
+                    'hash' => $hash,
                     'time' => $time
                 ] );
-                $msg = \IPS\storm\Profiler\Template::i()
-                                                   ->consoleContainer( 'DbQueries', $msg, "DB Query",
-                                                       $this->oddEven( $this->dbQueriesTab ) );
+
+                $msg2 = \IPS\storm\Profiler\Template::i()->db2( [
+                    'query' => $query[ 'query' ],
+                    'time' => $time
+                ] );
+                $msg = \IPS\storm\Profiler\Template::i()->consoleContainer( 'DbQueries', $msg, "DB Query", $this->oddEven( $this->dbQueriesTab ) );
+                $msg2 = \IPS\storm\Profiler\Template::i()->consoleContainer( 'DbQueries', $msg2, 'DB Query', $this->oddEven( $this->dbQueriesTab ) );
                 $this->dbQueriesList = $msg . "\n" . $this->dbQueriesList;
-                $this->processedLogs = $msg . "\n" . $this->processedLogs;
+                $this->processedLogs = $msg2 . "\n" . $this->processedLogs;
 
                 if( $this->dbEnabledSpeed )
                 {
@@ -320,7 +306,7 @@ class _Profiler
     {
         if( $this->timeEnabled )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
 
                 $this->consoleTab++;
@@ -341,7 +327,7 @@ class _Profiler
     {
         if( $this->memEnabled )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
 
                 $this->mstart = \memory_get_usage();
@@ -353,7 +339,7 @@ class _Profiler
     {
         if( $this->memEnabled )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
 
                 if( $this->mstart !== null )
@@ -381,17 +367,18 @@ class _Profiler
     {
         if( $this->cacheEnabled )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
                 $this->consoleTab++;
                 $this->cacheTab++;
-                $this->cacheLogs[ $this->cacheTab ] = $cache;
-                $msg = \IPS\storm\Profiler\Template::i()->cache( $cache[ 'type' ], $cache[ 'key' ], $this->cacheTab );
-                $msg = \IPS\storm\Profiler\Template::i()
-                                                   ->consoleContainer( 'Cache', $msg, "Cache",
-                                                       $this->oddEven( $this->cacheTab ) );
+                $hash = sha1( 'cache_'. trim( $cache[ 'backtrace' ] ) );
+                $msg = \IPS\storm\Profiler\Template::i()->cache( $cache , $hash );
+                $msg2 = \IPS\storm\Profiler\Template::i()->cache2( $cache[ 'type' ], $cache[ 'key' ]);
+
+                $msg = \IPS\storm\Profiler\Template::i()->consoleContainer( 'Cache', $msg, "Cache", $this->oddEven( $this->cacheTab ) );
+                $msg2 = \IPS\storm\Profiler\Template::i()->consoleContainer( 'Cache', $msg2, "Cache", $this->oddEven( $this->cacheTab ) );
                 $this->cacheList = $msg . "\n" . $this->cacheList;
-                $this->processedLogs = $msg . "\n" . $this->processedLogs;
+                $this->processedLogs = $msg2 . "\n" . $this->processedLogs;
             }
         }
     }
@@ -400,7 +387,7 @@ class _Profiler
     {
         if( $this->timeEnabled )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
 
                 $this->ttime = microtime( true );
@@ -412,7 +399,7 @@ class _Profiler
     {
         if( $this->timeEnabled )
         {
-            if( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) )
+            if( !\IPS\Request::i()->isAjax() and ( ( defined( 'CJ_STORM_PROFILER' ) and CJ_STORM_PROFILER ) or ( defined( 'CJ_STORM_PROFILER_SAFE_MODE' ) and CJ_STORM_PROFILER_SAFE_MODE and \IPS\storm\Profiler::profilePassCheck() ) ) )
             {
 
                 if( $this->ttime !== null )

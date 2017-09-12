@@ -166,3 +166,6 @@
     background: #fff !important;
     color:#000 !important;
 }
+html[dir="ltr"] body {
+    margin-right: 0;
+}

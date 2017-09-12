@@ -29,6 +29,8 @@ class _Proxyclass extends \IPS\Patterns\Singleton
     public function run( $data = [] )
     {
         $i = 0;
+        $includes = \IPS\Request::i()->includes;
+
         if( isset( \IPS\Data\Store::i()->storm_proxyclass_files ) )
         {
             $iterator = \IPS\Data\Store::i()->storm_proxyclass_files;
@@ -39,7 +41,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
             {
                 $i++;
                 $filePath = $file[ 0 ];
-                $this->build( $filePath );
+                $this->build( $filePath, $includes );
                 unset( $iterator[ $key ] );
                 if( $i == $limit )
                 {
@@ -70,11 +72,14 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         }
         else
         {
+            if( $includes ) {
+                $this->buildConstants();
+            }
             return null;
         }
     }
 
-    public function build( $file )
+    public function build( $file, $includes = 0)
     {
         $ds = DIRECTORY_SEPARATOR;
 
@@ -90,7 +95,11 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         $content = \file_get_contents( $file );
         $content = \preg_replace( '!/\*.*?\*/!s', '', $content );
         $content = \preg_replace( '/\n\s*\n/', "\n", $content );
-
+        preg_match( '#\$databaseTable(.*?)\=(.*?)[\'|"](.*?)[\'|"]\;#msu', $content, $match);
+        $db = null;
+        if( isset( $match[3] ) ){
+            $db = $match[3];
+        }
         \preg_match( '/namespace(.+?)([^\;]+)/', $content, $matched );
 
         $namespace = null;
@@ -99,9 +108,9 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         {
             $namespace = $matched[ 0 ];
         }
-
         $regEx = '#(?:(?<!\w))(?:[^\w]|\s+)(?:(?:(?:abstract|final|static)\s+)*)class\s+([-a-zA-Z0-9_]+)?#';
-        $run = function( $matches ) use ( $namespace, $save )
+
+        $run = function( $matches ) use ( $namespace, $save, $db, $includes )
         {
             if( isset( $matches[ 1 ] ) )
             {
@@ -110,12 +119,53 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                     $content = '';
                     $append = \ltrim( $matches[ 1 ], '\\' );
                     $class = \str_replace( '_', '', \ltrim( $matches[ 1 ], '\\' ) );
-                    $alt = \str_replace( [
-                        "\\",
-                        " ",
-                        ";"
-                    ], "_", $namespace );
 
+                    $extra = '';
+                    $testClass = \str_replace( 'namespace ', '', $namespace ) . '\\' . $class;
+                    $isSettings = false;
+                    //took less than 5 minutes to implement this 'ultra complex' code
+                    try
+                    {
+                        if( $db and method_exists( $testClass, 'db' ) and $includes )
+                        {
+                            if( $testClass::db()->checkForTable( $testClass::$databaseTable ) )
+                            {
+                                $foo = $testClass::db()->getTableDefinition( $testClass::$databaseTable );
+                                if( isset( $foo[ 'columns' ] ) )
+                                {
+                                    foreach( $foo[ 'columns' ] as $key => $val )
+                                    {
+                                        if( mb_substr( $key, 0, mb_strlen( $testClass::$databasePrefix ) ) == $testClass::$databasePrefix
+                                        )
+                                        {
+                                            $key = mb_substr( $key, mb_strlen( $testClass::$databasePrefix ) );
+                                        }
+                                        $extra .= "public \${$key} = '';\n";
+                                    }
+                                }
+                            }
+                        }
+
+                        if( $testClass === 'IPS\Settings' and $includes ){
+                            $isSettings = true;
+                            $load = $testClass::i()->getData();
+                            foreach( $load as $key => $val ){
+                                $extra .= "public \${$key} = '';\n";
+                            }
+                        }
+                    }
+                    catch( \Exception $e ){};
+
+                    if( !$isSettings ) {
+                        $alt = \str_replace( [
+                            "\\",
+                            " ",
+                            ";",
+                        ], "_", $namespace );
+                    }
+                    else{
+                        $alt = 'IPS_Settings_lone';
+                    }
                     if( !\is_file( $save . $alt . '.php' ) )
                     {
                         $content = "<?php\n\n";
@@ -125,8 +175,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
                             $content .= $namespace . ";\n";
                         }
                     }
-
-                    $content .= str_replace( '_', '', $matches[ 0 ] ) . ' extends ' . $append . '{}' . "\n";
+                    $content .= str_replace( '_', '', $matches[ 0 ] ) . ' extends ' . $append . '{' . PHP_EOL . $extra . '}' . "\n";
                     $createdClass[ \str_replace( 'namespace ', '', $namespace ) ][] = $class;
 
                     \file_put_contents( $save . $alt . ".php", $content, FILE_APPEND );
@@ -136,6 +185,54 @@ class _Proxyclass extends \IPS\Patterns\Singleton
         };
         preg_replace_callback( $regEx, $run, $content, 1 );
 
+    }
+
+    public function buildConstants(){
+        $load = \IPS\IPS::defaultConstants();
+        $ds = DIRECTORY_SEPARATOR;
+        $root = \IPS\ROOT_PATH;
+        $save = $root . $ds . $this->save . $ds;
+        $extra = "\n";
+        foreach( $load as $key => $val ){
+            if( !is_numeric( $val ) ){
+                $val = "'".$val."'";
+            }
+            $extra .= 'define( "IPS\\'.$key.'",'. $val.");\n";
+        }
+        $php = <<<EOF
+<?php
+{$extra}
+EOF;
+        \file_put_contents( $save .  "IPS_Constants_lone.php", $php );
+        \chmod( $save .  "IPS_Constants_lone.php", 0777 );
+    }
+
+    public function generateSettings(){
+        $ds = DIRECTORY_SEPARATOR;
+        $root = \IPS\ROOT_PATH;
+        $save = $root . $ds . $this->save . $ds;
+
+        if( !file_exists($save .  "IPS_Settings_lone.php") )
+        {
+            return false;
+        }
+
+        $load = \IPS\Settings::i()->getData();
+        $extra = "\n";
+        foreach( $load as $key => $val ){
+            $extra .= "public \${$key} = '';\n";
+        }
+        $php = <<<EOF
+<?php
+
+namespace IPS;
+
+class Settings extends _Settings {
+{$extra}
+}
+EOF;
+        \file_put_contents( $save .  "IPS_Settings_lone.php", $php );
+        \chmod( $save .  "IPS_Settings_lone.php", 0777 );
     }
 
     public function dirIterator()
@@ -193,7 +290,7 @@ class _Proxyclass extends \IPS\Patterns\Singleton
             'init.php',
             'error.php',
             '404error.php',
-            'StormTemplates'
+            'StormTemplates',
         ];
 
         $filter = function( $file, $key, $iterator ) use ( $exclude )

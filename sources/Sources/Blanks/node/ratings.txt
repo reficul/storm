@@ -1,0 +1,4 @@
+	/**
+	 * @brief	[Node] By mapping appropriate columns (rating_average and/or rating_total + rating_hits) allows to cache rating values
+	 */
+	public static $ratingColumnMap	= array();

@@ -1,19 +1,17 @@
 //<?php
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
-if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
-{
+if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) ) {
     exit;
 }
 
 class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
 {
-    public function execute($command='do')
+    public function execute( $command = 'do' )
     {
-        \IPS\Output::i()->jsVars[ 'storm_table_url' ] = (string)\IPS\Http\Url::internal( 'app=storm&module=configuration&controller=settings' );
-        parent::execute($command);
+        \IPS\Output::i()->jsVars[ 'storm_table_url' ] = (string) \IPS\Http\Url::internal( 'app=storm&module=configuration&controller=settings' );
+        parent::execute( $command );
     }
-
 
     public function addVersionQuery()
     {
@@ -30,8 +28,7 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
         $t = [];
         $t[ 0 ] = "Select Table";
 
-        foreach( $tables as $table )
-        {
+        foreach ( $tables as $table ) {
             $foo = array_values( $table );
             $t[ $foo[ 0 ] ] = $foo[ 0 ];
         }
@@ -39,26 +36,26 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
         $el[ 'prefix' ] = 'storm_query_';
 
         $el[] = [
-            'name' => "select",
-            'class' => "Select",
+            'name'     => "select",
+            'class'    => "Select",
             'required' => true,
-            'ops' => [
+            'ops'      => [
                 'options' => [
-                    0 => "Select One",
-                    "addColumn" => "Add Column",
+                    0            => "Select One",
+                    "addColumn"  => "Add Column",
                     //                    "changeColumn" => "Change Column",
                     "dropColumn" => "Drop Column",
-                    "code" => "Code Box",
+                    "code"       => "Code Box",
                 ],
                 'toggles' => [
-                    'code' => [
+                    'code'       => [
                         'code',
                     ],
                     'dropColumn' => [
                         'table',
                         'columns',
                     ],
-                    'addColumn' => [
+                    'addColumn'  => [
                         'table',
                         'add_column',
                         'type',
@@ -82,83 +79,69 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
             ],
         ];
 
-        $val = function( $val )
-        {
+        $val = function ( $val ) {
             /* Check it starts with \IPS\Db::i()-> */
             $val = trim( $val );
-            if( mb_substr( $val, 0, 14 ) !== '\IPS\Db::i()->' )
-            {
+            if ( mb_substr( $val, 0, 14 ) !== '\IPS\Db::i()->' ) {
                 throw new \DomainException( 'versions_query_start' );
             }
 
             /* Check there's only one query */
-            if( mb_substr( $val, -1 ) !== ';' )
-            {
+            if ( mb_substr( $val, -1 ) !== ';' ) {
                 $val .= ';';
             }
-            if( mb_substr_count( $val, ';' ) > 1 )
-            {
+            if ( mb_substr_count( $val, ';' ) > 1 ) {
                 throw new \DomainException( 'versions_query_one' );
             }
 
             /* Check our Regex will be okay with it */
             preg_match( '/^\\\IPS\\\Db::i\(\)->(.+?)\(\s*[\'"](.+?)[\'"]\s*(,\s*(.+?))?\)\s*;$/', $val, $matches );
-            if( empty( $matches ) )
-            {
+            if ( empty( $matches ) ) {
                 throw new \DomainException( 'versions_query_format' );
             }
 
             /* Run it if we're adding it to the current working version */
-            if( \IPS\Request::i()->id == 'working' )
-            {
-                try
-                {
-                    try
-                    {
-                        if( @eval( $val ) === false )
-                        {
+            if ( \IPS\Request::i()->id == 'working' ) {
+                try {
+                    try {
+                        if ( @eval( $val ) === false ) {
                             throw new \DomainException( 'versions_query_phperror' );
                         }
-                    }
-                    catch( \ParseError $e )
-                    {
+                    } catch ( \ParseError $e ) {
                         throw new \DomainException( 'versions_query_phperror' );
                     }
-                }
-                catch( \IPS\Db\Exception $e )
-                {
+                } catch ( \IPS\Db\Exception $e ) {
                     throw new \DomainException( $e->getMessage() );
                 }
             }
         };
 
         $el[] = [
-            'name' => 'code',
-            'class' => "TextArea",
-            'default' => '\IPS\Db::i()->',
+            'name'     => 'code',
+            'class'    => "TextArea",
+            'default'  => '\IPS\Db::i()->',
             'required' => true,
-            'v' => $val,
-            'ops' => [
+            'v'        => $val,
+            'ops'      => [
                 'size' => 45,
             ],
         ];
 
-        if( !isset( \IPS\Request::i()->storm_query_code ) or \IPS\Request::i()->storm_query_code != 'code' )
-        {
+        if ( !isset( \IPS\Request::i()->storm_query_code ) or \IPS\Request::i()->storm_query_code != 'code' ) {
             $el[] = [
-                'name' => "table",
-                'class' => "Select",
+                'name'     => "table",
+                'class'    => "Select",
                 'required' => true,
-                'ops' => [
+                'ops'      => [
                     'options' => $t,
-                    'parse' => 'raw',
+                    'parse'   => 'raw',
                 ],
             ];
 
             $el[] = [
-                'name' => "columns",
+                'name'        => "columns",
                 'customClass' => "\\IPS\\storm\\Forms\\Select",
-                'ops' => [
+                'ops'         => [
                     'options' => [
 
                     ],
@@ -173,7 +156,7 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
                 'comment',
                 'sunsigned',
                 'zerofill',
-                'auto_increment'
+                'auto_increment',
             ];
 
             $decfloat = [
@@ -184,14 +167,14 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
                 'default',
                 'comment',
                 'sunsigned',
-                'zerofill'
+                'zerofill',
             ];
 
             $dates = [
                 'add_column',
                 'allow_null',
                 'default',
-                'comment'
+                'comment',
             ];
 
             $char = [
@@ -200,14 +183,14 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
                 'allow_null',
                 'default',
                 'comment',
-                'binary'
+                'binary',
             ];
 
             $text = [
                 'add_column',
                 'allow_null',
                 'comment',
-                'binary'
+                'binary',
             ];
 
             $binary = [
@@ -215,13 +198,13 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
                 'length',
                 'allow_null',
                 'default',
-                'comment'
+                'comment',
             ];
 
             $blob = [
                 'add_column',
                 'allow_null',
-                'comment'
+                'comment',
             ];
 
             $enum = [
@@ -229,265 +212,237 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
                 'values',
                 'allow_null',
                 'default',
-                'comment'
+                'comment',
             ];
 
             $el[] = [
                 'class' => "Select",
-                'name' => "type",
-                'ops' => [
+                'name'  => "type",
+                'ops'   => [
                     'options' => \IPS\Db::$dataTypes,
                     'toggles' => [
-                        'TINYINT' => $ints,
-                        'SMALLINT' => $ints,
-                        'MEDIUMINT' => $ints,
-                        'INT' => $ints,
-                        'BIGINT' => $ints,
-                        'DECIMAL' => $decfloat,
-                        'FLOAT' => $decfloat,
-                        'BIT' => [
+                        'TINYINT'    => $ints,
+                        'SMALLINT'   => $ints,
+                        'MEDIUMINT'  => $ints,
+                        'INT'        => $ints,
+                        'BIGINT'     => $ints,
+                        'DECIMAL'    => $decfloat,
+                        'FLOAT'      => $decfloat,
+                        'BIT'        => [
                             'columns',
                             'length',
                             'allow_null',
                             'default',
                             'comment',
                         ],
-                        'DATE' => $dates,
-                        'DATETIME' => $dates,
-                        'TIMESTAMP' => $dates,
-                        'TIME' => $dates,
-                        'YEAR' => $dates,
-                        'CHAR' => $char,
-                        'VARCHAR' => $char,
-                        'TINYTEXT' => $text,
-                        'TEXT' => $text,
+                        'DATE'       => $dates,
+                        'DATETIME'   => $dates,
+                        'TIMESTAMP'  => $dates,
+                        'TIME'       => $dates,
+                        'YEAR'       => $dates,
+                        'CHAR'       => $char,
+                        'VARCHAR'    => $char,
+                        'TINYTEXT'   => $text,
+                        'TEXT'       => $text,
                         'MEDIUMTEXT' => $text,
-                        'LONGTEXT' => $text,
-                        'BINARY' => $binary,
-                        'VARBINARY' => $binary,
-                        'TINYBLOB' => $blob,
-                        'BLOB' => $blob,
+                        'LONGTEXT'   => $text,
+                        'BINARY'     => $binary,
+                        'VARBINARY'  => $binary,
+                        'TINYBLOB'   => $blob,
+                        'BLOB'       => $blob,
                         'MEDIUMBLOB' => $blob,
-                        'BIGBLOB' => $blob,
-                        'ENUM' => $enum,
-                        'SET' => $enum
+                        'BIGBLOB'    => $blob,
+                        'ENUM'       => $enum,
+                        'SET'        => $enum,
 
-                    ]
+                    ],
                 ],
             ];
 
             $el[] = [
-                'name' => "add_column",
+                'name'     => "add_column",
                 'required' => true,
-                'class' => "Text",
+                'class'    => "Text",
             ];
 
             $el[] = [
-                'name' => 'values',
-                'class' => 'Stack'
+                'name'  => 'values',
+                'class' => 'Stack',
             ];
 
             $el[] = [
-                'name' => "length",
-                'class' => "Number",
-                'default' => 255
+                'name'    => "length",
+                'class'   => "Number",
+                'default' => 255,
             ];
 
             $el[] = [
-                'name' => "allow_null",
+                'name'  => "allow_null",
                 'class' => "YesNo",
             ];
 
             $el[] = [
-                'name' => 'decimals',
+                'name'  => 'decimals',
                 'class' => 'Number',
             ];
 
             $el[] = [
-                'name' => "default",
+                'name'  => "default",
                 'class' => "TextArea",
             ];
 
             $el[] = [
-                'name' => "comment",
+                'name'  => "comment",
                 'class' => "TextArea",
             ];
 
             $el[] = [
-                'name' => "sunsigned",
+                'name'  => "sunsigned",
                 'class' => "YesNo",
             ];
 
             $el[] = [
-                'name' => "zerofill",
+                'name'  => "zerofill",
                 'class' => "YesNo",
             ];
 
             $el[] = [
-                'name' => "auto_increment",
+                'name'  => "auto_increment",
                 'class' => "YesNo",
             ];
 
             $el[] = [
-                'name' => "binary",
+                'name'  => "binary",
                 'class' => "YesNo",
             ];
 
             $el[] = [
-                'name' => 'values',
+                'name'  => 'values',
                 'class' => "Stack",
             ];
         }
 
         $forms = \IPS\storm\Forms::i( $el, null, 'add_version_query', null, null, 'save', null,
-            [ 'data-controller' => 'storm.admin.query.query' ] );
+                                      [ 'data-controller' => 'storm.admin.query.query' ] );
 
         /* If submitted, add to json file */
-        if( $vals = $forms->values() )
-        {
+        if ( $vals = $forms->values() ) {
             /* Get our file */
             $version = \IPS\Request::i()->id;
             $json = $this->_getQueries( $version );
-            $install = $this->_getQueries( 'install');
-            if( $vals[ 'storm_query_select' ] != 'code' )
-            {
+            $install = $this->_getQueries( 'install' );
+            if ( $vals[ 'storm_query_select' ] != 'code' ) {
                 $type = $vals[ 'storm_query_select' ];
                 $table = $vals[ 'storm_query_table' ];
-                if( $type == 'dropColumn' )
-                {
+                if ( $type == 'dropColumn' ) {
                     $column = $vals[ 'storm_query_columns' ];
                     $json[] = [ 'method' => $type, 'params' => [ $table, $column ] ];
                     \IPS\Db::i()->dropColumn( $table, $column );
                 }
-                else
-                {
+                else {
                     $column = $vals[ 'storm_query_add_column' ];
                     $schema = [];
                     $schema[ 'name' ] = $vals[ 'storm_query_add_column' ];
                     $schema[ 'type' ] = $vals[ 'storm_query_type' ];
 
-                    if( isset( $vals[ 'storm_query_length' ] ) and $vals[ 'storm_query_length' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_length' ] ) and $vals[ 'storm_query_length' ] ) {
                         $schema[ 'length' ] = $vals[ 'storm_query_length' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'length' ] = null;
                     }
 
-                    if( isset( $vals[ 'storm_query_decimals' ] ) and $vals[ 'storm_query_decimals' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_decimals' ] ) and $vals[ 'storm_query_decimals' ] ) {
                         $schema[ 'decimals' ] = $vals[ 'storm_query_decimals' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'decimals' ] = null;
                     }
 
-                    if( isset( $vals[ 'storm_query_values' ] ) and \count( $vals[ 'storm_query_values' ] ) )
-                    {
+                    if ( isset( $vals[ 'storm_query_values' ] ) and \count( $vals[ 'storm_query_values' ] ) ) {
                         $schema[ 'values' ] = $vals[ 'storm_query_values' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'values' ] = null;
                     }
 
-                    if( isset( $vals[ 'storm_query_allow_null' ] ) and $vals[ 'storm_query_allow_null' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_allow_null' ] ) and $vals[ 'storm_query_allow_null' ] ) {
                         $schema[ 'allow_null' ] = true;
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'allow_null' ] = false;
                     }
 
-                    if( isset( $vals[ 'storm_query_default' ] ) and $vals[ 'storm_query_default' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_default' ] ) and $vals[ 'storm_query_default' ] ) {
                         $schema[ 'default' ] = $vals[ 'storm_query_default' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'default' ] = null;
                     }
 
-                    if( isset( $vals[ 'storm_query_comment' ] ) and $vals[ 'storm_query_comment' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_comment' ] ) and $vals[ 'storm_query_comment' ] ) {
                         $schema[ 'comment' ] = $vals[ 'storm_query_comment' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'comment' ] = '';
                     }
 
-                    if( isset( $vals[ 'storm_query_sunsigned' ] ) and $vals[ 'storm_query_sunsigned' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_sunsigned' ] ) and $vals[ 'storm_query_sunsigned' ] ) {
                         $schema[ 'unsigned' ] = $vals[ 'storm_query_sunsigned' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'unsigned' ] = false;
                     }
 
-                    if( isset( $vals[ 'storm_query_zerofill' ] ) and $vals[ 'storm_query_zerofill' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_zerofill' ] ) and $vals[ 'storm_query_zerofill' ] ) {
                         $schema[ 'zerofill' ] = $vals[ 'storm_query_zerofill' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'zerofill' ] = false;
                     }
 
-                    if( isset( $vals[ 'storm_query_auto_increment' ] ) and $vals[ 'storm_query_auto_increment' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_auto_increment' ] ) and $vals[ 'storm_query_auto_increment' ] ) {
                         $schema[ 'auto_increment' ] = $vals[ 'storm_query_auto_increment' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'auto_increment' ] = false;
                     }
 
-                    if( isset( $vals[ 'storm_query_binary' ] ) and $vals[ 'storm_query_binary' ] )
-                    {
+                    if ( isset( $vals[ 'storm_query_binary' ] ) and $vals[ 'storm_query_binary' ] ) {
                         $schema[ 'binary' ] = $vals[ 'storm_query_auto_increment' ];
                     }
-                    else
-                    {
+                    else {
                         $schema[ 'binary' ] = false;
                     }
 
-                    if( $type == 'addColumn' )
-                    {
+                    if ( $type == 'addColumn' ) {
                         $json[] = [ 'method' => $type, 'params' => [ $table, $schema ] ];
                         $install[] = [ 'method' => $type, 'params' => [ $table, $schema ] ];
                         $this->_writeQueries( 'install', $install );
                         \IPS\Db::i()->addColumn( $table, $schema );
                     }
-                    else if( $type == 'changeColumn' )
-                    {
+                    else if ( $type == 'changeColumn' ) {
                         $json[] = [ 'method' => $type, 'params' => [ $table, $column, $schema ] ];
                         \IPS\Db::i()->changeColumn( $table, $column, $schema );
                     }
                 }
 
             }
-            else
-            {
+            else {
 
                 /* Work out the different parts of the query */
                 $val = trim( $vals[ 'storm_query_code' ] );
-                if( mb_substr( $val, -1 ) !== ';' )
-                {
+                if ( mb_substr( $val, -1 ) !== ';' ) {
                     $val .= ';';
                 }
 
                 preg_match( '/^\\\IPS\\\Db::i\(\)->(.+?)\(\s*(.+?)\s*\)\s*;$/', $val, $matches );
 
                 /* Add it on */
-                $json[] = array(
+                $json[] = [
                     'method' => $matches[ 1 ],
-                    'params' => eval( 'return array( ' . $matches[ 2 ] . ' );' )
-                );
+                    'params' => eval( 'return array( ' . $matches[ 2 ] . ' );' ),
+                ];
             }
 
             /* Write it */
@@ -495,21 +450,18 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
 
             /* Redirect us */
             \IPS\Output::i()
-                       ->redirect( \IPS\Http\Url::internal( "app=core&module=applications&controller=developer&appKey={$this->application->directory}&tab=versions&root={$version}" ) );
+                ->redirect( \IPS\Http\Url::internal( "app=core&module=applications&controller=developer&appKey={$this->application->directory}&tab=versions&root={$version}" ) );
         }
 
         \IPS\Output::i()->output = $forms;
-
     }
 
     protected function addTable()
     {
         $activeTab = \IPS\Request::i()->tab ?: 'new';
 
-        if( $activeTab === "new" and isset( \IPS\Request::i()->storm_create_class ) and \IPS\Request::i()->storm_create_class !== "select" )
-        {
-            try
-            {
+        if ( $activeTab === "new" and isset( \IPS\Request::i()->storm_create_class ) and \IPS\Request::i()->storm_create_class !== "select" ) {
+            try {
                 $queriesJson = $this->_getQueries( 'working' );
 
                 $type = \IPS\Request::i()->storm_create_class;
@@ -523,37 +475,35 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
                 $data[ 'storm_class_item_node_class' ] = \IPS\Request::i()->storm_class_item_node_class ?: '';
                 $class->process( $data, $this->application );
 
-                if( $prefix )
-                {
+                if ( $prefix ) {
                     $prefix = $prefix . "_id";
                 }
-                else
-                {
+                else {
                     $prefix = "id";
                 }
 
                 $definition = [
-                    'name' => $data[ 'storm_class_database' ],
+                    'name'    => $data[ 'storm_class_database' ],
                     'columns' => [
                         $prefix => [
-                            'name' => $prefix,
-                            'type' => 'BIGINT',
-                            'length' => '20',
-                            'unsigned' => true,
-                            'zerofill' => false,
-                            'binary' => false,
-                            'allow_null' => false,
-                            'default' => null,
+                            'name'           => $prefix,
+                            'type'           => 'BIGINT',
+                            'length'         => '20',
+                            'unsigned'       => true,
+                            'zerofill'       => false,
+                            'binary'         => false,
+                            'allow_null'     => false,
+                            'default'        => null,
                             'auto_increment' => true,
-                            'comment' => \IPS\Member::loggedIn()->language()->get( 'database_default_column_comment' ),
+                            'comment'        => \IPS\Member::loggedIn()->language()->get( 'database_default_column_comment' ),
                         ],
                     ],
                     'indexes' => [
                         'PRIMARY' => [
-                            'type' => 'primary',
-                            'name' => 'PRIMARY',
+                            'type'    => 'primary',
+                            'name'    => 'PRIMARY',
                             'columns' => [ $prefix ],
-                            'length' => [ null ],
+                            'length'  => [ null ],
                         ],
                     ],
                 ];
@@ -563,7 +513,7 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
 
                 /* Add to the queries.json file */
                 $queriesJson = $this->_addQueryToJson( $queriesJson,
-                    [ 'method' => 'createTable', 'params' => [ $definition ] ] );
+                                                       [ 'method' => 'createTable', 'params' => [ $definition ] ] );
                 $this->_writeQueries( 'working', $queriesJson );
 
                 /* Add to schema.json */
@@ -573,10 +523,8 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
 
                 /* Redirect */
                 \IPS\Output::i()
-                           ->redirect( \IPS\Http\Url::internal( "app=core&module=applications&controller=developer&appKey={$this->application->directory}&do=editSchema&_name={$definition['name']}" ) );
-            }
-            catch( \Exception $e )
-            {
+                    ->redirect( \IPS\Http\Url::internal( "app=core&module=applications&controller=developer&appKey={$this->application->directory}&do=editSchema&_name={$definition['name']}" ) );
+            } catch ( \Exception $e ) {
             }
         }
 
@@ -584,29 +532,29 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
         $form = new \IPS\Helpers\Form;
         $options = [
             'options' => [
-                "select" => "Select Class Type",
-                "ar" => "ActiveRecord",
-                "model" => "Node",
-                "item" => "Content Item",
+                "select"  => "Select Class Type",
+                "ar"      => "ActiveRecord",
+                "model"   => "Node",
+                "item"    => "Content Item",
                 "comment" => "Content Item Comment",
             ],
             'toggles' => [
-                'ar' => [ 'js_storm_class_prefix' ],
-                'model' => [ 'js_storm_class_prefix' ],
-                'item' => [ 'js_storm_class_prefix', 'js_storm_class_item_node_class' ],
+                'ar'      => [ 'js_storm_class_prefix' ],
+                'model'   => [ 'js_storm_class_prefix' ],
+                'item'    => [ 'js_storm_class_prefix', 'js_storm_class_item_node_class' ],
                 'comment' => [ 'js_storm_class_prefix', 'js_storm_class_item_node_class' ],
             ],
 
         ];
         $select = new \IPS\Helpers\Form\Select( 'storm_create_class', null, false, $options, '', '', '', '' );
         $prefix = new \IPS\Helpers\Form\Text( 'storm_class_prefix', null, false, [], '', '', '_',
-            'js_storm_class_prefix' );
+                                              'js_storm_class_prefix' );
         $nodeItemClass = new \IPS\Helpers\Form\Text( 'storm_class_item_node_class', null, false, [], '', '', '',
-            'js_storm_class_item_node_class' );
+                                                     'js_storm_class_item_node_class' );
         $output = \IPS\Output::i()->output;
         $add = $select->rowHtml( $form ) . $prefix->rowHtml( $form ) . $nodeItemClass->rowHtml( $form );
         $output = preg_replace( '#<li class=[\'|"](.+?)[\'|"] id=[\'|"]database_table_new_database_table_name[\'|"]>#mu',
-            $add . '<li class="$1" id="database_table_new_database_table_name">', $output );
+                                $add . '<li class="$1" id="database_table_new_database_table_name">', $output );
 
         \IPS\Output::i()->output = $output;
     }
@@ -619,6 +567,19 @@ class storm_hook_coreModAdminAppDev extends _HOOK_CLASS_
     protected function _manageDevFolder()
     {
         return \IPS\storm\Classes\DevFolder::i()->form();
+    }
+
+    protected function _manageclassDev(){
+        return \IPS\storm\Sources::i()->form();
+    }
+
+    protected function _writeJson( $file, $data )
+    {
+        if( $file == \IPS\ROOT_PATH . "/applications/{$this->application->directory}/data/settings.json" ){
+            \IPS\storm\Proxyclass::i()->generateSettings();
+        }
+
+        parent::_writeJson( $file, $data );
     }
 
 }

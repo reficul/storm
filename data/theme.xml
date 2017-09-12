@@ -1,213 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<theme name="Default" author_name="Invision Power Services, Inc" author_url="http://www.invisionpower.com">
+<theme name="Default" author_name="Invision Power Services, Inc" author_url="https://www.invisioncommunity.com">
  <template template_group="css" template_name="css" template_data="$url" template_location="front" template_app="storm"><![CDATA[
 <link rel='stylesheet' href='{expression="\IPS\Http\Url::external( $url )->setQueryString( 'v', \IPS\SUITE_UNIQUE_KEY )"}' media='all'>
 
-
-{{$customCss = \IPS\Theme::i()->css( 'custom.css', 'core', 'front' );}}
-{{foreach $customCss as $css}}
-<link rel='stylesheet' href='{expression="\IPS\Http\Url::external( $css )->setQueryString( 'v', \IPS\SUITE_UNIQUE_KEY )"}' media='all'>
-{{endforeach}}
 
 {{if \IPS\Output::i()->headCss}}
 <style type='text/css'>
     {expression="\IPS\Output::i()->headCss" raw="true"}
 </style>
 {{endif}}]]></template>
- <template template_group="dev" template_name="devBar" template_data="$apps, $plugins" template_location="admin" template_app="storm"><![CDATA[<ul id="stormDevBar" class="ipsList_inline ipsType_light ">
-    <li>
-        <a href="#elStormDevStormApp_menu" id="elStormDevStormApp" data-ipsMenu>{lang="__app_storm"}</a>
-        <ul id="elStormDevStormApp_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
-
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=settings"}">{lang="menu__storm_configuration_settings"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=generator"}">{lang="menu__storm_configuration_generator"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=proxyclass"}">{lang="menu__storm_configuration_proxyclass"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=apps"}">{lang="menu__storm_configuration_apps"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=plugins"}">{lang="menu__storm_configuration_plugins"}</a>
-            </li>
-
-        </ul>
-    </li>
-    <li>
-        <a href="#elStormDevStormAppIPS_menu" id="elStormDevStormAppIPS" data-ipsMenu>IPS</a>
-        <ul id="elStormDevStormAppIPS_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/developers/" target="_blank">Dev Docs</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/4guides/" target="_blank">Guides</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/forums/forum/503-customization-resources/" target="_blank">Community
-                    Forum</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/release-notes/" target="_blank">Release Notes</a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="#elStormDevSupport_menu" id="elStormDevSupport" data-ipsMenu>{lang="__app_core"}</a>
-        <ul id="elStormDevSupport_menu" class="ipsMenu ipsHide">
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=applications&controller=applications"}">{lang="applications_and_modules"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=applications&controller=plugins"}">{lang="app_details_plugins"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=systemLogs"}">{lang="system_logs"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url="app=core&module=settings&controller=advanced&do=tasks"}">Tasks</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=sql"}">{lang="sql_toolbox"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=support"}">{lang="module__core_support"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=errorLogs"}">{lang="error_logs"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url="app=core&module=support&controller=support&do=systemCheck"}">{lang="requirements_checker"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=support&do=phpinfo"}">{lang="phpinfo"}</a>
-            </li>
-        </ul>
-    </li>
-    {{if $plugins and \IPS\IN_DEV}}
-    <li>
-        <a href="#elStormDevPlugins_menu" id="elStormDevPlugins" data-ipsMenu>Plugins Dev</a>
-        <ul id="elStormDevPlugins_menu" class="ipsMenu ipsHide">
-            {{foreach $plugins as $plugin}}
-            <li class="ipsMenu_item">
-                <a href="{$plugin['url']}" id="elStorm_menu_{$plugin['name']}">{$plugin['name']}</a>
-            </li>
-            {{endforeach}}
-        </ul>
-    </li>
+ <template template_group="dev" template_name="devBar" template_data="$menus, $apps, $plugins" template_location="admin" template_app="storm"><![CDATA[<ul id="stormDevBar" class="ipsList_inline ipsType_light ">
+    {{if isset( $menus[0] ) }}
+         {{foreach $menus[0] as $menu }}
+            {{if $menu['ori'] == "plugins" or $menu['ori'] == "apps"}}
+                {{if \IPS\IN_DEV }}
+                    {{if $menu['ori'] == 'plugins' and $plugins }}
+                        {template="li" group="dev" location="admin" app="storm" params="$menu, $menus, $plugins"}
+                    {{endif}}
+                    {{if $menu['ori'] == 'apps' and $apps }}
+                        {template="li" group="dev" location="admin" app="storm" params="$menu, $menus, $apps"}
+                    {{endif}}
+                {{endif}}
+            {{else}}
+                {template="li" group="dev" location="admin" app="storm" params="$menu, $menus"}
+            {{endif}}
+        {{endforeach}}
     {{endif}}
-    {{if $apps and \IPS\IN_DEV}}
-    <li>
-        <a href="#elStormDev_menu" id="elStormDev" data-ipsMenu>Apps Dev</a>
-        <ul id="elStormDev_menu" class="ipsMenu ipsHide">
-            {{foreach $apps as $app}}
-            <li class="ipsMenu_item">
-                <a href="{$app['url']}" id="elStorm_menu_{$app['name']}">{lang="__app_{$app['name']}"}</a>
-            </li>
-            {{endforeach}}
-        </ul>
-    </li>
-    {{endif}}
-</ul>]]></template>
- <template template_group="dev" template_name="devBar2" template_data="$apps, $plugins" template_location="admin" template_app="storm"><![CDATA[<ul id="stormDevBar" class="ipsList_inline ipsType_light ">
-    <li>
-        <a href="#elStormDevStormApp_menu" id="elStormDevStormApp" data-ipsMenu>{lang="__app_storm"}</a>
-        <ul id="elStormDevStormApp_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
-
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=settings"}">{lang="menu__storm_configuration_settings"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=generator"}">{lang="menu__storm_configuration_generator"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=proxyclass"}">{lang="menu__storm_configuration_proxyclass"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=apps"}">{lang="menu__storm_configuration_apps"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=plugins"}">{lang="menu__storm_configuration_plugins"}</a>
-            </li>
-
-        </ul>
-    </li>
-    <li>
-        <a href="#elStormDevStormAppIPS_menu" id="elStormDevStormAppIPS" data-ipsMenu>IPS</a>
-        <ul id="elStormDevStormAppIPS_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/developers/" target="_blank">Dev Docs</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/4guides/" target="_blank">Guides</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/forums/forum/503-customization-resources/" target="_blank">Community
-                                                                                                              Forum</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/release-notes/" target="_blank">Release Notes</a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="#elStormDevSupport_menu" id="elStormDevSupport" data-ipsMenu>{lang="__app_core"}</a>
-        <ul id="elStormDevSupport_menu" class="ipsMenu ipsHide">
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=applications&controller=applications"}">{lang="applications_and_modules"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=applications&controller=plugins"}">{lang="app_details_plugins"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=systemLogs"}">{lang="system_logs"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=sql"}">{lang="sql_toolbox"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=support"}">{lang="module__core_support"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=errorLogs"}">{lang="error_logs"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=support&do=systemChecks"}">{lang="requirements_checker"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=support&do=phpinfo"}">{lang="phpinfo"}</a>
-            </li>
-        </ul>
-    </li>
-    {{if $plugins and \IPS\IN_DEV}}
-    <li>
-        <a href="#elStormDevPlugins_menu" id="elStormDevPlugins" data-ipsMenu>Plugins Dev</a>
-        <ul id="elStormDevPlugins_menu" class="ipsMenu ipsHide">
-            {{foreach $plugins as $plugin}}
-            <li class="ipsMenu_item">
-                <a href="{$plugin['url']}" id="elStorm_menu_{$plugin['name']}">{$plugin['name']}</a>
-            </li>
-            {{endforeach}}
-        </ul>
-    </li>
-    {{endif}}
-    {{if $apps and \IPS\IN_DEV}}
-    <li>
-        <a href="#elStormDev_menu" id="elStormDev" data-ipsMenu>Apps Dev</a>
-        <ul id="elStormDev_menu" class="ipsMenu ipsHide">
-            {{foreach $apps as $app}}
-            <li class="ipsMenu_item">
-                <a href="{$app['url']}" id="elStorm_menu_{$app['name']}">{lang="__app_{$app['name']}"}</a>
-            </li>
-            {{endforeach}}
-        </ul>
-    </li>
-    {{endif}}
-</ul>
+ </ul>]]></template>
+ <template template_group="dev" template_name="devBar2" template_data="$menu" template_location="admin" template_app="storm"><![CDATA[{$menu|raw}
 <header>]]></template>
+ <template template_group="dev" template_name="li" template_data="$menu, $menus, $other=null" template_location="admin" template_app="storm"><![CDATA[{{ $wrap = true;}}
+<li>
+    <a href="{$menu['url']}_menu" id="{$menu['url']}" data-ipsMenu>{$menu['name']}</a>
+    {{if isset( $menus[ $menu['id'] ] ) }}
+        {{ $wrap = false; }}
+        <ul id="{$menu['url']}_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
+        {{foreach $menus[ $menu['id'] ] as $m }}
+            <li class="ipsMenu_item">
+                <a href="{$m['url']}">{$m['name']}</a>
+            </li>
+        {{endforeach}}
+    {{endif}}
+    {{if $other }}
+        {{if $wrap }}
+        <ul id="{$menu['url']}_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
+            {{$wrap = false;}}
+        {{endif}}
+            {{if $menu['ori'] == 'plugins'}}
+                {{foreach $other as $plugin}}
+                <li class="ipsMenu_item">
+                    <a href="{$plugin['url']}" id="elStorm_menu_{$plugin['name']}">{$plugin['name']}</a>
+                </li>
+                {{endforeach}}
+            {{endif}}
+            {{if $menu['ori'] == 'apps'}}
+                {{foreach $other as $app}}
+                <li class="ipsMenu_item">
+                    <a href="{$app['url']}" id="elStorm_menu_{$app['name']}">{lang="__app_{$app['name']}"}</a>
+                </li>
+                {{endforeach}}
+            {{endif}}
+    {{endif}}
+    {{if !$wrap }}
+        </ul>
+    {{endif}}
+</li>]]></template>
  <template template_group="diff" template_name="diff" template_data="$html" template_location="admin" template_app="storm"><![CDATA[<!DOCTYPE html>
 <html lang="{expression="\IPS\Member::loggedIn()->language()->bcp47()"}" dir="{{if member.language()->isrtl}}rtl{{else}}ltr{{endif}}">
 <head>
@@ -466,36 +323,30 @@
     background: #fff !important;&#13;
     color:#000 !important;&#13;
 }&#13;
-</css>
-
+html[dir=&quot;ltr&quot;] body {&#13;
+    margin-right: 0;&#13;
+}</css>
  <css css_location="admin" css_app="storm" css_attributes="" css_path="devbar" css_name="devbar.css"><![CDATA[/*.ipsApp.ipsApp_admin{*/
     /*padding-top:97px;*/
 /*}*/
 /*html[dir="ltr"] #ipsLayout_header {*/
     /*height:100px;*/
 /*}*/
-=======
- <css css_location="admin" css_app="storm" css_attributes="" css_path="devbar" css_name="devbar.css"><![CDATA[.ipsApp.ipsApp_admin{
-    padding-top:97px;
-}
-html[dir="ltr"] #ipsLayout_header {
-    height:100px;
-}
 #stormDevBar {
-    background:#417ba3;
-    color: #fff;
+    /*background:#417ba3;*/
+    /*color: #fff;*/
     font-size:14px;
     padding:10px 5px;
-    width: 100%;
+    width: 75%;
 }
-#stormDevBar > li {
-    padding:0px 5px;
-}
+/*#stormDevBar > li {*/
+    /*padding:0px 5px;*/
+/*}*/
 
 #stormDevBar > li > a{
     color:#fff;
-    line-height: 18px;
-    text-align: center;
+    /*line-height: 18px;*/
+    /*text-align: center;*/
 }]]></css>
  <css css_location="admin" css_app="storm" css_attributes="" css_path="devbar" css_name="devbar2.css"><![CDATA[.ipsApp.ipsApp_admin{
     padding-top:97px;

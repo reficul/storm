@@ -1,99 +1,19 @@
-<ips:template parameters="$apps, $plugins"/>
+<ips:template parameters="$menus, $apps, $plugins"/>
 <ul id="stormDevBar" class="ipsList_inline ipsType_light ">
-    <li>
-        <a href="#elStormDevStormApp_menu" id="elStormDevStormApp" data-ipsMenu>{lang="__app_storm"}</a>
-        <ul id="elStormDevStormApp_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
-
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=settings"}">{lang="menu__storm_configuration_settings"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=generator"}">{lang="menu__storm_configuration_generator"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=proxyclass"}">{lang="menu__storm_configuration_proxyclass"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=apps"}">{lang="menu__storm_configuration_apps"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=storm&module=configuration&controller=plugins"}">{lang="menu__storm_configuration_plugins"}</a>
-            </li>
-
-        </ul>
-    </li>
-    <li>
-        <a href="#elStormDevStormAppIPS_menu" id="elStormDevStormAppIPS" data-ipsMenu>IPS</a>
-        <ul id="elStormDevStormAppIPS_menu" class="ipsMenu ipsHide ipsMenu_narrow ipsClearfix">
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/developers/" target="_blank">Dev Docs</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/4guides/" target="_blank">Guides</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/forums/forum/503-customization-resources/" target="_blank">Community
-                    Forum</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="https://invisionpower.com/release-notes/" target="_blank">Release Notes</a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="#elStormDevSupport_menu" id="elStormDevSupport" data-ipsMenu>{lang="__app_core"}</a>
-        <ul id="elStormDevSupport_menu" class="ipsMenu ipsHide">
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=applications&controller=applications"}">{lang="applications_and_modules"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=applications&controller=plugins"}">{lang="app_details_plugins"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=systemLogs"}">{lang="system_logs"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url="app=core&module=settings&controller=advanced&do=tasks"}">Tasks</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=sql"}">{lang="sql_toolbox"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=support"}">{lang="module__core_support"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=errorLogs"}">{lang="error_logs"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url="app=core&module=support&controller=support&do=systemCheck"}">{lang="requirements_checker"}</a>
-            </li>
-            <li class="ipsMenu_item">
-                <a href="{url=" app=core&module=support&controller=support&do=phpinfo"}">{lang="phpinfo"}</a>
-            </li>
-        </ul>
-    </li>
-    {{if $plugins and \IPS\IN_DEV}}
-    <li>
-        <a href="#elStormDevPlugins_menu" id="elStormDevPlugins" data-ipsMenu>Plugins Dev</a>
-        <ul id="elStormDevPlugins_menu" class="ipsMenu ipsHide">
-            {{foreach $plugins as $plugin}}
-            <li class="ipsMenu_item">
-                <a href="{$plugin['url']}" id="elStorm_menu_{$plugin['name']}">{$plugin['name']}</a>
-            </li>
-            {{endforeach}}
-        </ul>
-    </li>
+    {{if isset( $menus[0] ) }}
+         {{foreach $menus[0] as $menu }}
+            {{if $menu['ori'] == "plugins" or $menu['ori'] == "apps"}}
+                {{if \IPS\IN_DEV }}
+                    {{if $menu['ori'] == 'plugins' and $plugins }}
+                        {template="li" group="dev" location="admin" app="storm" params="$menu, $menus, $plugins"}
+                    {{endif}}
+                    {{if $menu['ori'] == 'apps' and $apps }}
+                        {template="li" group="dev" location="admin" app="storm" params="$menu, $menus, $apps"}
+                    {{endif}}
+                {{endif}}
+            {{else}}
+                {template="li" group="dev" location="admin" app="storm" params="$menu, $menus"}
+            {{endif}}
+        {{endforeach}}
     {{endif}}
-    {{if $apps and \IPS\IN_DEV}}
-    <li>
-        <a href="#elStormDev_menu" id="elStormDev" data-ipsMenu>Apps Dev</a>
-        <ul id="elStormDev_menu" class="ipsMenu ipsHide">
-            {{foreach $apps as $app}}
-            <li class="ipsMenu_item">
-                <a href="{$app['url']}" id="elStorm_menu_{$app['name']}">{lang="__app_{$app['name']}"}</a>
-            </li>
-            {{endforeach}}
-        </ul>
-    </li>
-    {{endif}}
-</ul>
+ </ul>

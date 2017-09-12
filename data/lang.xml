@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="storm" version="30001">
+ <app key="storm" version="30009">
   <word key="__app_storm" js="0">Storm</word>
   <word key="menu__storm_configuration" js="0">Storm</word>
   <word key="menu__storm_configuration_settings" js="0">Settings</word>
@@ -35,7 +35,7 @@
   <word key="storm_apps_return_lang" js="0">Language Strings Generated</word>
   <word key="storm_apps_queue_title" js="0">Generating Dev Files</word>
   <word key="storm_apps_total_done" js="0">Processing %s of %s</word>
-  <word key="storm_apps_completed" js="0">Dev Folder Generated Completed!</word>
+  <word key="storm_apps_completed" js="0">Dev folder generated for %s</word>
   <word key="storm_plugins_done" js="0">The Dev Folder for %s has been generated!</word>
   <word key="storm_plugin_upload" js="0">Plugin XML</word>
   <word key="storm_plugin_upload_desc" js="0">Upload the plugin's xml file here. Will install the plugin if its not already installed (this will overwrite if a dev folder is already there).</word>
@@ -65,10 +65,6 @@
   <word key="storm_settings_enable_query" js="0">Enable DB Queries</word>
   <word key="storm_class_created" js="0">Created %s Class: %s has been created successfully!</word>
   <word key="storm_devfolder_created" js="0">%s has been successfully created.</word>
-  <word key="storm_settings_tab_debug_templates" js="0">Debug Templates</word>
-  <word key="storm_settings_tab_debug_templates_desc" js="0">This will write the templates to disk for easier debugging.</word>
-  <word key="storm_settings_tab_debug_css" js="0">Debug CSS</word>
-  <word key="storm_settings_tab_debug_css_desc" js="0">Requires debug templates to be enabled, but writes the css to disk and allows for easier debugging.</word>
   <word key="storm_settings_tab_debug_css_alt" js="0">Alt CSS Loading</word>
   <word key="storm_settings_tab_debug_css_alt_desc" js="0">if you are getting no css, you could be hitting the query string limit in apache, enable this to try to avoid it.</word>
   <word key="storm_settings_tab_profiler" js="0">Profiler</word>
@@ -143,5 +139,42 @@
   <word key="storm_query_columns" js="0">Table Column</word>
   <word key="storm_query_code" js="0">Query Box</word>
   <word key="storm_member_creation_done" js="0">Dummy data creation done</word>
+  <word key="storm_remote_key_use" js="0">Remote Key</word>
+  <word key="storm_remote_key_use_desc" js="0"><![CDATA[<br>Use this key in another storm instance to sync apps.]]></word>
+  <word key="storm_remote_url" js="0">Remote Interface</word>
+  <word key="storm_remote_url_desc" js="0"><![CDATA[<br> Use this for the remote interface in another storm instance to sync an app]]></word>
+  <word key="storm_ftp_app" js="0">Remote App</word>
+  <word key="general_tab" js="0">General</word>
+  <word key="remote_tab" js="0">Sync</word>
+  <word key="storm_ftp_path" js="0">FTP Path</word>
+  <word key="storm_ftp_path_desc" js="0">Full path to where the synced file is located.</word>
+  <word key="storm_ftp_key" js="0">Remote Key</word>
+  <word key="storm_ftp_interface_host" js="0">Remote Interface</word>
+  <word key="storm_ftp_host" js="0">FTP Host</word>
+  <word key="storm_ftp_username" js="0">FTP Username</word>
+  <word key="storm_ftp_pass" js="0">FTP Password</word>
+  <word key="storm_ftp_port" js="0">FTP Port</word>
+  <word key="storm_ftp_timeout" js="0">FTP Timeout</word>
+  <word key="storm_ftp_ssh" js="0">Use SSH</word>
+  <word key="storm_cron_task" js="0">Cron Task</word>
+  <word key="storm_cron_task_desc" js="0"><![CDATA[<br>Add this to your cron, set to however often you want it to run.]]></word>
+  <word key="menu__storm_configuration_menu" js="0">Menu</word>
+  <word key="storm_menu_name" js="0">Name</word>
+  <word key="storm_menu_parent" js="0">Parent</word>
+  <word key="storm_menu_type" js="0">Type</word>
+  <word key="storm_menu_internal" js="0">Url</word>
+  <word key="storm_menu_external" js="0">Url</word>
+  <word key="storm_ftp_secure" js="0">Secure Connection</word>
+  <word key="storm_settings_disable_menu" js="0">Disable Menu</word>
+  <word key="storm_settings_disable_menu_desc" js="0">Disables the header menu.</word>
+  <word key="menu__storm_configuration_sync" js="0">Sync</word>
+  <word key="storm_sources_trait_exists" js="0">Trait already exists!</word>
+  <word key="storm_sources_interface_exists" js="0">Interface already exists!</word>
+  <word key="storm_sources_no_trait" js="0">Trait doesn't exist: %s</word>
+  <word key="storm_class_content_item_class" js="0">Item Class</word>
+  <word key="storm_class_traits" js="0">Traits</word>
+  <word key="storm_class_subnode_class" js="0">Subnode Class</word>
+  <word key="storm_class_traitName" js="0">Trait Name</word>
+  <word key="storm_class_interfaceName" js="0">Interface Name</word>
  </app>
 </language>

@@ -9,10 +9,6 @@
         "bitbucket": {
             "default_controller": "",
             "protected": 0
-        },
-        "general": {
-            "default_controller": "general",
-            "protected": 0
         }
     }
 }

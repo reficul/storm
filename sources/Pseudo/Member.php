@@ -2,12 +2,12 @@
 
 /**
  * @brief       Member Singleton
- * @author      -storm_author-
- * @copyright   -storm_copyright-
+ * @author      <a href='http://codingjungle.com'>Michael Edwards</a>
+ * @copyright   (c) 2017 Michael Edwards
  * @package     IPS Social Suite
  * @subpackage  Storm
  * @since       -storm_since_version-
- * @version     -storm_version-
+ * @version     3.0.4
  */
 
 namespace IPS\storm\Pseudo;
@@ -21,6 +21,300 @@ if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 
 class _Member
 {
+    protected $first = '';
+
+    protected $last = '';
+
+    protected $user = '';
+
+    protected $email = '';
+
+    protected $pass = '';
+
+    protected $fontSize = 150;
+
+    protected $baseSize = 250;
+
+    protected $xOffset = 0;
+
+    protected $yOffset = 0;
+
+    protected $angle = 0;
+
+    protected $shadowXOffset = 0;
+
+    protected $shadowYOffset = 0;
+
+    protected $font = '';
+
+    static protected $availableClubIds = [];
+    static protected $thereAreNoClubs = false;
+
+    final public function __construct()
+    {
+        $this->first();
+        $this->last();
+        $this->username();
+        $this->email();
+        $fontFile = 'Roboto-Bold.ttf';
+        $this->font = \IPS\ROOT_PATH . '/applications/storm/sources/Pseudo/' . $fontFile;
+    }
+
+    protected function first()
+    {
+        $rand = rand( 0, ( count( $this->firstNames ) - 1 ) );
+        $this->first = $this->firstNames[ $rand ];
+    }
+
+    protected function last()
+    {
+        $rand = rand( 0, ( count( $this->lastNames ) - 1 ) );
+        $this->last = $this->lastNames[ $rand ];
+    }
+
+    protected function username()
+    {
+        $rand = rand( 0, count( $this->userNames ) );
+        $dividedBy = 3;
+        $num = $rand / $dividedBy;
+        if( is_int( $num ) )
+        {
+            $placeHolder = [ ".", "-", "_", " " ];
+            $p = rand( 0, 3 );
+            $placeHolder = $placeHolder[ $p ];
+            $this->user = $this->first . $placeHolder . $this->last;
+        }
+        else
+        {
+            $rand = rand( 0, ( count( $this->userNames ) - 1 ) );
+            $this->user = $this->userNames[ $rand ];
+        }
+    }
+
+    protected function email()
+    {
+        $rand = rand( 0, ( count( $this->domains ) - 1 ) );
+        $domain = $this->domains[ $rand ];
+        $this->email = $this->user . "@" . $domain;
+    }
+
+    public function run( $password = null, $group = null, $avatar = null, $club = null )
+    {
+        $existing = \IPS\Member::load( $this->user, 'name' );
+
+        if( !$existing->member_id )
+        {
+
+            if( !$group or !is_int( $group ) )
+            {
+                $group = \IPS\Settings::i()->getFromConfGlobal( 'member_group' );
+            }
+
+            if( $password )
+            {
+                $this->pass = sha1( rand( 1, 8800000083 ) );
+            }
+            else
+            {
+                $this->pass = $this->user;
+            }
+
+            $time = \IPS\storm\Pseudo\Generator::getTime();
+            $member = new \IPS\Member;
+            $member->name = $this->user;
+            $member->member_group_id = $group;
+            $member->email = $this->email;
+            $member->joined = $time;
+            $member->language = \IPS\Lang::defaultLanguage();
+            $member->skin = 0;
+
+            //put it into 3.x mode, it is much faster
+            $member->members_pass_salt = mb_substr( $member->generateSalt(), 0, 8 );
+            $member->members_pass_hash = $member->encryptedPassword( $this->pass );
+            $member->members_bitoptions[ 'coppa_user' ] = false;
+            $file = sha1( $this->user ) . ".png";
+            $text = mb_substr( $this->user, 0, 1 );
+            $text = mb_strtoupper( $text );
+
+            if( $avatar )
+            {
+                $member->pp_main_photo = $this->generateAvatar( $file, $text, $this->user )->url;
+                $member->pp_photo_type = "custom";
+            }
+
+            $member->save();
+
+            /* Add member to club? */
+            if ( $club )
+            {
+                if ( self::$thereAreNoClubs == false AND count( self::$availableClubIds ) == 0 )
+                {
+                    self::$availableClubIds = iterator_to_array( \IPS\Db::i()->select( 'id', 'core_clubs' ) );
+
+                    if ( count( self::$availableClubIds ) == 0 )
+                    {
+                        self::$thereAreNoClubs = true;
+                    }
+                }
+
+                if ( self::$thereAreNoClubs == false )
+                {
+                    $joinedAClub = false;
+
+                    foreach( self::$availableClubIds as $club )
+                    {
+                        $areWeJoining = rand( 0, 1 ); /* 50% chance of joinging the club */
+
+                        if ( $areWeJoining == 1 )
+                        {
+                            \IPS\Db::i()->insert( 'core_clubs_memberships', array(
+                                'club_id'   => $club,
+                                'member_id' => $member->member_id,
+                                'joined'    => time(),
+                                'status'    => 'member',
+                                'added_by'  => NULL,
+                                'invited_by'=> NULL,
+                            ) );
+
+                            $joinedAClub = true;
+                        }
+                    }
+
+                    if ( $joinedAClub )
+                    {
+                        $member->rebuildPermissionArray();
+                    }
+                }
+            }
+
+            \IPS\storm\Generator::create( "members", $member->member_id );
+        }
+        else
+        {
+            $this->first();
+            $this->last();
+            $this->username();
+            $this->email();
+            $this->run( $password, $group, $avatar, $club );
+        }
+    }
+
+    protected function generateAvatar( $file, $text, $full )
+    {
+        list( $r, $g, $b ) = $this->sscanf( $this->getColorForWords( $full ) );
+
+        $font = $this->font;
+
+        $fontSize = $this->fontSize;
+        $imageSize = $this->baseSize;
+        $angle = $this->angle;
+        $alpha = 1;
+
+        //have to do it this way, as sometimes # is here, other times its not
+        $sha = "#" . str_replace( "#", '', mb_strtoupper( "000000" ) );
+        list( $sr, $sg, $sb ) = $this->sscanf( $sha );
+        //have to do it this way, as sometimes # is here, other times its not
+        $fc = "#" . str_replace( "#", '', mb_strtoupper( "FFFFFF" ) );
+        list( $fr, $fg, $fb ) = $this->sscanf( $fc );
+
+        if( \IPS\Settings::i()->image_suite == 'imagemagick' and class_exists( 'Imagick', false ) )
+        {
+            if( $angle != 0 )
+            {
+                $angle = $angle * -1;
+            }
+
+            $x = $this->xOffset;
+            $y = $this->yOffset;
+            /* Create some objects */
+            $image = new \Imagick();
+            $draw = new \ImagickDraw();
+            $string = "rgba({$r}, {$g}, {$b}, $alpha)";
+            $shadow = "rgb({$sr},{$sg},{$sb})";
+            $fontColor = "rgb({$fr},{$fg},{$fb})";
+            $pixel = new \ImagickPixel( $string );
+
+            /* New image */
+            $image->newImage( $imageSize, $imageSize, $pixel );
+            $image->setImageFormat( "png" );
+            $draw = $draw;
+            $image = $image;
+            $draw->setTextAntialias( true );
+            $draw->setGravity( \Imagick::GRAVITY_CENTER );
+            $draw->setFont( $font );
+            $draw->setFontSize( $fontSize );
+            $draw->setFillColor( $shadow );
+            $image->annotateImage( $draw, $x + $this->shadowXOffset, $y + $this->shadowYOffset, $angle, $text );
+            /* white text */
+            $draw->setFillColor( $fontColor );
+            $draw->setFont( $font );
+            $draw->setFontSize( $fontSize );
+            $image->annotateImage( $draw, $x, $y, $angle, $text );
+            $image->setImageFormat( 'png' );
+            $file = \IPS\File::create( 'core_Profile', $file, $image );
+
+        }
+        else
+        {
+            $alpha = \floor( 127 * $alpha );
+            $alpha = 127 - $alpha;
+
+            list( $x, $y ) = $this->imageTTFCenter( $imageSize, $text, $font, $fontSize, $angle );
+            $x = $x + $this->xOffset;
+            $y = $y + $this->yOffset;
+            $im = \imagecreatetruecolor( $imageSize, $imageSize );
+            // background color, generated by
+            $bg = \imagecolorallocatealpha( $im, $r, $g, $b, $alpha );
+            \imagefill( $im, 0, 0, $bg );
+            imagesavealpha( $im, true );
+            //have to do it this way, as sometimes # is here, other times its not
+            $shadow = \imagecolorallocate( $im, $sr, $sg, $sb );
+            ImageTTFText( $im, $fontSize, $angle, $x + $this->shadowXOffset, $y + $this->shadowYOffset, $shadow, $font,
+                $text );
+
+            $fontColor = \imagecolorallocate( $im, $fr, $fg, $fb );
+            ImageTTFText( $im, $fontSize, $angle, $x, $y, $fontColor, $font, $text );
+
+            \ob_start();
+            \imagepng( $im, null, 1, PNG_ALL_FILTERS );
+            $fileContents = \ob_get_contents();
+            $file = \IPS\File::create( 'core_Profile', $file, $fileContents );
+            \ob_end_clean();
+            \imagedestroy( $im );
+        }
+
+        return $file;
+    }
+
+    protected function sscanf( $data )
+    {
+        return \sscanf( $data, "#%02x%02x%02x" );
+    }
+
+    protected function getColorForWords( $str )
+    {
+        $str = strrev( $str );
+        $code = dechex( crc32( $str ) );
+        $code = mb_substr( $code, 0, 6 );
+
+        return "#" . $code;
+    }
+
+    protected function imageTTFCenter( $image, $text, $font, $size, $angle )
+    {
+        // find the size of the text
+        $box = \ImageTTFBBox( $size, $angle, $font, $text );
+
+        $xr = abs( max( $box[ 2 ], $box[ 4 ] ) );
+        $yr = abs( max( $box[ 5 ], $box[ 7 ] ) );
+
+        // compute centering
+        $x = intval( ( $image - $xr ) / 2 );
+        $y = intval( ( $image + $yr ) / 2 );
+
+        return [ $x, $y ];
+    }
+
 
     protected $firstNames = [
         'Edris',
@@ -2121,252 +2415,4 @@ class _Member
         'globomail.com',
         'oi.com.br'
     ];
-
-    protected $first = '';
-
-    protected $last = '';
-
-    protected $user = '';
-
-    protected $email = '';
-
-    protected $pass = '';
-
-    protected $fontSize = 150;
-
-    protected $baseSize = 250;
-
-    protected $xOffset = 0;
-
-    protected $yOffset = 0;
-
-    protected $angle = 0;
-
-    protected $shadowXOffset = 0;
-
-    protected $shadowYOffset = 0;
-
-    protected $font = '';
-
-    final public function __construct()
-    {
-        $this->first();
-        $this->last();
-        $this->username();
-        $this->email();
-        $fontFile = 'Roboto-Bold.ttf';
-        $this->font = \IPS\ROOT_PATH . '/applications/storm/sources/Pseudo/' . $fontFile;
-    }
-
-    protected function first()
-    {
-        $rand = rand( 0, ( count( $this->firstNames ) - 1 ) );
-        $this->first = $this->firstNames[ $rand ];
-    }
-
-    protected function last()
-    {
-        $rand = rand( 0, ( count( $this->lastNames ) - 1 ) );
-        $this->last = $this->lastNames[ $rand ];
-    }
-
-    protected function username()
-    {
-        $rand = rand( 0, count( $this->userNames ) );
-        $dividedBy = 3;
-        $num = $rand / $dividedBy;
-        if( is_int( $num ) )
-        {
-            $placeHolder = [ ".", "-", "_", " " ];
-            $p = rand( 0, 3 );
-            $placeHolder = $placeHolder[ $p ];
-            $this->user = $this->first . $placeHolder . $this->last;
-        }
-        else
-        {
-            $rand = rand( 0, ( count( $this->userNames ) - 1 ) );
-            $this->user = $this->userNames[ $rand ];
-        }
-    }
-
-    protected function email()
-    {
-        $rand = rand( 0, ( count( $this->domains ) - 1 ) );
-        $domain = $this->domains[ $rand ];
-        $this->email = $this->user . "@" . $domain;
-    }
-
-    public function run( $password = null, $group = null, $avatar = null )
-    {
-        $existing = \IPS\Member::load( $this->user, 'name' );
-
-        if( !$existing->member_id )
-        {
-
-            if( !$group or !is_int( $group ) )
-            {
-                $group = \IPS\Settings::i()->getFromConfGlobal( 'member_group' );
-            }
-
-            if( $password )
-            {
-                $this->pass = sha1( rand( 1, 8800000083 ) );
-            }
-            else
-            {
-                $this->pass = $this->user;
-            }
-
-            $time = \IPS\storm\Pseudo\Generator::getTime();
-            $member = new \IPS\Member;
-            $member->name = $this->user;
-            $member->member_group_id = $group;
-            $member->email = $this->email;
-            $member->joined = $time;
-            $member->language = \IPS\Lang::defaultLanguage();
-            $member->skin = 0;
-
-            //put it into 3.x mode, it is much faster
-            $member->members_pass_salt = mb_substr( $member->generateSalt(), 0, 8 );
-            $member->members_pass_hash = $member->encryptedPassword( $this->pass );
-            $member->members_bitoptions[ 'coppa_user' ] = false;
-            $file = sha1( $this->user ) . ".png";
-            $text = mb_substr( $this->user, 0, 1 );
-            $text = mb_strtoupper( $text );
-
-            if( $avatar )
-            {
-                $member->pp_main_photo = $this->generateAvatar( $file, $text, $this->user )->url;
-                $member->pp_photo_type = "custom";
-            }
-
-            $member->save();
-            \IPS\storm\Generator::create( "members", $member->member_id );
-        }
-        else
-        {
-            $this->first();
-            $this->last();
-            $this->username();
-            $this->email();
-            $this->run( $password, $group, $avatar );
-        }
-    }
-
-    protected function generateAvatar( $file, $text, $full )
-    {
-        list( $r, $g, $b ) = $this->sscanf( $this->getColorForWords( $full ) );
-
-        $font = $this->font;
-
-        $fontSize = $this->fontSize;
-        $imageSize = $this->baseSize;
-        $angle = $this->angle;
-        $alpha = 1;
-
-        //have to do it this way, as sometimes # is here, other times its not
-        $sha = "#" . str_replace( "#", '', mb_strtoupper( "000000" ) );
-        list( $sr, $sg, $sb ) = $this->sscanf( $sha );
-        //have to do it this way, as sometimes # is here, other times its not
-        $fc = "#" . str_replace( "#", '', mb_strtoupper( "FFFFFF" ) );
-        list( $fr, $fg, $fb ) = $this->sscanf( $fc );
-
-        if( \IPS\Settings::i()->image_suite == 'imagemagick' and class_exists( 'Imagick', false ) )
-        {
-            if( $angle != 0 )
-            {
-                $angle = $angle * -1;
-            }
-
-            $x = $this->xOffset;
-            $y = $this->yOffset;
-            /* Create some objects */
-            $image = new \Imagick();
-            $draw = new \ImagickDraw();
-            $string = "rgba({$r}, {$g}, {$b}, $alpha)";
-            $shadow = "rgb({$sr},{$sg},{$sb})";
-            $fontColor = "rgb({$fr},{$fg},{$fb})";
-            $pixel = new \ImagickPixel( $string );
-
-            /* New image */
-            $image->newImage( $imageSize, $imageSize, $pixel );
-            $image->setImageFormat( "png" );
-            $draw = $draw;
-            $image = $image;
-            $draw->setTextAntialias( true );
-            $draw->setGravity( \Imagick::GRAVITY_CENTER );
-            $draw->setFont( $font );
-            $draw->setFontSize( $fontSize );
-            $draw->setFillColor( $shadow );
-            $image->annotateImage( $draw, $x + $this->shadowXOffset, $y + $this->shadowYOffset, $angle, $text );
-            /* white text */
-            $draw->setFillColor( $fontColor );
-            $draw->setFont( $font );
-            $draw->setFontSize( $fontSize );
-            $image->annotateImage( $draw, $x, $y, $angle, $text );
-            $image->setImageFormat( 'png' );
-            $file = \IPS\File::create( 'core_Profile', $file, $image );
-
-        }
-        else
-        {
-            $alpha = \floor( 127 * $alpha );
-            $alpha = 127 - $alpha;
-
-            list( $x, $y ) = $this->imageTTFCenter( $imageSize, $text, $font, $fontSize, $angle );
-            $x = $x + $this->xOffset;
-            $y = $y + $this->yOffset;
-            $im = \imagecreatetruecolor( $imageSize, $imageSize );
-            // background color, generated by
-            $bg = \imagecolorallocatealpha( $im, $r, $g, $b, $alpha );
-            \imagefill( $im, 0, 0, $bg );
-            imagesavealpha( $im, true );
-            //have to do it this way, as sometimes # is here, other times its not
-            $shadow = \imagecolorallocate( $im, $sr, $sg, $sb );
-            ImageTTFText( $im, $fontSize, $angle, $x + $this->shadowXOffset, $y + $this->shadowYOffset, $shadow, $font,
-                $text );
-
-            $fontColor = \imagecolorallocate( $im, $fr, $fg, $fb );
-            ImageTTFText( $im, $fontSize, $angle, $x, $y, $fontColor, $font, $text );
-
-            \ob_start();
-            \imagepng( $im, null, 1, PNG_ALL_FILTERS );
-            $fileContents = \ob_get_contents();
-            $file = \IPS\File::create( 'core_Profile', $file, $fileContents );
-            \ob_end_clean();
-            \imagedestroy( $im );
-        }
-
-        return $file;
-    }
-
-    protected function sscanf( $data )
-    {
-        return \sscanf( $data, "#%02x%02x%02x" );
-    }
-
-    protected function getColorForWords( $str )
-    {
-        $str = strrev( $str );
-        $code = dechex( crc32( $str ) );
-        $code = mb_substr( $code, 0, 6 );
-
-        return "#" . $code;
-    }
-
-    protected function imageTTFCenter( $image, $text, $font, $size, $angle )
-    {
-        // find the size of the text
-        $box = \ImageTTFBBox( $size, $angle, $font, $text );
-
-        $xr = abs( max( $box[ 2 ], $box[ 4 ] ) );
-        $yr = abs( max( $box[ 5 ], $box[ 7 ] ) );
-
-        // compute centering
-        $x = intval( ( $image - $xr ) / 2 );
-        $y = intval( ( $image + $yr ) / 2 );
-
-        return [ $x, $y ];
-    }
-
 }

@@ -13,6 +13,8 @@
 namespace IPS\storm\modules\admin\configuration;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
+use IPS\Member;
+
 if( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 {
     header( ( isset( $_SERVER[ 'SERVER_PROTOCOL' ] ) ? $_SERVER[ 'SERVER_PROTOCOL' ] : 'HTTP/1.0' ) . ' 403 Forbidden' );
@@ -45,13 +47,14 @@ class _apps extends \IPS\Dispatcher\Controller
     {
         $apps = \IPS\Data\Store::i()->applications;
 
+
         $groups[ 'select' ] = \IPS\Member::loggedIn()->language()->addToStack( 'storm_apps_apps_select' );
 
-        foreach( $apps as $key => $val )
+        foreach( \IPS\Application::applications() as $key => $val )
         {
-            $groups[ $val[ 'app_directory' ] ] = \IPS\Member::loggedIn()
+            $groups[ $val->directory ] = \IPS\Member::loggedIn()
                                                             ->language()
-                                                            ->get( "__app_{$val[ 'app_directory' ]}" );
+                                                            ->addToStack( "__app_{$val->directory}" );
         }
 
         $langs = [
@@ -127,7 +130,7 @@ class _apps extends \IPS\Dispatcher\Controller
                 'name' => 'storm_apps_type',
                 'class' => 'Select',
                 'ap' => true,
-                'default' => 'select',
+                'default' => 'all',
                 'options' => [
                     'options' => $langs
                 ],
@@ -144,7 +147,7 @@ class _apps extends \IPS\Dispatcher\Controller
 
             if( $type === "all" )
             {
-                \IPS\Output::i()->redirect( $this->url->setQueryString( [ 'do' => "queue", 'appKey' => $app ] ) );
+                \IPS\Output::i()->redirect( $this->url->setQueryString( [ 'do' => "queue", 'appKey' => $app ] )  );
             }
             else
             {
@@ -224,9 +227,12 @@ class _apps extends \IPS\Dispatcher\Controller
             },
             function()
             {
+                $app = \IPS\Request::i()->appKey;
+                $app = \IPS\Member::loggedIn()->language()->addToStack( "__app_{$app}" );
+                $msg = \IPS\Member::loggedIn()->language()->addToStack('storm_apps_completed', false, ['sprintf' => [ $app]]);
                 /* And redirect back to the overview screen */
                 \IPS\Output::i()->redirect( \IPS\Http\Url::internal( 'app=storm&module=configuration&controller=apps' ),
-                    'storm_apps_completed' );
+                    $msg );
             }
         );
     }

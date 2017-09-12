@@ -31,16 +31,8 @@ class _Forms
      *
      * @return mixed
      */
-    public static function i(
-        array $elements,
-        $object = null,
-        $name = 'default',
-        $form = null,
-        $id = 'form',
-        $submitLang = 'save',
-        $action = null,
-        $attributes = []
-    ) {
+    public static function i( array $elements, $object = null, $name = 'default', $form = null, $id = 'form', $submitLang = 'save', $action = null, $attributes = [] )
+    {
         if( !$name )
         {
             $name = md5( rand( 1, 100000 ) );
@@ -203,7 +195,13 @@ class _Forms
             {
                 if( isset( $el[ 'name' ] ) )
                 {
-                    $name = $langPrefix . $el[ 'name' ];
+                    if( isset( $el['skip'] ) and $el['skip']){
+                        $name = $el['name'];
+                    }
+                    else
+                    {
+                        $name = $langPrefix . $el[ 'name' ];
+                    }
                 }
                 else
                 {
@@ -216,18 +214,18 @@ class _Forms
             switch( $type )
             {
                 case 'tab':
-                    $this->form->addTab( $langPrefix . $name . '_tab' );
+                    $this->form->addTab(  $name . '_tab' );
                     break;
                 case 'header':
-                    $this->form->addHeader( $langPrefix . $name . '_header' );
+                    $this->form->addHeader(  $name . '_header' );
                     break;
                 case 'sidebar':
                     if( \IPS\Member::loggedIn()->language()->checkKeyExists( $name ) )
                     {
-                        $element = \IPS\Member::loggedIn()->language()->addToStack( $name );
+                        $name = \IPS\Member::loggedIn()->language()->addToStack( $name );
                     }
 
-                    $this->form->addSidebar( $element );
+                    $this->form->addSidebar( $name );
                     break;
                 case 'separator':
                     $this->form->addSeparator();
@@ -291,7 +289,16 @@ class _Forms
                         throw new \InvalidArgumentException( json_encode( $el ) );
                     }
 
-                    if( is_object( $this->obj ) )
+                    $default = null;
+
+                    if( array_key_exists( 'default', $el)  )
+                    {
+                        $default = $el[ 'default' ];
+                    }
+                    else if( array_key_exists( 'def', $el) ){
+                        $default = $el['def'];
+                    }
+                    else if( ( !array_key_exists( 'default', $el) or !array_key_exists( 'def', $el)  )  and is_object( $this->obj ) )
                     {
                         $obj = $this->obj;
                         $prop = $el[ 'name' ];
@@ -302,15 +309,21 @@ class _Forms
                         else
                         {
                             $prop = $langPrefix . $prop;
-                            $default = $obj->{$prop};
+                            if( $obj->{$prop} )
+                            {
+                                $default = $obj->{$prop};
+                            }
                         }
-                    }
-                    else
-                    {
-                        $default = null;
-                        if( isset( $el[ 'default' ] ) or isset( $el[ 'def' ] ) )
+
+                        if( $default == null )
                         {
-                            $default = isset( $el[ 'default' ] ) ? $el[ 'default' ] : $el[ 'def' ];
+                            if( array_key_exists( 'default', $el)  )
+                            {
+                                $default = $el[ 'default' ];
+                            }
+                            else if( array_key_exists( 'def', $el) ){
+                                $default = $el['def'];
+                            }
                         }
                     }
 
@@ -420,8 +433,8 @@ class _Forms
                                     $sprintf = [ $sprintf ];
                                 }
                                 $desc = \IPS\Member::loggedIn()
-                                                   ->language()
-                                                   ->addToStack( $desc, false, [ 'sprintf' => $sprintf ] );
+                                    ->language()
+                                    ->addToStack( $desc, false, [ 'sprintf' => $sprintf ] );
                             }
                             else
                             {
@@ -525,15 +538,14 @@ class _Forms
      */
     final protected function setExtra( $el )
     {
+        if( isset( $el[ 'tab' ] ) )
+        {
+            $this->form->addTab( $this->langPrefix . $el[ 'tab' ] . '_tab' );
+        }
 
         if( isset( $el[ 'header' ] ) )
         {
             $this->form->addHeader( $this->langPrefix . $el[ 'header' ] . '_header' );
-        }
-
-        if( isset( $el[ 'tab' ] ) )
-        {
-            $this->form->addTab( $this->langPrefix . $el[ 'tab' ] . '_tab' );
         }
 
         if( isset( $el[ 'sidebar' ] ) )

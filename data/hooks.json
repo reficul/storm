@@ -15,10 +15,6 @@
         "type": "C",
         "class": "\\IPS\\Dispatcher\\Standard"
     },
-    "Theme": {
-        "type": "C",
-        "class": "\\IPS\\Theme"
-    },
     "coreModAdminAppDev": {
         "type": "C",
         "class": "\\IPS\\core\\modules\\admin\\applications\\developer"
@@ -51,10 +47,6 @@
         "type": "S",
         "class": "\\IPS\\Theme\\class_core_global_global"
     },
-    "Output": {
-        "type": "C",
-        "class": "\\IPS\\Output"
-    },
     "adminGlobalThemeHook": {
         "type": "S",
         "class": "\\IPS\\Theme\\class_core_admin_global"
@@ -62,5 +54,13 @@
     "Javascript": {
         "type": "C",
         "class": "\\IPS\\Output\\Javascript"
+    },
+    "frontGlobal": {
+        "type": "S",
+        "class": "\\IPS\\Theme\\class_core_front_global"
+    },
+    "Settings": {
+        "type": "C",
+        "class": "\\IPS\\Settings"
     }
 }

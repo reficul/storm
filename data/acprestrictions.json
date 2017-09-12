@@ -13,6 +13,15 @@
             "members_manage": "members_manage",
             "storm_create_members_loop": "storm_create_members_loop",
             "storm_create_generation_loop": "storm_create_generation_loop"
+        },
+        "menu": {
+            "menu_manage": "menu_manage"
+        },
+        "sync": {
+            "sync_manage": "sync_manage"
+        },
+        "guide": {
+            "guide_manage": "guide_manage"
         }
     },
     "settings": {
